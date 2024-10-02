@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkInvitationMapper">
+
+    <resultMap type="TkInvitation" id="TkInvitationResult">
+        <result property="id"    column="id"    />
+        <result property="inviterId"    column="inviter_id"    />
+        <result property="inviteeId"    column="invitee_id"    />
+        <result property="level"    column="level"    />
+        <result property="amount"    column="amount"    />
+    </resultMap>
+
+
+
+    <!-- 映射查询结果到 TeamUserOV -->
+    <resultMap id="TeamUserOVMap" type="com.tiktok.task.domain.ov.TeamUserOV">
+        <!-- 映射 TkInvitation 部分 -->
+        <association property="tkInvitation" javaType="com.tiktok.task.domain.TkInvitation">
+            <id column="invitation_id" property="id"/>
+            <result column="inviter_id" property="inviterId"/>
+            <result column="invitee_id" property="inviteeId"/>
+            <result column="level" property="level"/>
+            <result column="amount" property="amount"/>
+        </association>
+
+        <!-- 映射 TkUsers 部分 -->
+        <association property="tkUsers" javaType="com.tiktok.task.domain.TkUsers">
+            <id column="invitee_uid" property="uid"/>
+            <result column="invitee_username" property="username"/>
+            <result column="invitee_nickname" property="nickname"/>
+            <result column="invitee_svip_level" property="svipLevel"/>
+            <result column="invitee_balance" property="balance"/>
+            <result column="invitee_usdt_address" property="usdtAddress"/>
+            <result column="registration_time" property="registrationTime"/>
+            <result column="avatar" property="avatar"/>
+
+
+        </association>
+    </resultMap>
+
+    <sql id="selectTkInvitationVo">
+        select id, inviter_id, invitee_id, level, amount from tk_invitation
+    </sql>
+
+    <select id="selectTkInvitationList" parameterType="TkInvitation" resultMap="TkInvitationResult">
+        <include refid="selectTkInvitationVo"/>
+        <where>
+            <if test="inviterId != null "> and inviter_id = #{inviterId}</if>
+            <if test="inviteeId != null "> and invitee_id = #{inviteeId}</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="amount != null  and amount != ''"> and amount = #{amount}</if>
+        </where>
+    </select>
+
+    <select id="selectTkInvitationById" parameterType="Long" resultMap="TkInvitationResult">
+        <include refid="selectTkInvitationVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectTeamUserInfo" resultMap="TeamUserOVMap" parameterType="map">
+        SELECT
+--             i.id AS invitation_id,
+--             i.inviter_id,
+            i.invitee_id,
+--             i.level,
+            i.amount,
+            u.uid AS invitee_uid,
+            u.avatar AS avatar,
+--             u.username AS invitee_username,
+            u.nickname AS invitee_nickname,
+            u.svip_level AS invitee_svip_level,
+--             u.balance AS invitee_balance,
+--             u.usdt_address AS invitee_usdt_address,
+            u.registration_time AS registration_time
+        FROM
+            tk_invitation i
+                LEFT JOIN
+            tk_users u
+            ON
+                i.invitee_id = u.uid
+        WHERE
+            i.inviter_id = #{inviterId}
+          AND
+            i.level = #{level}
+        ORDER BY u.registration_time DESC;;
+    </select>
+    <select id="getTeamData" resultType="java.util.HashMap">
+        SELECT
+            COUNT(i.id) AS invitations,                -- 邀请数量
+            ROUND(SUM(i.amount), 2) AS amount,        -- 四舍五入保留两位小数的返佣金额总额
+            ROUND(SUM(u.totareward), 2) AS totareward -- 四舍五入保留两位小数的被邀请人总奖励金额
+        FROM
+            tk_invitation i
+                JOIN
+            tk_users u ON i.invitee_id = u.uid              -- 关联 tk_users 表
+        WHERE
+            i.inviter_id = #{uid}                                  -- 替换为具体的 inviter_id
+        GROUP BY
+            i.inviter_id;                                     -- 按 inviter_id 分组
+
+
+    </select>
+
+    <insert id="insertTkInvitation" parameterType="TkInvitation" useGeneratedKeys="true" keyProperty="id">
+        insert into tk_invitation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inviterId != null">inviter_id,</if>
+            <if test="inviteeId != null">invitee_id,</if>
+            <if test="level != null">level,</if>
+            <if test="amount != null and amount != ''">amount,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inviterId != null">#{inviterId},</if>
+            <if test="inviteeId != null">#{inviteeId},</if>
+            <if test="level != null">#{level},</if>
+            <if test="amount != null and amount != ''">#{amount},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTkInvitation" parameterType="TkInvitation">
+        update tk_invitation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inviterId != null">inviter_id = #{inviterId},</if>
+            <if test="inviteeId != null">invitee_id = #{inviteeId},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="amount != null and amount != ''">amount = #{amount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkInvitationById" parameterType="Long">
+        delete from tk_invitation where id = #{id}
+    </delete>
+
+    <delete id="deleteTkInvitationByIds" parameterType="String">
+        delete from tk_invitation where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

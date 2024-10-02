@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkTasksMapper">
+
+    <resultMap type="TkTasks" id="TkTasksResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="image"    column="image"    />
+        <result property="description"    column="description"    />
+        <result property="detailedDescription"    column="detailed_description"    />
+        <result property="rewardAmount"    column="reward_amount"    />
+        <result property="link"    column="link"    />
+        <result property="totalQuantity"    column="total_quantity"    />
+        <result property="surplusquantity"    column="surplusquantity"    />
+        <result property="completedQuantity"    column="completed_quantity"    />
+        <result property="taskLevel"    column="task_level"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="state"    column="state"    />
+    </resultMap>
+
+    <resultMap id="UserTaskOVResult" type="UserTaskOV">
+        <!-- 映射 TkTaskAcceptances 对象 -->
+        <association property="tkTaskAcceptances" javaType="TkTaskAcceptances" resultMap="com.tiktok.task.mapper.TkTaskAcceptancesMapper.TkTaskAcceptancesResult"/>
+
+        <!-- 映射 TkTasks 对象 -->
+        <association property="tkTasks" javaType="TkTasks" resultMap="com.tiktok.task.mapper.TkTasksMapper.TkTasksResult"/>
+    </resultMap>
+
+    <sql id="selectTkTasksVo">
+        select id, title, image, description, detailed_description, reward_amount, link, total_quantity,surplusquantity, completed_quantity, task_level, created_at, state from tk_tasks
+    </sql>
+
+    <select id="selectTkTasksList" parameterType="TkTasks" resultMap="TkTasksResult">
+        <include refid="selectTkTasksVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="taskLevel != null "> and task_level = #{taskLevel}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+        </where>
+    </select>
+
+    <select id="selectTkTasksById" parameterType="Long" resultMap="TkTasksResult">
+        <include refid="selectTkTasksVo"/>
+        where id = #{id}
+    </select>
+    <select id="getTaskNum" resultType="java.util.Map">
+        SELECT
+            s.status,
+            COUNT(t.status) AS count
+        FROM
+            (SELECT '0' AS status
+            UNION ALL SELECT '1'
+            UNION ALL SELECT '2'
+            UNION ALL SELECT '3') s
+            LEFT JOIN
+            tk_task_acceptances t ON s.status = t.status AND t.uid = #{uid}  -- 替换 ? 为您要传入的 uid
+        GROUP BY
+            s.status;
+
+    </select>
+
+    <select id="getUserTask" resultMap="UserTaskOVResult">
+        SELECT
+            ta.id AS id,
+            ta.uid,
+            ta.status,
+            ta.submitted_image,
+            ta.submission_time,
+            ta.approval_time,
+            ta.create_time,
+            t.id AS task_id,
+            t.title,
+            t.image,
+            t.description,
+            t.detailed_description,
+            t.reward_amount,
+            t.link,
+            t.total_quantity,
+            t.surplusquantity,
+            t.completed_quantity,
+            t.task_level,
+            t.created_at AS task_created_at,
+            t.state AS task_state
+        FROM
+            tk_task_acceptances ta
+                JOIN
+            tk_tasks t ON ta.task_id = t.id
+        WHERE
+            ta.uid = #{uid}
+          AND
+            ta.status = #{status}
+    </select>
+    <select id="getUserTaskById" resultMap="UserTaskOVResult">
+        SELECT
+            ta.id AS id,
+            ta.uid,
+            ta.status,
+            ta.submitted_image,
+            ta.submission_time,
+            ta.approval_time,
+            ta.create_time,
+            t.id AS task_id,
+            t.title,
+            t.image,
+            t.description,
+            t.detailed_description,
+            t.reward_amount,
+            t.link,
+            t.total_quantity,
+            t.surplusquantity,
+            t.completed_quantity,
+            t.task_level,
+            t.created_at AS task_created_at,
+            t.state AS task_state
+        FROM
+            tk_task_acceptances ta
+                JOIN
+            tk_tasks t ON ta.task_id = t.id
+        WHERE
+            ta.uid = #{uid}
+          AND
+            ta.task_id = #{taskId}
+    </select>
+
+    <insert id="insertTkTasks" parameterType="TkTasks" useGeneratedKeys="true" keyProperty="id">
+        insert into tk_tasks
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="image != null">image,</if>
+            <if test="description != null">description,</if>
+            <if test="detailedDescription != null">detailed_description,</if>
+            <if test="rewardAmount != null">reward_amount,</if>
+            <if test="link != null">link,</if>
+            <if test="totalQuantity != null">total_quantity,</if>
+            <if test="surplusquantity != null">surplusquantity,</if>
+            <if test="completedQuantity != null">completed_quantity,</if>
+            <if test="taskLevel != null">task_level,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="state != null">state,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="image != null">#{image},</if>
+            <if test="description != null">#{description},</if>
+            <if test="detailedDescription != null">#{detailedDescription},</if>
+            <if test="rewardAmount != null">#{rewardAmount},</if>
+            <if test="link != null">#{link},</if>
+            <if test="totalQuantity != null">#{totalQuantity},</if>
+            <if test="surplusquantity != null">#{surplusquantity},</if>
+            <if test="completedQuantity != null">#{completedQuantity},</if>
+            <if test="taskLevel != null">#{taskLevel},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="state != null">#{state},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTkTasks" parameterType="TkTasks">
+        update tk_tasks
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="detailedDescription != null">detailed_description = #{detailedDescription},</if>
+            <if test="rewardAmount != null">reward_amount = #{rewardAmount},</if>
+            <if test="link != null">link = #{link},</if>
+            <if test="totalQuantity != null">total_quantity = #{totalQuantity},</if>
+            <if test="surplusquantity != null">surplusquantity = #{surplusquantity},</if>
+            <if test="completedQuantity != null">completed_quantity = #{completedQuantity},</if>
+            <if test="taskLevel != null">task_level = #{taskLevel},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="state != null">state = #{state},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkTasksById" parameterType="Long">
+        delete from tk_tasks where id = #{id}
+    </delete>
+
+    <delete id="deleteTkTasksByIds" parameterType="String">
+        delete from tk_tasks where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

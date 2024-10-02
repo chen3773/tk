@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkUsersTetsMapper">
+    
+    <resultMap type="TkUsersTets" id="TkUsersTetsResult">
+        <result property="uid"    column="uid"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="svipLevel"    column="svip_level"    />
+        <result property="totareward"    column="totareward"    />
+        <result property="balance"    column="balance"    />
+        <result property="nonWithdrawableBalance"    column="non_withdrawable_balance"    />
+        <result property="usdtAddress"    column="usdt_address"    />
+        <result property="registrationTime"    column="registration_time"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="referrerId"    column="referrer_id"    />
+        <result property="userStatus"    column="user_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTkUsersTetsVo">
+        select uid, username, password, nickname, svip_level, totareward, balance, non_withdrawable_balance, usdt_address, registration_time, avatar, referrer_id, user_status, create_by, create_time, update_by, update_time, remark from tk_users
+    </sql>
+
+    <select id="selectTkUsersTetsList" parameterType="TkUsersTets" resultMap="TkUsersTetsResult">
+        <include refid="selectTkUsersTetsVo"/>
+        <where>  
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="svipLevel != null  and svipLevel != ''"> and svip_level = #{svipLevel}</if>
+            <if test="totareward != null  and totareward != ''"> and totareward = #{totareward}</if>
+            <if test="balance != null  and balance != ''"> and balance = #{balance}</if>
+            <if test="nonWithdrawableBalance != null  and nonWithdrawableBalance != ''"> and non_withdrawable_balance = #{nonWithdrawableBalance}</if>
+            <if test="usdtAddress != null  and usdtAddress != ''"> and usdt_address = #{usdtAddress}</if>
+            <if test="params.beginRegistrationTime != null and params.beginRegistrationTime != '' and params.endRegistrationTime != null and params.endRegistrationTime != ''"> and registration_time between #{params.beginRegistrationTime} and #{params.endRegistrationTime}</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+            <if test="referrerId != null  and referrerId != ''"> and referrer_id = #{referrerId}</if>
+            <if test="userStatus != null  and userStatus != ''"> and user_status = #{userStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectTkUsersTetsByUid" parameterType="Long" resultMap="TkUsersTetsResult">
+        <include refid="selectTkUsersTetsVo"/>
+        where uid = #{uid}
+    </select>
+
+    <insert id="insertTkUsersTets" parameterType="TkUsersTets" useGeneratedKeys="true" keyProperty="uid">
+        insert into tk_users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">username,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="svipLevel != null">svip_level,</if>
+            <if test="totareward != null">totareward,</if>
+            <if test="balance != null">balance,</if>
+            <if test="nonWithdrawableBalance != null">non_withdrawable_balance,</if>
+            <if test="usdtAddress != null">usdt_address,</if>
+            <if test="registrationTime != null">registration_time,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="referrerId != null">referrer_id,</if>
+            <if test="userStatus != null">user_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="svipLevel != null">#{svipLevel},</if>
+            <if test="totareward != null">#{totareward},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="nonWithdrawableBalance != null">#{nonWithdrawableBalance},</if>
+            <if test="usdtAddress != null">#{usdtAddress},</if>
+            <if test="registrationTime != null">#{registrationTime},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="referrerId != null">#{referrerId},</if>
+            <if test="userStatus != null">#{userStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTkUsersTets" parameterType="TkUsersTets">
+        update tk_users
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="svipLevel != null">svip_level = #{svipLevel},</if>
+            <if test="totareward != null">totareward = #{totareward},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="nonWithdrawableBalance != null">non_withdrawable_balance = #{nonWithdrawableBalance},</if>
+            <if test="usdtAddress != null">usdt_address = #{usdtAddress},</if>
+            <if test="registrationTime != null">registration_time = #{registrationTime},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="referrerId != null">referrer_id = #{referrerId},</if>
+            <if test="userStatus != null">user_status = #{userStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where uid = #{uid}
+    </update>
+
+    <delete id="deleteTkUsersTetsByUid" parameterType="Long">
+        delete from tk_users where uid = #{uid}
+    </delete>
+
+    <delete id="deleteTkUsersTetsByUids" parameterType="String">
+        delete from tk_users where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+</mapper>

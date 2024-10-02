@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkWallettransactionsMapper">
+
+    <resultMap type="TkWallettransactions" id="TkWallettransactionsResult">
+        <result property="id"    column="id"    />
+        <result property="userid"    column="userid"    />
+        <result property="transactionType"    column="Transaction_Type"    />
+        <result property="Amount"    column="Amount"    />
+        <result property="transactionDate"    column="Transaction_Date"    />
+        <result property="fundBalance"    column="Fund_Balance"    />
+        <result property="Description"    column="Description"    />
+        <result property="Category"    column="Category"    />
+        <result property="transactionStatus"    column="Transaction_Status"    />
+        <result property="updatedAt"    column="Updated_At"    />
+    </resultMap>
+
+    <sql id="selectTkWallettransactionsVo">
+        select id, userid, Transaction_Type, Amount, Transaction_Date, Fund_Balance, Description, Category, Transaction_Status, Updated_At from tk_WalletTransactions
+    </sql>
+
+    <select id="selectTkWallettransactionsList" parameterType="TkWallettransactions" resultMap="TkWallettransactionsResult">
+        <include refid="selectTkWallettransactionsVo"/>
+        <where>
+            <if test="userid != null "> and userid = #{userid}</if>
+            <if test="transactionType != null  and transactionType != ''"> and Transaction_Type = #{transactionType}</if>
+            <if test="Amount != null "> and Amount = #{Amount}</if>
+            <if test="transactionDate != null "> and Transaction_Date = #{transactionDate}</if>
+            <if test="fundBalance != null "> and Fund_Balance = #{fundBalance}</if>
+            <if test="Description != null  and Description != ''"> and Description = #{Description}</if>
+            <if test="Category != null  and Category != ''"> and Category = #{Category}</if>
+            <if test="transactionStatus != null  and transactionStatus != ''"> and Transaction_Status = #{transactionStatus}</if>
+            <if test="updatedAt != null "> and Updated_At = #{updatedAt}</if>
+        </where>
+        ORDER BY Transaction_Date DESC
+    </select>
+
+    <select id="selectTkWallettransactionsById" parameterType="Long" resultMap="TkWallettransactionsResult">
+        <include refid="selectTkWallettransactionsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTkWallettransactions" parameterType="TkWallettransactions" useGeneratedKeys="true" keyProperty="id">
+        insert into tk_WalletTransactions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">userid,</if>
+            <if test="transactionType != null and transactionType != ''">Transaction_Type,</if>
+            <if test="Amount != null">Amount,</if>
+            <if test="transactionDate != null">Transaction_Date,</if>
+            <if test="fundBalance != null">Fund_Balance,</if>
+            <if test="Description != null">Description,</if>
+            <if test="Category != null">Category,</if>
+            <if test="transactionStatus != null">Transaction_Status,</if>
+            <if test="updatedAt != null">Updated_At,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">#{userid},</if>
+            <if test="transactionType != null and transactionType != ''">#{transactionType},</if>
+            <if test="Amount != null">#{Amount},</if>
+            <if test="transactionDate != null">#{transactionDate},</if>
+            <if test="fundBalance != null">#{fundBalance},</if>
+            <if test="Description != null">#{Description},</if>
+            <if test="Category != null">#{Category},</if>
+            <if test="transactionStatus != null">#{transactionStatus},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTkWallettransactions" parameterType="TkWallettransactions">
+        update tk_WalletTransactions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userid != null">userid = #{userid},</if>
+            <if test="transactionType != null and transactionType != ''">Transaction_Type = #{transactionType},</if>
+            <if test="Amount != null">Amount = #{Amount},</if>
+            <if test="transactionDate != null">Transaction_Date = #{transactionDate},</if>
+            <if test="fundBalance != null">Fund_Balance = #{fundBalance},</if>
+            <if test="Description != null">Description = #{Description},</if>
+            <if test="Category != null">Category = #{Category},</if>
+            <if test="transactionStatus != null">Transaction_Status = #{transactionStatus},</if>
+            <if test="updatedAt != null">Updated_At = #{updatedAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkWallettransactionsById" parameterType="Long">
+        delete from tk_WalletTransactions where id = #{id}
+    </delete>
+
+    <delete id="deleteTkWallettransactionsByIds" parameterType="String">
+        delete from tk_WalletTransactions where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

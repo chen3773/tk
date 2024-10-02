@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkUserDefaultMapper">
+    
+    <resultMap type="TkUserDefault" id="TkUserDefaultResult">
+        <result property="id"    column="id"    />
+        <result property="experienceTaskCount"    column="experience_task_count"    />
+        <result property="regularTaskCount"    column="regular_task_count"    />
+        <result property="hiddenTaskCount"    column="hidden_task_count"    />
+        <result property="minimumWithdrawalAmount"    column="minimum_withdrawal_amount"    />
+        <result property="vip1"    column="vip1"    />
+        <result property="vip2"    column="vip2"    />
+        <result property="vip3"    column="vip3"    />
+        <result property="vip4"    column="vip4"    />
+        <result property="vip5"    column="vip5"    />
+    </resultMap>
+
+    <sql id="selectTkUserDefaultVo">
+        select id, experience_task_count, regular_task_count, hidden_task_count, minimum_withdrawal_amount, vip1, vip2, vip3, vip4, vip5 from tk_user_default
+    </sql>
+
+    <select id="selectTkUserDefaultList" parameterType="TkUserDefault" resultMap="TkUserDefaultResult">
+        <include refid="selectTkUserDefaultVo"/>
+        <where>  
+            <if test="experienceTaskCount != null "> and experience_task_count = #{experienceTaskCount}</if>
+            <if test="regularTaskCount != null "> and regular_task_count = #{regularTaskCount}</if>
+            <if test="hiddenTaskCount != null "> and hidden_task_count = #{hiddenTaskCount}</if>
+            <if test="minimumWithdrawalAmount != null  and minimumWithdrawalAmount != ''"> and minimum_withdrawal_amount = #{minimumWithdrawalAmount}</if>
+            <if test="vip1 != null "> and vip1 = #{vip1}</if>
+            <if test="vip2 != null "> and vip2 = #{vip2}</if>
+            <if test="vip3 != null "> and vip3 = #{vip3}</if>
+            <if test="vip4 != null "> and vip4 = #{vip4}</if>
+            <if test="vip5 != null "> and vip5 = #{vip5}</if>
+        </where>
+    </select>
+    
+    <select id="selectTkUserDefaultById" parameterType="Long" resultMap="TkUserDefaultResult">
+        <include refid="selectTkUserDefaultVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTkUserDefault" parameterType="TkUserDefault">
+        insert into tk_user_default
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="experienceTaskCount != null">experience_task_count,</if>
+            <if test="regularTaskCount != null">regular_task_count,</if>
+            <if test="hiddenTaskCount != null">hidden_task_count,</if>
+            <if test="minimumWithdrawalAmount != null">minimum_withdrawal_amount,</if>
+            <if test="vip1 != null">vip1,</if>
+            <if test="vip2 != null">vip2,</if>
+            <if test="vip3 != null">vip3,</if>
+            <if test="vip4 != null">vip4,</if>
+            <if test="vip5 != null">vip5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="experienceTaskCount != null">#{experienceTaskCount},</if>
+            <if test="regularTaskCount != null">#{regularTaskCount},</if>
+            <if test="hiddenTaskCount != null">#{hiddenTaskCount},</if>
+            <if test="minimumWithdrawalAmount != null">#{minimumWithdrawalAmount},</if>
+            <if test="vip1 != null">#{vip1},</if>
+            <if test="vip2 != null">#{vip2},</if>
+            <if test="vip3 != null">#{vip3},</if>
+            <if test="vip4 != null">#{vip4},</if>
+            <if test="vip5 != null">#{vip5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTkUserDefault" parameterType="TkUserDefault">
+        update tk_user_default
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="experienceTaskCount != null">experience_task_count = #{experienceTaskCount},</if>
+            <if test="regularTaskCount != null">regular_task_count = #{regularTaskCount},</if>
+            <if test="hiddenTaskCount != null">hidden_task_count = #{hiddenTaskCount},</if>
+            <if test="minimumWithdrawalAmount != null">minimum_withdrawal_amount = #{minimumWithdrawalAmount},</if>
+            <if test="vip1 != null">vip1 = #{vip1},</if>
+            <if test="vip2 != null">vip2 = #{vip2},</if>
+            <if test="vip3 != null">vip3 = #{vip3},</if>
+            <if test="vip4 != null">vip4 = #{vip4},</if>
+            <if test="vip5 != null">vip5 = #{vip5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkUserDefaultById" parameterType="Long">
+        delete from tk_user_default where id = #{id}
+    </delete>
+
+    <delete id="deleteTkUserDefaultByIds" parameterType="String">
+        delete from tk_user_default where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

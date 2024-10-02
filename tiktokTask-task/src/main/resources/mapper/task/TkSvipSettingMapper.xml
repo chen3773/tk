@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkSvipSettingMapper">
+    
+    <resultMap type="TkSvipSetting" id="TkSvipSettingResult">
+        <result property="id"    column="id"    />
+        <result property="vipLevel"    column="vip_level"    />
+        <result property="dailyTaskCount"    column="daily_task_count"    />
+        <result property="upgradeAmount"    column="upgrade_amount"    />
+    </resultMap>
+
+    <sql id="selectTkSvipSettingVo">
+        select id, vip_level, daily_task_count, upgrade_amount from tk_svip_setting
+    </sql>
+
+    <select id="selectTkSvipSettingList" parameterType="TkSvipSetting" resultMap="TkSvipSettingResult">
+        <include refid="selectTkSvipSettingVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="vipLevel != null "> and vip_level = #{vipLevel}</if>
+            <if test="dailyTaskCount != null "> and daily_task_count = #{dailyTaskCount}</if>
+            <if test="upgradeAmount != null "> and upgrade_amount = #{upgradeAmount}</if>
+        </where>
+        ORDER BY `vip_level` ASC
+    </select>
+    
+    <select id="selectTkSvipSettingById" parameterType="Long" resultMap="TkSvipSettingResult">
+        <include refid="selectTkSvipSettingVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTkSvipSetting" parameterType="TkSvipSetting" useGeneratedKeys="true" keyProperty="id">
+        insert into tk_svip_setting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vipLevel != null">vip_level,</if>
+            <if test="dailyTaskCount != null">daily_task_count,</if>
+            <if test="upgradeAmount != null">upgrade_amount,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vipLevel != null">#{vipLevel},</if>
+            <if test="dailyTaskCount != null">#{dailyTaskCount},</if>
+            <if test="upgradeAmount != null">#{upgradeAmount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTkSvipSetting" parameterType="TkSvipSetting">
+        update tk_svip_setting
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipLevel != null">vip_level = #{vipLevel},</if>
+            <if test="dailyTaskCount != null">daily_task_count = #{dailyTaskCount},</if>
+            <if test="upgradeAmount != null">upgrade_amount = #{upgradeAmount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkSvipSettingById" parameterType="Long">
+        delete from tk_svip_setting where id = #{id}
+    </delete>
+
+    <delete id="deleteTkSvipSettingByIds" parameterType="String">
+        delete from tk_svip_setting where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

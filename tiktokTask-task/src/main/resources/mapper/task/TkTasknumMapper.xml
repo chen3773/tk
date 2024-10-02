@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkTasknumMapper">
+    
+    <resultMap type="TkTasknum" id="TkTasknumResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="hiddenTaskCount"    column="hidden_task_count"    />
+        <result property="normalTaskCount"    column="normal_task_count"    />
+        <result property="experienceTaskCount"    column="experience_task_count"    />
+        <result property="totalCompletedTasks"    column="total_completed_tasks"    />
+    </resultMap>
+
+    <sql id="selectTkTasknumVo">
+        select id, user_id, hidden_task_count, normal_task_count, experience_task_count, total_completed_tasks from tk_tasknum
+    </sql>
+
+    <select id="selectTkTasknumList" parameterType="TkTasknum" resultMap="TkTasknumResult">
+        <include refid="selectTkTasknumVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectTkTasknumById" parameterType="Long" resultMap="TkTasknumResult">
+        <include refid="selectTkTasknumVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTkTasknum" parameterType="TkTasknum" useGeneratedKeys="true" keyProperty="id">
+        insert into tk_tasknum
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="hiddenTaskCount != null">hidden_task_count,</if>
+            <if test="normalTaskCount != null">normal_task_count,</if>
+            <if test="experienceTaskCount != null">experience_task_count,</if>
+            <if test="totalCompletedTasks != null">total_completed_tasks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="hiddenTaskCount != null">#{hiddenTaskCount},</if>
+            <if test="normalTaskCount != null">#{normalTaskCount},</if>
+            <if test="experienceTaskCount != null">#{experienceTaskCount},</if>
+            <if test="totalCompletedTasks != null">#{totalCompletedTasks},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTkTasknum" parameterType="TkTasknum">
+        update tk_tasknum
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="hiddenTaskCount != null">hidden_task_count = #{hiddenTaskCount},</if>
+            <if test="normalTaskCount != null">normal_task_count = #{normalTaskCount},</if>
+            <if test="experienceTaskCount != null">experience_task_count = #{experienceTaskCount},</if>
+            <if test="totalCompletedTasks != null">total_completed_tasks = #{totalCompletedTasks},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkTasknumById" parameterType="Long">
+        delete from tk_tasknum where id = #{id}
+    </delete>
+
+    <delete id="deleteTkTasknumByIds" parameterType="String">
+        delete from tk_tasknum where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

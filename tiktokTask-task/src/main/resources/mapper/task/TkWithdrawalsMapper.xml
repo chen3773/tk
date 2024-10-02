@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkWithdrawalsMapper">
+    
+    <resultMap type="TkWithdrawals" id="TkWithdrawalsResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="username"    column="username"    />
+        <result property="amount"    column="amount"    />
+        <result property="withdrawalTime"    column="withdrawal_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectTkWithdrawalsVo">
+        select id, uid, username, amount, withdrawal_time, status from tk_Withdrawals
+    </sql>
+
+    <select id="selectTkWithdrawalsList" parameterType="TkWithdrawals" resultMap="TkWithdrawalsResult">
+        <include refid="selectTkWithdrawalsVo"/>
+        <where>  
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="params.beginWithdrawalTime != null and params.beginWithdrawalTime != '' and params.endWithdrawalTime != null and params.endWithdrawalTime != ''"> and withdrawal_time between #{params.beginWithdrawalTime} and #{params.endWithdrawalTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTkWithdrawalsById" parameterType="Long" resultMap="TkWithdrawalsResult">
+        <include refid="selectTkWithdrawalsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTkWithdrawals" parameterType="TkWithdrawals" useGeneratedKeys="true" keyProperty="id">
+        insert into tk_Withdrawals
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">uid,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="amount != null">amount,</if>
+            <if test="withdrawalTime != null">withdrawal_time,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">#{uid},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="withdrawalTime != null">#{withdrawalTime},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTkWithdrawals" parameterType="TkWithdrawals">
+        update tk_Withdrawals
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="withdrawalTime != null">withdrawal_time = #{withdrawalTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkWithdrawalsById" parameterType="Long">
+        delete from tk_Withdrawals where id = #{id}
+    </delete>
+
+    <delete id="deleteTkWithdrawalsByIds" parameterType="String">
+        delete from tk_Withdrawals where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
