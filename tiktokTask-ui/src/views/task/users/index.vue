@@ -222,24 +222,24 @@
       </div>
     </el-dialog>
     <el-dialog title="配置特殊任务" :visible.sync="open2" width="600px" append-to-body>
-      <div>
+      <div v-for="(data, index) in form2.taskList" :key="index">
         <div style="display: flex;align-items: center;justify-content: space-between; margin-bottom: 15px;">
-          <p style="font-size: 16px; font-weight: bold; margin: 0;">特殊任务一</p>
-          <i style="font-size: 16px; color: red;" class="el-icon-delete"></i>
+          <p style="font-size: 16px; font-weight: bold; margin: 0;">特殊任务{{ index+1 }}</p>
+          <i style="font-size: 16px; color: red;" class="el-icon-delete" @click="delTask(index)"></i>
         </div>
-        <el-form ref="form2" :model="form2" label-width="120px">
-          <el-form-item label="任务id" prop="lv">
-            <el-input v-model="form1.lv" placeholder="请输入任务id" />
+        <el-form ref="form2" label-width="120px">
+          <el-form-item label="任务id" prop="taskId">
+            <el-input v-model="data.taskId" placeholder="请输入任务id" />
           </el-form-item>
-          <el-form-item label="几次任务后触发" prop="lv">
-            <el-input v-model="form1.lv" placeholder="请输入几次任务后触发" />
+          <el-form-item label="几次任务后触发" prop="count">
+            <el-input v-model="data.count" placeholder="请输入几次任务后触发" />
           </el-form-item>
         </el-form>
       </div>
-      <el-button type="primary" @click="submitForm1">增加条件</el-button>
+      <el-button type="primary" @click="addTask">增加任务</el-button>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm1">确 定</el-button>
-        <el-button @click="cancel1">取 消</el-button>
+        <el-button type="primary" @click="submitForm2">确 定</el-button>
+        <el-button @click="cancel2">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -296,7 +296,13 @@ export default {
       open1: false,
       form1: {},
       open2: true,
-      form2: {}
+      form2: {
+        uids: [],
+        taskList: [{
+          taskId: '',
+          count: ''
+        }]
+      }
     };
   },
   created() {
@@ -446,6 +452,54 @@ export default {
       };
       this.open1 = true;
     },
+    submitForm2() {
+      this.$refs["form2"].validate(valid => {
+        if (valid) {
+          UpgradeSvip(this.form2).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open2 = false;
+              this.getList();
+            });
+        }
+      });
+    },
+    cancel2() {
+      this.open2 = false;
+      this.reset2();
+    },
+    // 表单重置
+    reset2() {
+      this.form2 = {
+        uids: [],
+        taskList: [{
+          taskId: '',
+          count: ''
+        }]
+      };
+      this.resetForm("form2");
+    },
+     /** 修改按钮操作 */
+    handleUpdate2(row) {
+      this.reset2();
+      const uid = row.uid || this.ids
+      this.form2 = {
+        uids: [],
+        taskList: [{
+          taskId: '',
+          count: ''
+        }]
+      };
+      this.open2 = true;
+    },
+    addTask() {
+      this.form2.taskList.push({
+        taskId: '',
+        count: ''
+      })
+    },
+    delTask() {
+
+    }
   }
 };
 </script>
