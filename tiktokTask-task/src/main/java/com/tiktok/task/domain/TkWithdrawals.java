@@ -12,7 +12,7 @@ import com.tiktok.common.core.domain.BaseEntity;
  * 提现记录对象 tk_Withdrawals
  * 
  * @author ruoyi
- * @date 2024-09-26
+ * @date 2024-10-03
  */
 public class TkWithdrawals extends BaseEntity
 {
@@ -29,6 +29,10 @@ public class TkWithdrawals extends BaseEntity
     @Excel(name = "用户名")
     private String username;
 
+    /** 区块链地址 */
+    @Excel(name = "区块链地址")
+    private String address;
+
     /** 提现金额 */
     @Excel(name = "提现金额")
     private BigDecimal amount;
@@ -38,9 +42,9 @@ public class TkWithdrawals extends BaseEntity
     @Excel(name = "提现时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date withdrawalTime;
 
-    /** 提现状态，不能为空，默认值为 pending */
-    @Excel(name = "提现状态，不能为空，默认值为 pending")
-    private String status;
+    /** 提现状态 */
+    @Excel(name = "提现状态")
+    private Long status;
 
     public void setId(Long id) 
     {
@@ -69,6 +73,15 @@ public class TkWithdrawals extends BaseEntity
     {
         return username;
     }
+    public void setAddress(String address) 
+    {
+        this.address = address;
+    }
+
+    public String getAddress() 
+    {
+        return address;
+    }
     public void setAmount(BigDecimal amount) 
     {
         this.amount = amount;
@@ -87,12 +100,12 @@ public class TkWithdrawals extends BaseEntity
     {
         return withdrawalTime;
     }
-    public void setStatus(String status) 
+    public void setStatus(Long status) 
     {
         this.status = status;
     }
 
-    public String getStatus() 
+    public Long getStatus() 
     {
         return status;
     }
@@ -103,6 +116,7 @@ public class TkWithdrawals extends BaseEntity
             .append("id", getId())
             .append("uid", getUid())
             .append("username", getUsername())
+            .append("address", getAddress())
             .append("amount", getAmount())
             .append("withdrawalTime", getWithdrawalTime())
             .append("status", getStatus())

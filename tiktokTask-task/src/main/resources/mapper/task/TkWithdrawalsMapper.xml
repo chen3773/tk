@@ -8,13 +8,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="uid"    column="uid"    />
         <result property="username"    column="username"    />
+        <result property="address"    column="address"    />
         <result property="amount"    column="amount"    />
         <result property="withdrawalTime"    column="withdrawal_time"    />
         <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectTkWithdrawalsVo">
-        select id, uid, username, amount, withdrawal_time, status from tk_Withdrawals
+        select id, uid, username, address, amount, withdrawal_time, status from tk_Withdrawals
     </sql>
 
     <select id="selectTkWithdrawalsList" parameterType="TkWithdrawals" resultMap="TkWithdrawalsResult">
@@ -22,8 +23,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="uid != null "> and uid = #{uid}</if>
             <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
             <if test="params.beginWithdrawalTime != null and params.beginWithdrawalTime != '' and params.endWithdrawalTime != null and params.endWithdrawalTime != ''"> and withdrawal_time between #{params.beginWithdrawalTime} and #{params.endWithdrawalTime}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
     
@@ -37,6 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uid != null">uid,</if>
             <if test="username != null and username != ''">username,</if>
+            <if test="address != null">address,</if>
             <if test="amount != null">amount,</if>
             <if test="withdrawalTime != null">withdrawal_time,</if>
             <if test="status != null">status,</if>
@@ -44,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="uid != null">#{uid},</if>
             <if test="username != null and username != ''">#{username},</if>
+            <if test="address != null">#{address},</if>
             <if test="amount != null">#{amount},</if>
             <if test="withdrawalTime != null">#{withdrawalTime},</if>
             <if test="status != null">#{status},</if>
@@ -55,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="uid != null">uid = #{uid},</if>
             <if test="username != null and username != ''">username = #{username},</if>
+            <if test="address != null">address = #{address},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="withdrawalTime != null">withdrawal_time = #{withdrawalTime},</if>
             <if test="status != null">status = #{status},</if>

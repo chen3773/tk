@@ -31,6 +31,8 @@ public class TkSvipSettingServiceImpl implements ITkSvipSettingService
     private TkInvitationMapper tkInvitationMapper;
     @Autowired
     private TkWallettransactionsMapper tkWallettransactionsMapper;
+    @Autowired
+    private TkTasknumMapper tkTasknumMapper;
 
     /**
      * 查询svip默认配置
@@ -116,6 +118,14 @@ public class TkSvipSettingServiceImpl implements ITkSvipSettingService
         tkuser.setSvipLevel(lv);
         tkUsersMapper.updateTkUsers(tkuser);
 
+
+        //清空用户配额  重新分配
+        TkTasknum tkTasknum = new TkTasknum();
+        tkTasknum.setUserId(uid);
+        TkTasknum tkTasknum1 = tkTasknumMapper.selectTkTasknumList(tkTasknum).get(0);
+        tkTasknum1.setExperienceTaskCount(0L);
+        tkTasknum1.setNormalTaskCount(tkSvipSettings.get(0).getDailyTaskCount());
+        tkTasknumMapper.updateTkTasknum(tkTasknum1);
         //分成
         //开始分佣
         TkRoyaltySetting tkRoyaltySetting = tkRoyaltySettingMapper.selectTkRoyaltySettingById(1L);//分佣比例

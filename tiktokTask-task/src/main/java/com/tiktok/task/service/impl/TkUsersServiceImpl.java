@@ -252,7 +252,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         Assert.isTrue(value>0,"error");
 
         TkUserDefault tkUserDefault = tkUserDefaultMapper.selectTkUserDefaultById(1L);
-        Assert.isTrue(Double.parseDouble(tkUserDefault.getMinimumWithdrawalAmount())<value,"Minimum withdrawal ："+ tkUserDefault.getMinimumWithdrawalAmount());
+        Assert.isTrue(Double.parseDouble(tkUserDefault.getMinimumWithdrawalAmount())<=value,"Minimum withdrawal ："+ tkUserDefault.getMinimumWithdrawalAmount());
 
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
@@ -281,7 +281,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkWithdrawals.setUsername(tkUsers.getUsername());
         tkWithdrawals.setUid(uid);
         tkWithdrawals.setWithdrawalTime(new Date());
-        tkWithdrawals.setStatus("待打款");
+        tkWithdrawals.setStatus(0L);
         tkWithdrawalsMapper.insertTkWithdrawals(tkWithdrawals);
         //钱包记录
         TkWallettransactions tkWallettransactions = new TkWallettransactions();

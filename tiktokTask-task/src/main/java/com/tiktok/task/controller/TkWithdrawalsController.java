@@ -25,7 +25,7 @@ import com.tiktok.common.core.page.TableDataInfo;
  * 提现记录Controller
  * 
  * @author ruoyi
- * @date 2024-09-26
+ * @date 2024-10-03
  */
 @RestController
 @RequestMapping("/task/Withdrawals")

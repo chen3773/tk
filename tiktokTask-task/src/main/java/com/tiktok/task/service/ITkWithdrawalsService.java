@@ -7,7 +7,7 @@ import com.tiktok.task.domain.TkWithdrawals;
  * 提现记录Service接口
  * 
  * @author ruoyi
- * @date 2024-09-26
+ * @date 2024-10-03
  */
 public interface ITkWithdrawalsService 
 {

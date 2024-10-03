@@ -154,7 +154,7 @@ public class TkTasksServiceImpl implements ITkTasksService
 
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
         //等级不符合
-        Assert.isTrue(TaskList.getTaskLevel().toString().equals(tkUsers.getSvipLevel().toString()),"Rank error");
+        Assert.isTrue(TaskList.getTaskLevel()<=tkUsers.getSvipLevel(),"Rank error");
 
         //判断数量
         Assert.isTrue(TaskList.getSurplusquantity()>0,"Quota is full");
