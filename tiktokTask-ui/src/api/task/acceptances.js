@@ -42,3 +42,11 @@ export function delAcceptances(id) {
     method: 'delete'
   })
 }
+
+export function taskAudit(query) {
+  return request({
+    url: '/task/acceptances/TaskAudit',
+    method: 'get',
+    params: query
+  })
+}

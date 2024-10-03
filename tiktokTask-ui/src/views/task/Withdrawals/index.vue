@@ -28,10 +28,10 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="提现状态，不能为空，默认值为 pending" prop="status">
+      <el-form-item label="提现状态" prop="status">
         <el-input
           v-model="queryParams.status"
-          placeholder="请输入提现状态，不能为空，默认值为 pending"
+          placeholder="请输入提现状态"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -43,7 +43,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -52,7 +52,7 @@
           @click="handleAdd"
           v-hasPermi="['task:Withdrawals:add']"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -90,16 +90,16 @@
 
     <el-table v-loading="loading" :data="WithdrawalsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="自增主键" align="center" prop="id" />
+      <!-- <el-table-column label="自增主键" align="center" prop="id" /> -->
       <el-table-column label="用户 ID" align="center" prop="uid" />
       <el-table-column label="用户名" align="center" prop="username" />
       <el-table-column label="提现金额" align="center" prop="amount" />
-      <el-table-column label="提现时间" align="center" prop="withdrawalTime" width="180">
+      <el-table-column label="提现时间" align="center" prop="withdrawalTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.withdrawalTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="提现状态，不能为空，默认值为 pending" align="center" prop="status" />
+      <el-table-column label="提现状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

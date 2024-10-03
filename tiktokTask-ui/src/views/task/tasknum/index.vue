@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户唯一标识" prop="userId">
+      <el-form-item label="用户ID" prop="userId">
         <el-input
           v-model="queryParams.userId"
-          placeholder="请输入用户唯一标识"
+          placeholder="请输入用户ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -63,8 +63,8 @@
 
     <el-table v-loading="loading" :data="tasknumList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户ID" align="center" prop="id" />
-      <el-table-column label="用户唯一标识" align="center" prop="userId" />
+      <!-- <el-table-column label="用户ID" align="center" prop="id" /> -->
+      <el-table-column label="用户ID" align="center" prop="userId" />
       <el-table-column label="隐藏任务数" align="center" prop="hiddenTaskCount" />
       <el-table-column label="普通任务数" align="center" prop="normalTaskCount" />
       <el-table-column label="体验任务数" align="center" prop="experienceTaskCount" />

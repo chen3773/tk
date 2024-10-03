@@ -1,21 +1,40 @@
 <template>
   <div class="app-container home">
-
+    <panel-group :info="userIndexData" />
   </div>
 </template>
 
 <script>
+import { getHomePage } from "@/api/index";
+import PanelGroup from "./dashboard/PanelGroup";
 export default {
   name: "Index",
+  components: {
+    PanelGroup
+  },
   data() {
     return {
       // 版本号
-      version: "3.8.8"
+      version: "3.8.8",
+      userIndexData: {}
     };
+  },
+  created() {
+    this.getData();
+  },
+  activated() {
+    this.getData();
   },
   methods: {
     goTarget(href) {
       window.open(href, "_blank");
+    },
+    getData() {
+      this.loading = true;
+      getHomePage().then((response) => {
+        this.userIndexData = response.data;
+        this.loading = false;
+      });
     }
   }
 };

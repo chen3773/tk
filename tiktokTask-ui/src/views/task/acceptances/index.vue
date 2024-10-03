@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="接取任务的用户ID" prop="uid">
+      <el-form-item label="用户ID" prop="uid">
         <el-input
           v-model="queryParams.uid"
-          placeholder="请输入接取任务的用户ID"
+          placeholder="请输入用户ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="关联的任务ID" prop="taskId">
+      <el-form-item label="任务ID" prop="taskId">
         <el-input
           v-model="queryParams.taskId"
-          placeholder="请输入关联的任务ID"
+          placeholder="请输入任务ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -24,7 +24,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -55,7 +55,7 @@
           @click="handleDelete"
           v-hasPermi="['task:acceptances:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -71,21 +71,21 @@
 
     <el-table v-loading="loading" :data="acceptancesList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="接取任务的唯一标识符" align="center" prop="id" />
-      <el-table-column label="接取任务的用户ID" align="center" prop="uid" />
-      <el-table-column label="关联的任务ID" align="center" prop="taskId" />
-      <el-table-column label="接取任务的状态" align="center" prop="status" />
-      <el-table-column label="提交的图片链接" align="center" prop="submittedImage" width="100">
+      <!-- <el-table-column label="接取任务的唯一标识符" align="center" prop="id" /> -->
+      <el-table-column label="用户ID" align="center" prop="uid" />
+      <el-table-column label="任务ID" align="center" prop="taskId" />
+      <el-table-column label="任务状态" align="center" prop="status" />
+      <el-table-column label="提交的图片" align="center" prop="submittedImage" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.submittedImage" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="提交时间" align="center" prop="submissionTime" width="180">
+      <el-table-column label="提交时间" align="center" prop="submissionTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.submissionTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核通过时间" align="center" prop="approvalTime" width="180">
+      <el-table-column label="审核时间" align="center" prop="approvalTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.approvalTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -96,16 +96,23 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleUpdate(scope.row, true)"
             v-hasPermi="['task:acceptances:edit']"
-          >修改</el-button>
+          >通过</el-button>
           <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row, false)"
+            v-hasPermi="['task:acceptances:edit']"
+          >驳回</el-button>
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['task:acceptances:remove']"
-          >删除</el-button>
+          >删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -156,7 +163,7 @@
 </template>
 
 <script>
-import { listAcceptances, getAcceptances, delAcceptances, addAcceptances, updateAcceptances } from "@/api/task/acceptances";
+import { listAcceptances, getAcceptances, delAcceptances, addAcceptances, updateAcceptances, taskAudit } from "@/api/task/acceptances";
 
 export default {
   name: "Acceptances",
@@ -258,13 +265,15 @@ export default {
       this.title = "添加用户接取任务";
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
+    handleUpdate(row, bol) {
       this.reset();
       const id = row.id || this.ids
-      getAcceptances(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改用户接取任务";
+      taskAudit({
+        id,
+        pass: bol
+      }).then(response => {
+        this.getList();
+        this.$modal.msgSuccess("审核成功");
       });
     },
     /** 提交按钮 */

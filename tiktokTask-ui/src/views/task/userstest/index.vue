@@ -9,31 +9,31 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <!-- <el-form-item label="密码" prop="password">
         <el-input
           v-model="queryParams.password"
           placeholder="请输入密码"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="昵称" prop="nickname">
+      </el-form-item> -->
+      <!-- <el-form-item label="昵称" prop="nickname">
         <el-input
           v-model="queryParams.nickname"
           placeholder="请输入昵称"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="svip等级" prop="svipLevel">
+      </el-form-item> -->
+      <!-- <el-form-item label="svip等级" prop="svipLevel">
         <el-input
           v-model="queryParams.svipLevel"
           placeholder="请输入svip等级"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="总奖励金额" prop="totareward">
+      </el-form-item> -->
+      <!-- <el-form-item label="总奖励金额" prop="totareward">
         <el-input
           v-model="queryParams.totareward"
           placeholder="请输入总奖励金额"
@@ -56,16 +56,16 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="提现USDT地址" prop="usdtAddress">
+      </el-form-item> -->
+      <!-- <el-form-item label="提现USDT地址" prop="usdtAddress">
         <el-input
           v-model="queryParams.usdtAddress"
           placeholder="请输入提现USDT地址"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="注册时间">
+      </el-form-item> -->
+      <!-- <el-form-item label="注册时间">
         <el-date-picker
           v-model="daterangeRegistrationTime"
           style="width: 240px"
@@ -75,24 +75,24 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
-      </el-form-item>
-      <el-form-item label="头像" prop="avatar">
+      </el-form-item> -->
+      <!-- <el-form-item label="头像" prop="avatar">
         <el-input
           v-model="queryParams.avatar"
           placeholder="请输入头像"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="推荐人ID" prop="referrerId">
+      </el-form-item> -->
+      <!-- <el-form-item label="推荐人ID" prop="referrerId">
         <el-input
           v-model="queryParams.referrerId"
           placeholder="请输入推荐人ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="用户状态" prop="userStatus">
+      </el-form-item> -->
+      <!-- <el-form-item label="用户状态" prop="userStatus">
         <el-select v-model="queryParams.userStatus" placeholder="请选择用户状态" clearable>
           <el-option
             v-for="dict in dict.type.user_state"
@@ -101,7 +101,7 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
 	    <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -109,7 +109,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -118,7 +118,7 @@
           @click="handleAdd"
           v-hasPermi="['task:userstest:add']"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="info"
@@ -152,20 +152,24 @@
           <span>{{ parseTime(scope.row.registrationTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头像" align="center" prop="avatar" />
+      <el-table-column label="头像" align="center" prop="avatar">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.avatar" :width="50" :height="50" />
+        </template>
+      </el-table-column>
       <el-table-column label="推荐人ID" align="center" prop="referrerId" />
       <el-table-column label="用户状态" align="center" prop="userStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.userStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <!-- <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -189,7 +193,7 @@
             v-hasPermi="['task:userstest:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <!-- 添加或修改用户信息对话框 -->

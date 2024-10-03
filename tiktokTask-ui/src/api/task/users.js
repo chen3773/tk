@@ -42,3 +42,11 @@ export function delUsers(uid) {
     method: 'delete'
   })
 }
+
+export function UpgradeSvip(query) {
+  return request({
+    url: '/task/svipSetting/UpgradeSvip',
+    method: 'get',
+    params: query
+  })
+}

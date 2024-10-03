@@ -115,8 +115,22 @@
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate2(scope.row)"
+            v-hasPermi="['task:users:edit']"
+          >配置特殊任务</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate1(scope.row)"
+            v-hasPermi="['task:users:edit']"
+          >提升等级</el-button>
           <el-button
             size="mini"
             type="text"
@@ -144,8 +158,8 @@
     />
 
     <!-- 添加或修改用户信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="账户名" prop="username">
           <el-input v-model="form.username" placeholder="请输入账户名" />
         </el-form-item>
@@ -196,11 +210,43 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="修改vip等级" :visible.sync="open1" width="500px" append-to-body>
+      <el-form ref="form1" :model="form1" label-width="80px">
+        <el-form-item label="svip等级" prop="lv">
+          <el-input v-model="form1.lv" placeholder="请输入vip等级" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm1">确 定</el-button>
+        <el-button @click="cancel1">取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="配置特殊任务" :visible.sync="open2" width="600px" append-to-body>
+      <div>
+        <div style="display: flex;align-items: center;justify-content: space-between; margin-bottom: 15px;">
+          <p style="font-size: 16px; font-weight: bold; margin: 0;">特殊任务一</p>
+          <i style="font-size: 16px; color: red;" class="el-icon-delete"></i>
+        </div>
+        <el-form ref="form2" :model="form2" label-width="120px">
+          <el-form-item label="任务id" prop="lv">
+            <el-input v-model="form1.lv" placeholder="请输入任务id" />
+          </el-form-item>
+          <el-form-item label="几次任务后触发" prop="lv">
+            <el-input v-model="form1.lv" placeholder="请输入几次任务后触发" />
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-button type="primary" @click="submitForm1">增加条件</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm1">确 定</el-button>
+        <el-button @click="cancel1">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listUsers, getUsers, delUsers, addUsers, updateUsers } from "@/api/task/users";
+import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip } from "@/api/task/users";
 
 export default {
   name: "Users",
@@ -246,7 +292,11 @@ export default {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" }
         ],
-      }
+      },
+      open1: false,
+      form1: {},
+      open2: true,
+      form2: {}
     };
   },
   created() {
@@ -362,7 +412,40 @@ export default {
       this.download('task/users/export', {
         ...this.queryParams
       }, `users_${new Date().getTime()}.xlsx`)
-    }
+    },
+    submitForm1() {
+      this.$refs["form1"].validate(valid => {
+        if (valid) {
+          UpgradeSvip(this.form1).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open1 = false;
+              this.getList();
+            });
+        }
+      });
+    },
+    cancel1() {
+      this.open1 = false;
+      this.reset1();
+    },
+    // 表单重置
+    reset1() {
+      this.form1 = {
+        uid: null,
+        lv: null
+      };
+      this.resetForm("form1");
+    },
+     /** 修改按钮操作 */
+    handleUpdate1(row) {
+      this.reset1();
+      const uid = row.uid || this.ids
+      this.form1 = {
+        uid: uid,
+        lv: row.svipLevel
+      };
+      this.open1 = true;
+    },
   }
 };
 </script>
