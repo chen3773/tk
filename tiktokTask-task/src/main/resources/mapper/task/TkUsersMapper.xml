@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="usdtAddress"    column="usdt_address"    />
         <result property="registrationTime"    column="registration_time"    />
         <result property="totareward"    column="totareward"    />
+        <result property="invitationCode"    column="invitation_code"    />
         <result property="referrerId"    column="referrer_id"    />
         <result property="userStatus"    column="user_status"    />
         <result property="createBy"    column="create_by"    />
@@ -25,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTkUsersVo">
-        select uid, username, password, nickname, svip_level,totareward, balance, non_withdrawable_balance, usdt_address, registration_time,avatar, referrer_id, user_status, create_by, create_time, update_by, update_time, remark from tk_users
+        select uid, username, password, nickname, svip_level,totareward, balance, non_withdrawable_balance, usdt_address, registration_time,avatar,invitation_code, referrer_id, user_status, create_by, create_time, update_by, update_time, remark from tk_users
     </sql>
 
     <select id="selectTkUsersList" parameterType="TkUsers" resultMap="TkUsersResult">
@@ -33,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
             <if test="svipLevel != null "> and svip_level = #{svipLevel}</if>
+            <if test="invitationCode != null "> and invitation_code = #{invitationCode}</if>
             <if test="params.beginRegistrationTime != null and params.beginRegistrationTime != '' and params.endRegistrationTime != null and params.endRegistrationTime != ''"> and registration_time between #{params.beginRegistrationTime} and #{params.endRegistrationTime}</if>
             <if test="referrerId != null "> and referrer_id = #{referrerId}</if>
             <if test="createBy != null "> and create_by = #{createBy}</if>
@@ -57,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="usdtAddress != null">usdt_address,</if>
             <if test="registrationTime != null">registration_time,</if>
             <if test="referrerId != null">referrer_id,</if>
+            <if test="invitationCode != null">invitation_code,</if>
             <if test="userStatus != null">user_status,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -75,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="usdtAddress != null">#{usdtAddress},</if>
             <if test="registrationTime != null">#{registrationTime},</if>
             <if test="referrerId != null">#{referrerId},</if>
+            <if test="invitationCode != null"> #{invitationCode},</if>
             <if test="userStatus != null">#{userStatus},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -99,6 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="registrationTime != null">registration_time = #{registrationTime},</if>
             <if test="avatar != null">avatar = #{avatar},</if>
             <if test="referrerId != null">referrer_id = #{referrerId},</if>
+            <if test="invitationCode != null">invitation_code = #{invitationCode},</if>
             <if test="userStatus != null">user_status = #{userStatus},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

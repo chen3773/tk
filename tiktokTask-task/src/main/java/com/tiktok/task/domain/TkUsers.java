@@ -62,6 +62,10 @@ public class TkUsers extends BaseEntity
     private Date registrationTime;
 
     private String avatar;
+    /**
+     * 邀请码
+     */
+    private String invitationCode;
 
     /** 推荐人ID */
     @Excel(name = "推荐人ID")
@@ -210,5 +214,13 @@ public class TkUsers extends BaseEntity
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getInvitationCode() {
+        return invitationCode;
+    }
+
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
     }
 }

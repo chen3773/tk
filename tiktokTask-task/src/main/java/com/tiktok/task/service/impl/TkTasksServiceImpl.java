@@ -141,6 +141,12 @@ public class TkTasksServiceImpl implements ITkTasksService
     @Transactional
     public AjaxResult receiveTask(Long taskId) {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
+        //判断用户是否有未完成的任务
+        TkTaskAcceptances tkTaskAcceptancesdDm = new TkTaskAcceptances();
+        tkTaskAcceptancesdDm.setUid(uid);
+        tkTaskAcceptancesdDm.setStatus("0");
+        List<TkTaskAcceptances> tkTaskAcceptances3= tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptancesdDm);
+        Assert.isTrue(tkTaskAcceptances3.size()==0,"There's still work to be done");
         //只允许接一次
         TkTaskAcceptances tkTaskAcceptances1 = new TkTaskAcceptances();
         tkTaskAcceptances1.setTaskId(taskId);
@@ -205,6 +211,12 @@ public class TkTasksServiceImpl implements ITkTasksService
     public AjaxResult getUserTask(String status) {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         List<UserTaskOV> userTaskList =  tkTasksMapper.getUserTask(status, uid);
+        if(status.equals("3")){
+            for (int i = 0; i < userTaskList.size(); i++) {
+
+            }
+        }
+
         return AjaxResult.success(userTaskList);
     }
 
@@ -274,7 +286,15 @@ public class TkTasksServiceImpl implements ITkTasksService
     @Override
     public AjaxResult getUserTaskById(Long taskId) {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
-        return AjaxResult.success(tkTasksMapper.getUserTaskById(taskId,uid));
+
+        List<UserTaskOV> userTaskById = tkTasksMapper.getUserTaskById(taskId, uid);
+        for (int i = 0; i < userTaskById.size(); i++) {
+            if(userTaskById.get(i).getTkTaskAcceptances().getStatus().equals("3")){
+                userTaskById.get(i).getTkTasks().setLink("Task failure");
+            }
+        }
+
+        return AjaxResult.success(userTaskById);
     }
 
 

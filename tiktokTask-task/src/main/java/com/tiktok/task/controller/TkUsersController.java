@@ -191,6 +191,7 @@ public class TkUsersController extends BaseController
             newtkUsers.setUid(SecurityUtils.getLoginUser().getUser().getUid());
             newtkUsers.setTotareward(tkUsers.getTotareward());
             newtkUsers.setAvatar(tkUsers.getAvatar());
+            newtkUsers.setInvitationCode(tkUsers.getInvitationCode());
             userInfo.setTkUsers(newtkUsers);
         }
         TkTasknum tkTasknum = new TkTasknum();

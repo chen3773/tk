@@ -19,6 +19,7 @@ import com.tiktok.system.service.ISysRoleService;
 import com.tiktok.system.service.ISysUserService;
 import com.tiktok.task.domain.*;
 import com.tiktok.task.mapper.*;
+import com.tiktok.task.util.InviteCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tiktok.task.service.ITkUsersService;
@@ -106,10 +107,15 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkUsers3.setUsername(tkUsers.getUsername());
         Assert.isTrue(tkUsersMapper.selectTkUsersList(tkUsers3).size()==0,"用户名已存在");
 
+        String InviteCode = InviteCodeGenerator.generateInviteCode();//邀请码
 
-        //todo 判断一下推荐人是否存在
-        TkUsers tkUsers1 = tkUsersMapper.selectTkUsersByUid(tkUsers.getReferrerId());
-        Assert.isTrue(tkUsers1!=null,"推荐人id不存在");
+
+        //todo 判断邀请码是否存在
+        TkUsers tkUsers1 = new TkUsers();
+        tkUsers1.setInvitationCode(tkUsers.getInvitationCode());
+        List<TkUsers> tkUsers4 = tkUsersMapper.selectTkUsersList(tkUsers1);
+        Assert.isTrue(tkUsers4.size()!=0,"邀请码不存在");
+        tkUsers.setReferrerId(tkUsers4.get(0).getUid());
 
         Long userId = SecurityUtils.getUserId();
 
@@ -118,7 +124,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkUsers.setCreateBy(userId.toString());
         tkUsers.setAvatar("/profile/upload/avatar/2024/09/27/avatar_20240927193831A001.png");
         tkUsers.setTotareward("0");
-
+        tkUsers.setInvitationCode(InviteCode);
 
         SysUser user = new SysUser();
         user.setDeptId(110L);

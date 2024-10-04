@@ -28,10 +28,10 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="推荐人ID" prop="referrerId">
+      <el-form-item label="邀请码" prop="referrerId">
         <el-input
-          v-model="queryParams.referrerId"
-          placeholder="请输入推荐人ID"
+          v-model="queryParams.invitationCode"
+          placeholder="请输入邀请码"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -103,7 +103,7 @@
           <span>{{ parseTime(scope.row.registrationTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="推荐人ID" align="center" prop="referrerId" />
+      <el-table-column label="邀请码" align="center" prop="invitationCode" />
       <el-table-column label="用户状态" align="center" prop="userStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.userStatus"/>
@@ -189,8 +189,8 @@
                           placeholder="请选择注册时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="推荐人ID" prop="referrerId">
-          <el-input v-model="form.referrerId" placeholder="请输入推荐人ID" />
+        <el-form-item label="邀请码" prop="referrerId">
+          <el-input v-model="form.invitationCode" placeholder="请输入邀请码" />
         </el-form-item>
         <el-form-item label="用户状态" prop="userStatus">
           <el-radio-group v-model="form.userStatus">
@@ -281,6 +281,7 @@ export default {
         svipLevel: null,
         registrationTime: null,
         referrerId: null,
+        invitationCode:null
       },
       // 表单参数
       form: {},
@@ -341,6 +342,7 @@ export default {
         usdtAddress: null,
         registrationTime: null,
         referrerId: null,
+        invitationCode:null,
         userStatus: null,
         createBy: null,
         createTime: null,
