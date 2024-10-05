@@ -58,3 +58,11 @@ export function addSpecialTask(data) {
     data: data
   })
 }
+
+export function getSpecialTask(query) {
+  return request({
+    url: '/task/specialTask/SpecialTask',
+    method: 'get',
+    params: query
+  })
+}

@@ -85,6 +85,17 @@
           v-hasPermi="['task:users:export']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="multiple"
+          @click="handleUpdate2"
+          v-hasPermi="['task:users:edit']"
+        >配置特殊任务</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -246,7 +257,7 @@
 </template>
 
 <script>
-import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip, addSpecialTask } from "@/api/task/users";
+import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip, addSpecialTask, getSpecialTask } from "@/api/task/users";
 
 export default {
   name: "Users",
@@ -479,14 +490,17 @@ export default {
     handleUpdate2(row) {
       this.reset2();
       const uid = row.uid ? [row.uid] : this.ids;
-      this.form2 = {
-        uids: uid,
-        taskList: [{
-          taskId: '',
-          count: ''
-        }]
-      };
-      this.open2 = true;
+      getSpecialTask({
+        uid: uid[0].uid
+      }).then(response => {
+        console.log(response, 'response')
+        this.form2 = {
+          uids: uid,
+          taskList: response.data.taskList
+        };
+        this.open2 = true;
+      });
+      
     },
     addTask() {
       this.form2.taskList.push({
