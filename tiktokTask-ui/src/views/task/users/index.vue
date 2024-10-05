@@ -225,7 +225,7 @@
       <div v-for="(data, index) in form2.taskList" :key="index">
         <div style="display: flex;align-items: center;justify-content: space-between; margin-bottom: 15px;">
           <p style="font-size: 16px; font-weight: bold; margin: 0;">特殊任务{{ index+1 }}</p>
-          <i style="font-size: 16px; color: red;" class="el-icon-delete" @click="delTask(index)"></i>
+          <i style="font-size: 16px; color: red; cursor: pointer;" class="el-icon-delete" @click="delTask(index)"></i>
         </div>
         <el-form ref="form2" label-width="120px">
           <el-form-item label="任务id" prop="taskId">
@@ -246,7 +246,7 @@
 </template>
 
 <script>
-import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip } from "@/api/task/users";
+import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip, addSpecialTask } from "@/api/task/users";
 
 export default {
   name: "Users",
@@ -296,7 +296,7 @@ export default {
       },
       open1: false,
       form1: {},
-      open2: true,
+      open2: false,
       form2: {
         uids: [],
         taskList: [{
@@ -455,15 +455,11 @@ export default {
       this.open1 = true;
     },
     submitForm2() {
-      this.$refs["form2"].validate(valid => {
-        if (valid) {
-          UpgradeSvip(this.form2).then(response => {
+      addSpecialTask(this.form2).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open2 = false;
               this.getList();
             });
-        }
-      });
     },
     cancel2() {
       this.open2 = false;
@@ -478,14 +474,13 @@ export default {
           count: ''
         }]
       };
-      this.resetForm("form2");
     },
      /** 修改按钮操作 */
     handleUpdate2(row) {
       this.reset2();
-      const uid = row.uid || this.ids
+      const uid = row.uid ? [row.uid] : this.ids;
       this.form2 = {
-        uids: [],
+        uids: uid,
         taskList: [{
           taskId: '',
           count: ''
@@ -499,8 +494,9 @@ export default {
         count: ''
       })
     },
-    delTask() {
-
+    delTask(index) {
+      this.form2.taskList.splice(index, 1)
+      this.form2 = {...this.form2}
     }
   }
 };

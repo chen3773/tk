@@ -50,3 +50,11 @@ export function UpgradeSvip(query) {
     params: query
   })
 }
+
+export function addSpecialTask(data) {
+  return request({
+    url: '/task/users/addSpecialTask',
+    method: 'post',
+    data: data
+  })
+}
