@@ -491,7 +491,7 @@ export default {
       this.reset2();
       const uid = row.uid ? [row.uid] : this.ids;
       getSpecialTask({
-        uid: uid[0].uid
+        uid: uid[0]
       }).then(response => {
         console.log(response, 'response')
         this.form2 = {
