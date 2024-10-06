@@ -64,6 +64,13 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     @Autowired
     private TkTasknumMapper tkTasknumMapper;
+    @Autowired
+    private TkSpecialTaskMapper tkSpecialTaskMapper;
+    @Autowired
+    private TkTasksMapper tkTasksMapper;
+
+    @Autowired
+    private TkTaskAcceptancesMapper tkTaskAcceptancesMapper;
 
 
 
@@ -252,6 +259,14 @@ public class TkUsersServiceImpl implements ITkUsersService
     @Override
     @Transactional
     public AjaxResult withdraw(String amount) {
+        Long uid = SecurityUtils.getLoginUser().getUser().getUid();
+        //判断是否有未完成任务
+        TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
+        tkTaskAcceptances.setUid(uid);
+        List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
+        for (int i = 0; i < tkTaskAcceptances1.size(); i++) {
+            Assert.isTrue(tkTaskAcceptances1.get(i).getStatus().equals("0"),"Please complete all tasks before withdrawing");
+        }
 
         // 将字符串转换为 double
         double value = Double.parseDouble(amount);
@@ -260,7 +275,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         TkUserDefault tkUserDefault = tkUserDefaultMapper.selectTkUserDefaultById(1L);
         Assert.isTrue(Double.parseDouble(tkUserDefault.getMinimumWithdrawalAmount())<=value,"Minimum withdrawal ："+ tkUserDefault.getMinimumWithdrawalAmount());
 
-        Long uid = SecurityUtils.getLoginUser().getUser().getUid();
+
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
         // 获取余额和不可提现金额
         String balanceStr = tkUsers.getBalance(); // 余额
@@ -355,5 +370,24 @@ public class TkUsersServiceImpl implements ITkUsersService
         res.put("ShareholderDividends","0");
 
         return AjaxResult.success(res);
+    }
+
+    @Override
+    @Transactional
+    public AjaxResult addSpecialTask(TaskData taskData) {
+        for (int i = 0; i < taskData.getUids().size(); i++) {
+            for (int i1 = 0; i1 < taskData.getTaskList().size(); i1++) {
+                String taskId = taskData.getTaskList().get(i1).getTaskId();
+               Assert.isTrue( tkTasksMapper.selectTkTasksById(Long.valueOf(taskId))!=null,
+                       "这个任务id不存在-->"+taskId);
+
+                TkSpecialTask tkSpecialTask = new TkSpecialTask();
+                tkSpecialTask.setUserId(Long.valueOf(taskData.getUids().get(i)));
+                tkSpecialTask.setTaskId(Long.valueOf(taskId));
+                tkSpecialTask.setTriggerCount(Long.valueOf(taskData.getTaskList().get(i1).getCount()));
+                tkSpecialTaskMapper.insertTkSpecialTask(tkSpecialTask);
+            }
+        }
+        return AjaxResult.success("添加成功");
     }
 }

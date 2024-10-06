@@ -15,6 +15,7 @@ import com.tiktok.framework.web.service.SysLoginService;
 import com.tiktok.framework.web.service.TokenService;
 import com.tiktok.system.service.ISysUserService;
 import com.tiktok.task.domain.*;
+import com.tiktok.task.mapper.TkUserDefaultMapper;
 import com.tiktok.task.service.ITkSvipSettingService;
 import com.tiktok.task.service.impl.TkTasknumServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,6 +65,9 @@ public class TkUsersController extends BaseController
 
     @Autowired
     private ITkSvipSettingService tkSvipSettingService;
+
+    @Autowired
+    private TkUserDefaultMapper tkUserDefaultMapper;
 
 
     /**
@@ -199,10 +203,12 @@ public class TkUsersController extends BaseController
         TkTasknum tkTasknums = tkTasknumService.selectTkTasknumList(tkTasknum).get(0);
 
 
+        TkUserDefault tkUserDefault = tkUserDefaultMapper.selectTkUserDefaultById(1L);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("userInfo", userInfo);
         ajax.put("AvailableTasks",tkTasknums.getNormalTaskCount()+tkTasknums.getExperienceTaskCount());
         ajax.put("WorkIncome",tkUsers.getTotareward());
+        ajax.put("ChainName",tkUserDefault.getBlockchain());
         return ajax;
     }
 
@@ -304,6 +310,16 @@ public class TkUsersController extends BaseController
     {
         List<TkSvipSetting> list = tkSvipSettingService.selectTkSvipSettingList(tkSvipSetting);
         return getDataTable(list);
+    }
+
+    /**
+     * 给用户批量添加特殊任务
+     */
+    @PostMapping("/addSpecialTask")
+    public AjaxResult addSpecialTask(@RequestBody TaskData taskData)
+    {
+
+      return tkUsersService.addSpecialTask(taskData);
     }
 
 

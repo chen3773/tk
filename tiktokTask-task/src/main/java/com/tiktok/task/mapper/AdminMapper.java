@@ -6,5 +6,5 @@ import java.util.HashMap;
 
 @Mapper
 public interface AdminMapper {
-    HashMap<String,Object> HomePage();
+    HashMap<String,Object> HomePage(Long userId);
 }

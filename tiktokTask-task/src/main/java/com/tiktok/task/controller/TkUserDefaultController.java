@@ -25,7 +25,7 @@ import com.tiktok.common.core.page.TableDataInfo;
  * 系统默认配置Controller
  * 
  * @author ruoyi
- * @date 2024-09-27
+ * @date 2024-10-06
  */
 @RestController
 @RequestMapping("/task/userDefault")

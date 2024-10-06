@@ -33,42 +33,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="vip等级数量" prop="vip1">
+      <el-form-item label="区块链名称" prop="blockchain">
         <el-input
-          v-model="queryParams.vip1"
-          placeholder="请输入vip等级数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="${comment}" prop="vip2">
-        <el-input
-          v-model="queryParams.vip2"
-          placeholder="请输入${comment}"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="${comment}" prop="vip3">
-        <el-input
-          v-model="queryParams.vip3"
-          placeholder="请输入${comment}"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="${comment}" prop="vip4">
-        <el-input
-          v-model="queryParams.vip4"
-          placeholder="请输入${comment}"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="${comment}" prop="vip5">
-        <el-input
-          v-model="queryParams.vip5"
-          placeholder="请输入${comment}"
+          v-model="queryParams.blockchain"
+          placeholder="请输入区块链名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -132,11 +100,7 @@
       <el-table-column label="普通任务数" align="center" prop="regularTaskCount" />
       <el-table-column label="隐藏任务数" align="center" prop="hiddenTaskCount" />
       <el-table-column label="最低提现金额" align="center" prop="minimumWithdrawalAmount" />
-      <el-table-column label="vip等级数量" align="center" prop="vip1" />
-      <el-table-column label="${comment}" align="center" prop="vip2" />
-      <el-table-column label="${comment}" align="center" prop="vip3" />
-      <el-table-column label="${comment}" align="center" prop="vip4" />
-      <el-table-column label="${comment}" align="center" prop="vip5" />
+      <el-table-column label="区块链名称" align="center" prop="blockchain" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -180,20 +144,8 @@
         <el-form-item label="最低提现金额" prop="minimumWithdrawalAmount">
           <el-input v-model="form.minimumWithdrawalAmount" placeholder="请输入最低提现金额" />
         </el-form-item>
-        <el-form-item label="vip等级数量" prop="vip1">
-          <el-input v-model="form.vip1" placeholder="请输入vip等级数量" />
-        </el-form-item>
-        <el-form-item label="${comment}" prop="vip2">
-          <el-input v-model="form.vip2" placeholder="请输入${comment}" />
-        </el-form-item>
-        <el-form-item label="${comment}" prop="vip3">
-          <el-input v-model="form.vip3" placeholder="请输入${comment}" />
-        </el-form-item>
-        <el-form-item label="${comment}" prop="vip4">
-          <el-input v-model="form.vip4" placeholder="请输入${comment}" />
-        </el-form-item>
-        <el-form-item label="${comment}" prop="vip5">
-          <el-input v-model="form.vip5" placeholder="请输入${comment}" />
+        <el-form-item label="区块链名称" prop="blockchain">
+          <el-input v-model="form.blockchain" placeholder="请输入区块链名称" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -237,11 +189,7 @@ export default {
         regularTaskCount: null,
         hiddenTaskCount: null,
         minimumWithdrawalAmount: null,
-        vip1: null,
-        vip2: null,
-        vip3: null,
-        vip4: null,
-        vip5: null
+        blockchain: null
       },
       // 表单参数
       form: {},
@@ -276,11 +224,7 @@ export default {
         regularTaskCount: null,
         hiddenTaskCount: null,
         minimumWithdrawalAmount: null,
-        vip1: null,
-        vip2: null,
-        vip3: null,
-        vip4: null,
-        vip5: null
+        blockchain: null
       };
       this.resetForm("form");
     },

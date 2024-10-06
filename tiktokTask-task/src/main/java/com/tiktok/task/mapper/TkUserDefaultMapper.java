@@ -7,7 +7,7 @@ import com.tiktok.task.domain.TkUserDefault;
  * 系统默认配置Mapper接口
  * 
  * @author ruoyi
- * @date 2024-09-27
+ * @date 2024-10-06
  */
 public interface TkUserDefaultMapper 
 {

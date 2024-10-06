@@ -42,13 +42,13 @@ public class TkTransactions extends BaseEntity
     private String withdrawable;
 
     /** 时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date transactionTime;
 
     /** 创建时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
 
     public void setId(Long id) 

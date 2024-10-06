@@ -3,6 +3,7 @@ package com.tiktok.task.service;
 import java.util.List;
 
 import com.tiktok.common.core.domain.AjaxResult;
+import com.tiktok.task.domain.TaskData;
 import com.tiktok.task.domain.TkUsers;
 import com.tiktok.task.domain.TkWallettransactions;
 
@@ -71,4 +72,6 @@ public interface ITkUsersService
     AjaxResult getUserUpgradeVIPMessage();
 
     AjaxResult GetFundComposition();
+
+    AjaxResult addSpecialTask(TaskData taskData);
 }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkTransactionsMapper">
+    
+    <resultMap type="TkTransactions" id="TkTransactionsResult">
+        <result property="id"    column="id"    />
+        <result property="amount"    column="amount"    />
+        <result property="description"    column="description"    />
+        <result property="userId"    column="user_id"    />
+        <result property="changeType"    column="change_type"    />
+        <result property="withdrawable"    column="withdrawable"    />
+        <result property="transactionTime"    column="transaction_time"    />
+        <result property="createdAt"    column="created_at"    />
+    </resultMap>
+
+    <sql id="selectTkTransactionsVo">
+        select id, amount, description, user_id, change_type, withdrawable, transaction_time, created_at from tk_transactions
+    </sql>
+
+    <select id="selectTkTransactionsList" parameterType="TkTransactions" resultMap="TkTransactionsResult">
+        <include refid="selectTkTransactionsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="params.beginTransactionTime != null and params.beginTransactionTime != '' and params.endTransactionTime != null and params.endTransactionTime != ''"> and transaction_time between #{params.beginTransactionTime} and #{params.endTransactionTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTkTransactionsById" parameterType="Long" resultMap="TkTransactionsResult">
+        <include refid="selectTkTransactionsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTkTransactions" parameterType="TkTransactions" useGeneratedKeys="true" keyProperty="id">
+        insert into tk_transactions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="amount != null">amount,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="changeType != null and changeType != ''">change_type,</if>
+            <if test="withdrawable != null and withdrawable != ''">withdrawable,</if>
+            <if test="transactionTime != null">transaction_time,</if>
+            <if test="createdAt != null">created_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="amount != null">#{amount},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="changeType != null and changeType != ''">#{changeType},</if>
+            <if test="withdrawable != null and withdrawable != ''">#{withdrawable},</if>
+            <if test="transactionTime != null">#{transactionTime},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTkTransactions" parameterType="TkTransactions">
+        update tk_transactions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="changeType != null and changeType != ''">change_type = #{changeType},</if>
+            <if test="withdrawable != null and withdrawable != ''">withdrawable = #{withdrawable},</if>
+            <if test="transactionTime != null">transaction_time = #{transactionTime},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkTransactionsById" parameterType="Long">
+        delete from tk_transactions where id = #{id}
+    </delete>
+
+    <delete id="deleteTkTransactionsByIds" parameterType="String">
+        delete from tk_transactions where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

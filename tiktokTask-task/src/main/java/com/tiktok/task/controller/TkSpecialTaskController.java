@@ -1,7 +1,10 @@
 package com.tiktok.task.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.tiktok.task.domain.TaskData;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +47,33 @@ public class TkSpecialTaskController extends BaseController
         startPage();
         List<TkSpecialTask> list = tkSpecialTaskService.selectTkSpecialTaskList(tkSpecialTask);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询特殊任务触发列表
+     */
+    @PreAuthorize("@ss.hasPermi('task:specialTask:list')")
+    @GetMapping("/SpecialTask")
+    public AjaxResult list(Long uid)
+    {
+        TkSpecialTask tkSpecialTask = new TkSpecialTask();
+        tkSpecialTask.setUserId(uid);
+        List<TkSpecialTask> list = tkSpecialTaskService.selectTkSpecialTaskList(tkSpecialTask);
+
+        TaskData taskData = new TaskData();
+        ArrayList<String> objects = new ArrayList<>();
+        objects.add(list.get(0).getUserId().toString());
+        taskData.setUids(objects);
+
+        ArrayList<TaskData.Task> objects1 = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            TaskData.Task task = new TaskData.Task();
+            task.setCount(list.get(i).getTriggerCount().toString());
+            task.setTaskId(list.get(i).getTaskId().toString());
+            objects1.add(task);
+        }
+        taskData.setTaskList(objects1);
+        return AjaxResult.success(taskData);
     }
 
     /**

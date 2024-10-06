@@ -9,7 +9,7 @@ import com.tiktok.common.core.domain.BaseEntity;
  * 系统默认配置对象 tk_user_default
  * 
  * @author ruoyi
- * @date 2024-09-27
+ * @date 2024-10-06
  */
 public class TkUserDefault extends BaseEntity
 {
@@ -34,25 +34,9 @@ public class TkUserDefault extends BaseEntity
     @Excel(name = "最低提现金额")
     private String minimumWithdrawalAmount;
 
-    /** vip等级数量 */
-    @Excel(name = "vip等级数量")
-    private Long vip1;
-
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long vip2;
-
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long vip3;
-
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long vip4;
-
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long vip5;
+    /** 区块链名称 */
+    @Excel(name = "区块链名称")
+    private String blockchain;
 
     public void setId(Long id) 
     {
@@ -99,50 +83,14 @@ public class TkUserDefault extends BaseEntity
     {
         return minimumWithdrawalAmount;
     }
-    public void setVip1(Long vip1) 
+    public void setBlockchain(String blockchain) 
     {
-        this.vip1 = vip1;
+        this.blockchain = blockchain;
     }
 
-    public Long getVip1() 
+    public String getBlockchain() 
     {
-        return vip1;
-    }
-    public void setVip2(Long vip2) 
-    {
-        this.vip2 = vip2;
-    }
-
-    public Long getVip2() 
-    {
-        return vip2;
-    }
-    public void setVip3(Long vip3) 
-    {
-        this.vip3 = vip3;
-    }
-
-    public Long getVip3() 
-    {
-        return vip3;
-    }
-    public void setVip4(Long vip4) 
-    {
-        this.vip4 = vip4;
-    }
-
-    public Long getVip4() 
-    {
-        return vip4;
-    }
-    public void setVip5(Long vip5) 
-    {
-        this.vip5 = vip5;
-    }
-
-    public Long getVip5() 
-    {
-        return vip5;
+        return blockchain;
     }
 
     @Override
@@ -153,11 +101,7 @@ public class TkUserDefault extends BaseEntity
             .append("regularTaskCount", getRegularTaskCount())
             .append("hiddenTaskCount", getHiddenTaskCount())
             .append("minimumWithdrawalAmount", getMinimumWithdrawalAmount())
-            .append("vip1", getVip1())
-            .append("vip2", getVip2())
-            .append("vip3", getVip3())
-            .append("vip4", getVip4())
-            .append("vip5", getVip5())
+            .append("blockchain", getBlockchain())
             .toString();
     }
 }

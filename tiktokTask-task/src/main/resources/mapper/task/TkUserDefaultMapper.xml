@@ -10,15 +10,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="regularTaskCount"    column="regular_task_count"    />
         <result property="hiddenTaskCount"    column="hidden_task_count"    />
         <result property="minimumWithdrawalAmount"    column="minimum_withdrawal_amount"    />
-        <result property="vip1"    column="vip1"    />
-        <result property="vip2"    column="vip2"    />
-        <result property="vip3"    column="vip3"    />
-        <result property="vip4"    column="vip4"    />
-        <result property="vip5"    column="vip5"    />
+        <result property="blockchain"    column="blockchain"    />
     </resultMap>
 
     <sql id="selectTkUserDefaultVo">
-        select id, experience_task_count, regular_task_count, hidden_task_count, minimum_withdrawal_amount, vip1, vip2, vip3, vip4, vip5 from tk_user_default
+        select id, experience_task_count, regular_task_count, hidden_task_count, minimum_withdrawal_amount, blockchain from tk_user_default
     </sql>
 
     <select id="selectTkUserDefaultList" parameterType="TkUserDefault" resultMap="TkUserDefaultResult">
@@ -28,11 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="regularTaskCount != null "> and regular_task_count = #{regularTaskCount}</if>
             <if test="hiddenTaskCount != null "> and hidden_task_count = #{hiddenTaskCount}</if>
             <if test="minimumWithdrawalAmount != null  and minimumWithdrawalAmount != ''"> and minimum_withdrawal_amount = #{minimumWithdrawalAmount}</if>
-            <if test="vip1 != null "> and vip1 = #{vip1}</if>
-            <if test="vip2 != null "> and vip2 = #{vip2}</if>
-            <if test="vip3 != null "> and vip3 = #{vip3}</if>
-            <if test="vip4 != null "> and vip4 = #{vip4}</if>
-            <if test="vip5 != null "> and vip5 = #{vip5}</if>
+            <if test="blockchain != null "> and blockchain = #{blockchain}</if>
         </where>
     </select>
     
@@ -49,11 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="regularTaskCount != null">regular_task_count,</if>
             <if test="hiddenTaskCount != null">hidden_task_count,</if>
             <if test="minimumWithdrawalAmount != null">minimum_withdrawal_amount,</if>
-            <if test="vip1 != null">vip1,</if>
-            <if test="vip2 != null">vip2,</if>
-            <if test="vip3 != null">vip3,</if>
-            <if test="vip4 != null">vip4,</if>
-            <if test="vip5 != null">vip5,</if>
+            <if test="blockchain != null">blockchain,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -61,11 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="regularTaskCount != null">#{regularTaskCount},</if>
             <if test="hiddenTaskCount != null">#{hiddenTaskCount},</if>
             <if test="minimumWithdrawalAmount != null">#{minimumWithdrawalAmount},</if>
-            <if test="vip1 != null">#{vip1},</if>
-            <if test="vip2 != null">#{vip2},</if>
-            <if test="vip3 != null">#{vip3},</if>
-            <if test="vip4 != null">#{vip4},</if>
-            <if test="vip5 != null">#{vip5},</if>
+            <if test="blockchain != null">#{blockchain},</if>
          </trim>
     </insert>
 
@@ -76,11 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="regularTaskCount != null">regular_task_count = #{regularTaskCount},</if>
             <if test="hiddenTaskCount != null">hidden_task_count = #{hiddenTaskCount},</if>
             <if test="minimumWithdrawalAmount != null">minimum_withdrawal_amount = #{minimumWithdrawalAmount},</if>
-            <if test="vip1 != null">vip1 = #{vip1},</if>
-            <if test="vip2 != null">vip2 = #{vip2},</if>
-            <if test="vip3 != null">vip3 = #{vip3},</if>
-            <if test="vip4 != null">vip4 = #{vip4},</if>
-            <if test="vip5 != null">vip5 = #{vip5},</if>
+            <if test="blockchain != null">blockchain = #{blockchain},</if>
         </trim>
         where id = #{id}
     </update>

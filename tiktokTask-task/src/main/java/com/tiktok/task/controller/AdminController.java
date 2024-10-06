@@ -16,4 +16,16 @@ public class AdminController {
     public AjaxResult HomePage(){
         return  adminService.HomePage();
     }
+
+    /**
+     * 给用户加款 或者
+     * Add and deduct
+     */
+
+    @GetMapping("/AddAndDeduct")
+    public AjaxResult AddAndDeduct(String amount,String withdraw,String add,String uid){
+
+        return  adminService.AddAndDeduct(amount,withdraw,add,uid);
+    }
+
 }
