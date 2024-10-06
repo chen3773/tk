@@ -66,3 +66,11 @@ export function getSpecialTask(query) {
     params: query
   })
 }
+
+export function addAndDeduct(query) {
+  return request({
+    url: '/admin/AddAndDeduct',
+    method: 'get',
+    params: query
+  })
+}

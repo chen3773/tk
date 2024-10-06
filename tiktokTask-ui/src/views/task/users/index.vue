@@ -146,6 +146,13 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
+            @click="handleUpdate3(scope.row)"
+            v-hasPermi="['task:users:edit']"
+          >资金变动</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['task:users:edit']"
           >修改</el-button>
@@ -253,11 +260,40 @@
         <el-button @click="cancel2">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="资金变动" :visible.sync="open3" width="500px" append-to-body>
+      <el-form ref="form3" :model="form3" label-width="100px">
+        <el-form-item label="金额类型" prop="add">
+          <el-radio-group v-model="form3.add">
+            <el-radio
+              v-for="dict in yesno1"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="是否可提现" prop="withdraw">
+          <el-radio-group v-model="form3.withdraw">
+            <el-radio
+              v-for="dict in yesno"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="金额" prop="amount">
+          <el-input v-model="form3.amount" placeholder="请输入金额" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm3">确 定</el-button>
+        <el-button @click="cancel3">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip, addSpecialTask, getSpecialTask } from "@/api/task/users";
+import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip, addSpecialTask, getSpecialTask, addAndDeduct } from "@/api/task/users";
 
 export default {
   name: "Users",
@@ -314,7 +350,23 @@ export default {
           taskId: '',
           count: ''
         }]
-      }
+      },
+      open3: false,
+      form3: {},
+      yesno: [{
+        value: 'yes',
+        label: '是'
+      },{
+        value: 'no',
+        label: '否'
+      }],
+      yesno1: [{
+        value: 'yes',
+        label: '增加'
+      },{
+        value: 'no',
+        label: '扣除'
+      }]
     };
   },
   created() {
@@ -511,7 +563,44 @@ export default {
     delTask(index) {
       this.form2.taskList.splice(index, 1)
       this.form2 = {...this.form2}
-    }
+    },
+    submitForm3() {
+      this.$refs["form3"].validate(valid => {
+        if (valid) {
+          addAndDeduct(this.form3).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open3 = false;
+              this.getList();
+            });
+        }
+      });
+    },
+    cancel3() {
+      this.open3 = false;
+      this.reset3();
+    },
+    // 表单重置
+    reset3() {
+      this.form3 = {
+        uid: '',
+        amount: '',
+        withdraw: 'yes',
+        add: 'yes',
+      };
+      this.resetForm("form3");
+    },
+     /** 修改按钮操作 */
+    handleUpdate3(row) {
+      this.reset3();
+      const uid = row.uid
+      this.form3 = {
+        uid: uid,
+        amount: '',
+        withdraw: 'yes',
+        add: 'yes',
+      };
+      this.open3 = true;
+    },
   }
 };
 </script>

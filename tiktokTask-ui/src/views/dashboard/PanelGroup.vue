@@ -52,6 +52,19 @@
         </div>
       </div>
     </el-col>
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <div class="card-panel" @click="handleSetLineChartData('purchases')">
+        <div class="card-panel-icon-wrapper icon-people">
+          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
+        </div>
+        <div class="card-panel-description">
+          <div class="card-panel-text">
+            今日做任务用户数量
+          </div>
+          <count-to :start-val="0" :end-val="info.today_completed_task_users || 0" :duration="3200" class="card-panel-num" />
+        </div>
+      </div>
+    </el-col>
   </el-row>
 </template>
 
