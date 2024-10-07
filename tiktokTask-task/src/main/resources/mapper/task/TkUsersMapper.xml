@@ -18,6 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="invitationCode"    column="invitation_code"    />
         <result property="referrerId"    column="referrer_id"    />
         <result property="userStatus"    column="user_status"    />
+        <result property="withdraw"    column="withdraw"    />
+        <result property="blockchainName"    column="blockchain_name"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -26,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTkUsersVo">
-        select uid, username, password, nickname, svip_level,totareward, balance, non_withdrawable_balance, usdt_address, registration_time,avatar,invitation_code, referrer_id, user_status, create_by, create_time, update_by, update_time, remark from tk_users
+        select uid, username, password, nickname, svip_level,totareward, balance, non_withdrawable_balance, usdt_address, registration_time,avatar,invitation_code, referrer_id, user_status,withdraw,blockchain_name, create_by, create_time, update_by, update_time, remark from tk_users
     </sql>
 
     <select id="selectTkUsersList" parameterType="TkUsers" resultMap="TkUsersResult">
@@ -61,6 +63,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="referrerId != null">referrer_id,</if>
             <if test="invitationCode != null">invitation_code,</if>
             <if test="userStatus != null">user_status,</if>
+            <if test="withdraw != null">withdraw,</if>
+            <if test="blockchainName != null">blockchain_name,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -79,6 +83,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="registrationTime != null">#{registrationTime},</if>
             <if test="referrerId != null">#{referrerId},</if>
             <if test="invitationCode != null"> #{invitationCode},</if>
+            <if test="withdraw != null">#{withdraw},</if>
+            <if test="blockchainName != null">#{blockchainName},</if>
             <if test="userStatus != null">#{userStatus},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -104,6 +110,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="avatar != null">avatar = #{avatar},</if>
             <if test="referrerId != null">referrer_id = #{referrerId},</if>
             <if test="invitationCode != null">invitation_code = #{invitationCode},</if>
+            <if test="withdraw != null">withdraw = #{withdraw},</if>
+            <if test="blockchainName != null">blockchain_name = #{blockchainName},</if>
             <if test="userStatus != null">user_status = #{userStatus},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

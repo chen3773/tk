@@ -32,6 +32,7 @@ public class TkWithdrawals extends BaseEntity
     /** 区块链地址 */
     @Excel(name = "区块链地址")
     private String address;
+    private String blockchainName;
 
     /** 提现金额 */
     @Excel(name = "提现金额")
@@ -121,5 +122,13 @@ public class TkWithdrawals extends BaseEntity
             .append("withdrawalTime", getWithdrawalTime())
             .append("status", getStatus())
             .toString();
+    }
+
+    public String getBlockchainName() {
+        return blockchainName;
+    }
+
+    public void setBlockchainName(String blockchainName) {
+        this.blockchainName = blockchainName;
     }
 }

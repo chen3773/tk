@@ -208,11 +208,11 @@ public class TkUsersController extends BaseController
         ajax.put("userInfo", userInfo);
         ajax.put("AvailableTasks",tkTasknums.getNormalTaskCount()+tkTasknums.getExperienceTaskCount());
         ajax.put("WorkIncome",tkUsers.getTotareward());
-        ajax.put("ChainName",tkUserDefault.getBlockchain());
+        ajax.put("ChainName",tkUsers.getBlockchainName());
         return ajax;
     }
 
-
+  
     /**
      * 修改用户信息
      * @return

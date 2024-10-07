@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户ID，用于标识每个用户" prop="userid">
+      <el-form-item label="用户ID" prop="userid">
         <el-input
           v-model="queryParams.userid"
-          placeholder="请输入用户ID，用于标识每个用户"
+          placeholder="请输入用户ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -104,7 +104,7 @@
     <el-table v-loading="loading" :data="WalletTransactionsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="交易ID，自动递增" align="center" prop="id" />
-      <el-table-column label="用户ID，用于标识每个用户" align="center" prop="userid" />
+      <el-table-column label="用户ID" align="center" prop="userid" />
       <el-table-column label="交易类型" align="center" prop="transactionType" />
       <el-table-column label="交易金额" align="center" prop="amount" />
       <el-table-column label="交易日期和时间" align="center" prop="transactionDate" width="180">
@@ -152,8 +152,8 @@
     <!-- 添加或修改用户钱包交易记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户ID，用于标识每个用户" prop="userid">
-          <el-input v-model="form.userid" placeholder="请输入用户ID，用于标识每个用户" />
+        <el-form-item label="用户ID" prop="userid">
+          <el-input v-model="form.userid" placeholder="请输入用户ID" />
         </el-form-item>
         <el-form-item label="交易金额" prop="amount">
           <el-input v-model="form.amount" placeholder="请输入交易金额" />
@@ -236,7 +236,7 @@ export default {
       // 表单校验
       rules: {
         userid: [
-          { required: true, message: "用户ID，用于标识每个用户不能为空", trigger: "blur" }
+          { required: true, message: "用户ID", trigger: "blur" }
         ],
         transactionType: [
           { required: true, message: "交易类型不能为空", trigger: "change" }

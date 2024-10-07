@@ -17,6 +17,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
+      <el-form-item label="审核状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择审核状态" clearable>
+          <el-option
+            v-for="dict in dict.type.task_state"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -74,7 +85,11 @@
       <!-- <el-table-column label="接取任务的唯一标识符" align="center" prop="id" /> -->
       <el-table-column label="用户ID" align="center" prop="uid" />
       <el-table-column label="任务ID" align="center" prop="taskId" />
-      <el-table-column label="任务状态" align="center" prop="status" />
+      <el-table-column label="审核状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.task_state" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
       <el-table-column label="提交的图片" align="center" prop="submittedImage" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.submittedImage" :width="50" :height="50"/>
@@ -116,7 +131,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -167,6 +182,7 @@ import { listAcceptances, getAcceptances, delAcceptances, addAcceptances, update
 
 export default {
   name: "Acceptances",
+  dicts: ['task_state'],
   data() {
     return {
       // 遮罩层

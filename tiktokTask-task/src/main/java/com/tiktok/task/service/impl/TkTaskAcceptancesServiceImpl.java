@@ -58,8 +58,6 @@ public class TkTaskAcceptancesServiceImpl implements ITkTaskAcceptancesService
     @Override
     public List<TkTaskAcceptances> selectTkTaskAcceptancesList(TkTaskAcceptances tkTaskAcceptances)
     {
-
-        tkTaskAcceptances.setStatus("1");
         return tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
     }
 

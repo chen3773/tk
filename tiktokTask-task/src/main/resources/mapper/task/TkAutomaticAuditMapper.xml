@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkAutomaticAuditMapper">
+    
+    <resultMap type="TkAutomaticAudit" id="TkAutomaticAuditResult">
+        <result property="id"    column="id"    />
+        <result property="lv0"    column="lv0"    />
+        <result property="lv1"    column="lv1"    />
+        <result property="lv2"    column="lv2"    />
+        <result property="lv3"    column="lv3"    />
+        <result property="lv4"    column="lv4"    />
+        <result property="lv5"    column="lv5"    />
+    </resultMap>
+
+    <sql id="selectTkAutomaticAuditVo">
+        select id, lv0, lv1, lv2, lv3, lv4, lv5 from tk_automatic_audit
+    </sql>
+
+    <select id="selectTkAutomaticAuditList" parameterType="TkAutomaticAudit" resultMap="TkAutomaticAuditResult">
+        <include refid="selectTkAutomaticAuditVo"/>
+        <where>  
+            <if test="lv0 != null "> and lv0 = #{lv0}</if>
+            <if test="lv1 != null "> and lv1 = #{lv1}</if>
+            <if test="lv2 != null "> and lv2 = #{lv2}</if>
+            <if test="lv3 != null "> and lv3 = #{lv3}</if>
+            <if test="lv4 != null "> and lv4 = #{lv4}</if>
+            <if test="lv5 != null "> and lv5 = #{lv5}</if>
+        </where>
+    </select>
+    
+    <select id="selectTkAutomaticAuditById" parameterType="Long" resultMap="TkAutomaticAuditResult">
+        <include refid="selectTkAutomaticAuditVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTkAutomaticAudit" parameterType="TkAutomaticAudit">
+        insert into tk_automatic_audit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="lv0 != null">lv0,</if>
+            <if test="lv1 != null">lv1,</if>
+            <if test="lv2 != null">lv2,</if>
+            <if test="lv3 != null">lv3,</if>
+            <if test="lv4 != null">lv4,</if>
+            <if test="lv5 != null">lv5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="lv0 != null">#{lv0},</if>
+            <if test="lv1 != null">#{lv1},</if>
+            <if test="lv2 != null">#{lv2},</if>
+            <if test="lv3 != null">#{lv3},</if>
+            <if test="lv4 != null">#{lv4},</if>
+            <if test="lv5 != null">#{lv5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTkAutomaticAudit" parameterType="TkAutomaticAudit">
+        update tk_automatic_audit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lv0 != null">lv0 = #{lv0},</if>
+            <if test="lv1 != null">lv1 = #{lv1},</if>
+            <if test="lv2 != null">lv2 = #{lv2},</if>
+            <if test="lv3 != null">lv3 = #{lv3},</if>
+            <if test="lv4 != null">lv4 = #{lv4},</if>
+            <if test="lv5 != null">lv5 = #{lv5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkAutomaticAuditById" parameterType="Long">
+        delete from tk_automatic_audit where id = #{id}
+    </delete>
+
+    <delete id="deleteTkAutomaticAuditByIds" parameterType="String">
+        delete from tk_automatic_audit where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

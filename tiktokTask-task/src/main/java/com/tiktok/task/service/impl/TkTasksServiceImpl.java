@@ -8,6 +8,7 @@ import com.tiktok.common.utils.SecurityUtils;
 import com.tiktok.task.domain.*;
 import com.tiktok.task.domain.ov.UserTaskOV;
 import com.tiktok.task.mapper.*;
+import com.tiktok.task.service.ITkTaskAcceptancesService;
 import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ public class TkTasksServiceImpl implements ITkTasksService
     private TkTasknumMapper tkTasknumMapper;
     @Autowired
     private TkSpecialTaskMapper tkSpecialTaskMapper;
+    @Autowired
+    private TkAutomaticAuditMapper tkAutomaticAuditMapper;
+    @Autowired
+    private ITkTaskAcceptancesService tkTaskAcceptancesService;
+
+
 
     /**
      * 查询任务列
@@ -240,6 +247,16 @@ public class TkTasksServiceImpl implements ITkTasksService
         Assert.isTrue(tkTaskAcceptances.getStatus().equals("0"),"error");
         Assert.isTrue(Objects.equals(tkTaskAcceptances.getUid(), uid),"error");
 
+
+
+
+
+        //判断是否为自动审核任务
+        TkAutomaticAudit tkAutomaticAudit = tkAutomaticAuditMapper.selectTkAutomaticAuditById(1L);
+        TkTasks tkTasks1 = tkTasksMapper.selectTkTasksById(tkTasks.getId());
+        Long taskLevel = tkTasks1.getTaskLevel();
+
+
         tkTaskAcceptances.setStatus("1");
         tkTaskAcceptances.setSubmittedImage(image);
         tkTaskAcceptances.setSubmissionTime(new Date());
@@ -273,7 +290,41 @@ public class TkTasksServiceImpl implements ITkTasksService
             }
         }
 
-
+        switch (taskLevel.intValue()) {
+            case 0:
+                if (tkAutomaticAudit.getLv0() == 0) {
+                    tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                }
+                break;
+            case 1:
+                if (tkAutomaticAudit.getLv1() == 0) {
+                    tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                }
+                break;
+            case 2:
+                if (tkAutomaticAudit.getLv2() == 0) {
+                    tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                }
+                break;
+            case 3:
+                if (tkAutomaticAudit.getLv3() == 0) {
+                    // 执行自动审核任务
+                    tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                }
+                break;
+            case 4:
+                if (tkAutomaticAudit.getLv4() == 0) {
+                    // 执行自动审核任务
+                    tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                }
+                break;
+            case 5:
+                if (tkAutomaticAudit.getLv5() == 0) {
+                    // 执行自动审核任务
+                    tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                }
+                break;
+        }
 
         AjaxResult ajax = AjaxResult.success();
         if(specialTaskId!=0){

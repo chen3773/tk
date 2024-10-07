@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.TkBlockchainMapper">
+    
+    <resultMap type="TkBlockchain" id="TkBlockchainResult">
+        <result property="id"    column="id"    />
+        <result property="blockchainName"    column="blockchain_name"    />
+    </resultMap>
+
+    <sql id="selectTkBlockchainVo">
+        select id, blockchain_name from tk_blockchain
+    </sql>
+
+    <select id="selectTkBlockchainList" parameterType="TkBlockchain" resultMap="TkBlockchainResult">
+        <include refid="selectTkBlockchainVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectTkBlockchainById" parameterType="Long" resultMap="TkBlockchainResult">
+        <include refid="selectTkBlockchainVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTkBlockchain" parameterType="TkBlockchain">
+        insert into tk_blockchain
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="blockchainName != null">blockchain_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="blockchainName != null">#{blockchainName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTkBlockchain" parameterType="TkBlockchain">
+        update tk_blockchain
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="blockchainName != null">blockchain_name = #{blockchainName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTkBlockchainById" parameterType="Long">
+        delete from tk_blockchain where id = #{id}
+    </delete>
+
+    <delete id="deleteTkBlockchainByIds" parameterType="String">
+        delete from tk_blockchain where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

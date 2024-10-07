@@ -1,6 +1,8 @@
 package com.tiktok.task.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.tiktok.task.domain.TkSvipSetting;
 
 /**
@@ -42,6 +44,7 @@ public interface TkSvipSettingMapper
      * @return 结果
      */
     public int updateTkSvipSetting(TkSvipSetting tkSvipSetting);
+    public int updateTkSvipSettings(List<TkSvipSetting> tkSvipSetting);
 
     /**
      * 删除svip默认配置
@@ -58,4 +61,8 @@ public interface TkSvipSettingMapper
      * @return 结果
      */
     public int deleteTkSvipSettingByIds(Long[] ids);
+
+    public int updateDailyTaskCountBatch(Map<String, Object> params);
+
+    int updateNormalTaskCountBatch(Map<String, Object> params);
 }

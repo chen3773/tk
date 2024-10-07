@@ -66,6 +66,15 @@ public class TkUsers extends BaseEntity
      * 邀请码
      */
     private String invitationCode;
+    /**
+     * 提现开关
+     */
+    private String withdraw;
+    /**
+     * 区块链名称
+     */
+    private String blockchainName;
+
 
     /** 推荐人ID */
     @Excel(name = "推荐人ID")
@@ -222,5 +231,21 @@ public class TkUsers extends BaseEntity
 
     public void setInvitationCode(String invitationCode) {
         this.invitationCode = invitationCode;
+    }
+
+    public String getWithdraw() {
+        return withdraw;
+    }
+
+    public void setWithdraw(String withdraw) {
+        this.withdraw = withdraw;
+    }
+
+    public String getBlockchainName() {
+        return blockchainName;
+    }
+
+    public void setBlockchainName(String blockchainName) {
+        this.blockchainName = blockchainName;
     }
 }

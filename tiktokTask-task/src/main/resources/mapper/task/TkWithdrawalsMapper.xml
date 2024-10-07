@@ -9,13 +9,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="uid"    column="uid"    />
         <result property="username"    column="username"    />
         <result property="address"    column="address"    />
+        <result property="blockchainName"    column="blockchain_name"    />
         <result property="amount"    column="amount"    />
         <result property="withdrawalTime"    column="withdrawal_time"    />
         <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectTkWithdrawalsVo">
-        select id, uid, username, address, amount, withdrawal_time, status from tk_Withdrawals
+        select id, uid, username,blockchain_name,address, amount, withdrawal_time, status from tk_Withdrawals
     </sql>
 
     <select id="selectTkWithdrawalsList" parameterType="TkWithdrawals" resultMap="TkWithdrawalsResult">
@@ -42,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="username != null and username != ''">username,</if>
             <if test="address != null">address,</if>
             <if test="amount != null">amount,</if>
+            <if test="blockchainName != null">blockchain_name,</if>
             <if test="withdrawalTime != null">withdrawal_time,</if>
             <if test="status != null">status,</if>
          </trim>
@@ -50,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="username != null and username != ''">#{username},</if>
             <if test="address != null">#{address},</if>
             <if test="amount != null">#{amount},</if>
+            <if test="blockchainName != null">#{blockchainName},</if>
             <if test="withdrawalTime != null">#{withdrawalTime},</if>
             <if test="status != null">#{status},</if>
          </trim>

@@ -120,6 +120,12 @@
           <dict-tag :options="dict.type.user_state" :value="scope.row.userStatus"/>
         </template>
       </el-table-column>
+
+      <el-table-column label="提现" align="center" prop="userStatus">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.user_state" :value="scope.row.withdraw"/>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -212,6 +218,15 @@
         </el-form-item>
         <el-form-item label="用户状态" prop="userStatus">
           <el-radio-group v-model="form.userStatus">
+            <el-radio
+              v-for="dict in dict.type.user_state"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="提现状态" prop="userStatus">
+          <el-radio-group v-model="form.withdraw">
             <el-radio
               v-for="dict in dict.type.user_state"
               :key="dict.value"
@@ -406,6 +421,8 @@ export default {
         registrationTime: null,
         referrerId: null,
         invitationCode:null,
+        withdraw:null,
+        blockchainName:null,
         userStatus: null,
         createBy: null,
         createTime: null,
@@ -552,7 +569,7 @@ export default {
         };
         this.open2 = true;
       });
-      
+
     },
     addTask() {
       this.form2.taskList.push({

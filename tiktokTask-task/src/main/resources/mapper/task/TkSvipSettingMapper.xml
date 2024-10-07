@@ -54,6 +54,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
+    <update id="updateDailyTaskCountBatch" parameterType="java.util.Map">
+        UPDATE tk_tasknum
+        SET experience_task_count = #{dailyTaskCount}
+        WHERE user_id IN
+        <foreach collection="uids" item="uid" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </update>
+    <update id="updateNormalTaskCountBatch" parameterType="java.util.Map">
+        UPDATE tk_tasknum
+        SET normal_task_count = #{dailyTaskCount}
+        WHERE user_id IN
+        <foreach collection="uids" item="uid" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </update>
+
 
     <delete id="deleteTkSvipSettingById" parameterType="Long">
         delete from tk_svip_setting where id = #{id}

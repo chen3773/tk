@@ -13,7 +13,10 @@
             (SELECT COUNT(*) FROM tk_users WHERE svip_level > '0' AND create_by = #{userId}) AS svip_user_count,
 
                                                                               -- 今日接单总数
-            (SELECT COUNT(*) FROM tk_task_acceptances WHERE DATE(create_time) = CURDATE()) AS today_task_acceptance_count;
+            (SELECT COUNT(*) FROM tk_task_acceptances WHERE DATE(create_time) = CURDATE()) AS today_task_acceptance_count,
+
+                                                                                                                            -- 今日完成任务的用户数量
+            (SELECT COUNT(DISTINCT uid) FROM tk_task_acceptances WHERE DATE(create_time) = CURDATE()) AS today_completed_task_users;
     </select>
 
 </mapper>

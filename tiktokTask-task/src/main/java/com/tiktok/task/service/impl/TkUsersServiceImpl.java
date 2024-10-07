@@ -250,6 +250,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkUsers1.setNickname(tkUsers.getNickname());
         tkUsers1.setAvatar(tkUsers.getAvatar());
         tkUsers1.setUsdtAddress(tkUsers.getUsdtAddress());
+        tkUsers1.setBlockchainName(tkUsers.getBlockchainName());
         int i = tkUsersMapper.updateTkUsers(tkUsers1);
         Assert.isTrue(i!=0,"error");
         return AjaxResult.success("Successful");
@@ -259,13 +260,14 @@ public class TkUsersServiceImpl implements ITkUsersService
     @Override
     @Transactional
     public AjaxResult withdraw(String amount) {
+
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         //判断是否有未完成任务
         TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
         tkTaskAcceptances.setUid(uid);
         List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
         for (int i = 0; i < tkTaskAcceptances1.size(); i++) {
-            Assert.isTrue(tkTaskAcceptances1.get(i).getStatus().equals("0"),"Please complete all tasks before withdrawing");
+            Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("0"),"Please complete all tasks before withdrawing");
         }
 
         // 将字符串转换为 double
@@ -277,6 +279,9 @@ public class TkUsersServiceImpl implements ITkUsersService
 
 
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
+
+        Assert.isTrue(tkUsers.getWithdraw().equals("0"),"Withdrawal exception, contact customer service");
+
         // 获取余额和不可提现金额
         String balanceStr = tkUsers.getBalance(); // 余额
         String nonWithdrawableBalanceStr = tkUsers.getNonWithdrawableBalance(); // 不可提现金额
@@ -301,6 +306,8 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkWithdrawals.setAmount(new BigDecimal(amount));
         tkWithdrawals.setUsername(tkUsers.getUsername());
         tkWithdrawals.setUid(uid);
+        tkWithdrawals.setBlockchainName(tkUsers.getBlockchainName());
+        tkWithdrawals.setAddress(tkUsers.getUsdtAddress());
         tkWithdrawals.setWithdrawalTime(new Date());
         tkWithdrawals.setStatus(0L);
         tkWithdrawalsMapper.insertTkWithdrawals(tkWithdrawals);

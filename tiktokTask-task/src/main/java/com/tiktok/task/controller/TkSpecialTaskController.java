@@ -62,17 +62,23 @@ public class TkSpecialTaskController extends BaseController
 
         TaskData taskData = new TaskData();
         ArrayList<String> objects = new ArrayList<>();
-        objects.add(list.get(0).getUserId().toString());
-        taskData.setUids(objects);
-
         ArrayList<TaskData.Task> objects1 = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            TaskData.Task task = new TaskData.Task();
-            task.setCount(list.get(i).getTriggerCount().toString());
-            task.setTaskId(list.get(i).getTaskId().toString());
-            objects1.add(task);
+        if(list.size()!=0){
+
+            objects.add(list.get(0).getUserId().toString());
+            taskData.setUids(objects);
+
+            for (int i = 0; i < list.size(); i++) {
+                TaskData.Task task = new TaskData.Task();
+                task.setCount(list.get(i).getTriggerCount().toString());
+                task.setTaskId(list.get(i).getTaskId().toString());
+                objects1.add(task);
+            }
+            taskData.setTaskList(objects1);
+        }else {
+            taskData.setUids(objects);
+            taskData.setTaskList(objects1);
         }
-        taskData.setTaskList(objects1);
         return AjaxResult.success(taskData);
     }
 

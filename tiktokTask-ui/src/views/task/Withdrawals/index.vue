@@ -112,6 +112,7 @@
       <el-table-column label="用户 ID" align="center" prop="uid" />
       <el-table-column label="用户名" align="center" prop="username" />
       <el-table-column label="区块链地址" align="center" prop="address" />
+      <el-table-column label="链名称" align="center" prop="blockchainName" />
       <el-table-column label="提现金额" align="center" prop="amount" />
       <el-table-column label="提现时间" align="center" prop="withdrawalTime" width="180">
         <template slot-scope="scope">
@@ -142,7 +143,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -162,6 +163,9 @@
         </el-form-item>
         <el-form-item label="区块链地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入区块链地址" />
+        </el-form-item>
+        <el-form-item label="区块链地址" prop="address">
+          <el-input v-model="form.blockchainName" placeholder="请输入区块链名称" />
         </el-form-item>
         <el-form-item label="提现金额" prop="amount">
           <el-input v-model="form.amount" placeholder="请输入提现金额" />
@@ -281,6 +285,7 @@ export default {
         uid: null,
         username: null,
         address: null,
+        blockchainName:null,
         amount: null,
         withdrawalTime: null,
         status: null
