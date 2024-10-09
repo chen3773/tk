@@ -103,11 +103,11 @@
 
     <el-table v-loading="loading" :data="WalletTransactionsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="交易ID，自动递增" align="center" prop="id" />
+      <!-- <el-table-column label="交易ID，自动递增" align="center" prop="id" /> -->
       <el-table-column label="用户ID" align="center" prop="userid" />
       <el-table-column label="交易类型" align="center" prop="transactionType" />
       <el-table-column label="交易金额" align="center" prop="amount" />
-      <el-table-column label="交易日期和时间" align="center" prop="transactionDate" width="180">
+      <el-table-column label="交易时间" align="center" prop="transactionDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.transactionDate, '{y}-{m}-{d}') }}</span>
         </template>
@@ -129,7 +129,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['task:WalletTransactions:edit']"
-          >修改</el-button>
+          >金额回滚</el-button>
           <el-button
             size="mini"
             type="text"
@@ -193,7 +193,7 @@
 </template>
 
 <script>
-import { listWalletTransactions, getWalletTransactions, delWalletTransactions, addWalletTransactions, updateWalletTransactions } from "@/api/task/WalletTransactions";
+import { listWalletTransactions, getWalletTransactions, delWalletTransactions, addWalletTransactions, updateWalletTransactions, TakeOut } from "@/api/task/WalletTransactions";
 
 export default {
   name: "WalletTransactions",
@@ -309,12 +309,15 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getWalletTransactions(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改用户钱包交易记录";
-      });
+      const id = row.id || this.ids;
+      this.$modal.confirm('是否确认回滚金额？').then(function() {
+        return TakeOut({
+          id: id
+        });
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("回滚成功");
+      }).catch(() => {});
     },
     /** 提交按钮 */
     submitForm() {
