@@ -260,7 +260,7 @@
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="配置特殊任务" :visible.sync="open2" width="500px" append-to-body>
+    <el-dialog title="配置特殊任务" :visible.sync="open2" width="600px" append-to-body>
       <div v-for="(data, index) in form2.taskList" :key="index">
         <div style="display: flex;align-items: center;justify-content: space-between; margin-bottom: 15px;">
           <p style="font-size: 16px; font-weight: bold; margin: 0;">特殊任务{{ index+1 }}</p>
@@ -272,7 +272,7 @@
               <el-option
                 v-for="dict in tasksList"
                 :key="dict.id"
-                :label="dict.title"
+                :label="dict.label"
                 :value="dict.id"
               />
             </el-select>
@@ -435,6 +435,12 @@ export default {
         taskLevel: 6
       }).then(response => {
         this.tasksList = response.rows;
+        this.tasksList.map(item => {
+          item.id = item.id + '';
+          item.label = `名称: ${item.title}; 金额: ${item.rewardAmount}`;
+        })
+        this.tasksList = [...this.tasksList]
+        console.log(this.tasksList, 'this.tasksList')
       });
     },
     // 取消按钮
