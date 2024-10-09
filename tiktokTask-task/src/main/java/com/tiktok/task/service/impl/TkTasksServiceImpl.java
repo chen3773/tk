@@ -166,6 +166,7 @@ public class TkTasksServiceImpl implements ITkTasksService
         tkTasks.setId(taskId);
         TkTasks TaskList = tkTasksMapper.selectTkTasksList(tkTasks).get(0);
 
+        Assert.isTrue(TaskList.getDeleted().equals("0"),"error");
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
         //等级不符合
         Assert.isTrue(TaskList.getTaskLevel()<=tkUsers.getSvipLevel(),"Rank error");

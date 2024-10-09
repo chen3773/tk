@@ -21,7 +21,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectTkWithdrawalsList" parameterType="TkWithdrawals" resultMap="TkWithdrawalsResult">
         <include refid="selectTkWithdrawalsVo"/>
-        <where>  
+        <where>
+            <if test="id != null "> and id = #{id}</if>
             <if test="uid != null "> and uid = #{uid}</if>
             <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
@@ -29,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.beginWithdrawalTime != null and params.beginWithdrawalTime != '' and params.endWithdrawalTime != null and params.endWithdrawalTime != ''"> and withdrawal_time between #{params.beginWithdrawalTime} and #{params.endWithdrawalTime}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
+        order by withdrawal_time desc
     </select>
     
     <select id="selectTkWithdrawalsById" parameterType="Long" resultMap="TkWithdrawalsResult">

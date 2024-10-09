@@ -39,8 +39,8 @@ public class TkWithdrawals extends BaseEntity
     private BigDecimal amount;
 
     /** 提现时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "提现时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "提现时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date withdrawalTime;
 
     /** 提现状态 */

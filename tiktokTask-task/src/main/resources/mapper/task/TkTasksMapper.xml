@@ -30,7 +30,7 @@
     </resultMap>
 
     <sql id="selectTkTasksVo">
-        select id, title, image, description, detailed_description, reward_amount, link, total_quantity,surplusquantity, completed_quantity, task_level, created_at, state from tk_tasks
+        select id, title, image, description, detailed_description, reward_amount, link, total_quantity,surplusquantity, completed_quantity, task_level, created_at,deleted, state from tk_tasks
     </sql>
 
     <select id="selectTkTasksList" parameterType="TkTasks" resultMap="TkTasksResult">

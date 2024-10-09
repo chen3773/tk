@@ -36,6 +36,12 @@ public class AdminServiceImpl implements AdminService {
     public AjaxResult HomePage() {
         Long userId = SecurityUtils.getUserId();
 
+        //超级管理员和管理员可以查看全部
+        for (int i = 0; i < SecurityUtils.getLoginUser().getUser().getRoles().size(); i++) {
+            if( SecurityUtils.getLoginUser().getUser().getRoles().get(i).getRoleKey().contains("admin")){
+                userId = null;
+            }
+        }
         return AjaxResult.success(adminMapper.HomePage(userId));
     }
 
@@ -163,6 +169,9 @@ public class AdminServiceImpl implements AdminService {
 
         //相关订单号
         List<TkWallettransactions> tkWallettransactionsDm = tkWallettransactionsMapper.selectTkWallettransactionsList(tkWallettransactionsBody);
+        for (int i = 0; i < tkWallettransactionsDm.size(); i++) {
+            Assert.isTrue(!tkWallettransactionsDm.get(i).getTransactionType().equals("TakeOut"),"不能进行多次扣除");
+        }
         Assert.isTrue(tkWallettransactionsDm.size()<=4,"不能进行多次扣除");
 
 

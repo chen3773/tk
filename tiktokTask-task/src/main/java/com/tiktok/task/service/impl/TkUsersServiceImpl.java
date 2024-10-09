@@ -289,6 +289,7 @@ public class TkUsersServiceImpl implements ITkUsersService
 
 
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
+        Assert.isTrue(tkUsers.getBlockchainName()!=null,"Please bind your wallet first");
 
         Assert.isTrue(tkUsers.getWithdraw().equals("0"),"Withdrawal exception, contact customer service");
 

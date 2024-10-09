@@ -1,5 +1,6 @@
 package com.tiktok.task.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -88,6 +89,7 @@ public class TkWithdrawalsController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody TkWithdrawals tkWithdrawals)
     {
+        tkWithdrawals.setWithdrawalTime(new Date());
         return toAjax(tkWithdrawalsService.updateTkWithdrawals(tkWithdrawals));
     }
 
