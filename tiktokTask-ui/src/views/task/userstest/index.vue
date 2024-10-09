@@ -320,6 +320,9 @@ export default {
   created() {
     this.getList();
   },
+  activated() {
+    this.getList();
+  },
   methods: {
     /** 查询用户信息列表 */
     getList() {

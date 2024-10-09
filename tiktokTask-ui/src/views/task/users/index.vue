@@ -115,7 +115,6 @@
         </template>
       </el-table-column>
       <el-table-column label="邀请码" align="center" prop="invitationCode" />
-      <el-table-column label="上级ID" align="center" prop="referrerId" />
       <el-table-column label="用户状态" align="center" prop="userStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.userStatus"/>
@@ -130,11 +129,6 @@
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="最后登录时间" align="center" prop="createTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.logindate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
@@ -219,7 +213,7 @@
                           placeholder="请选择注册时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="邀请码" prop="invitationCode">
+        <el-form-item label="邀请码" prop="referrerId">
           <el-input v-model="form.invitationCode" placeholder="请输入邀请码" />
         </el-form-item>
         <el-form-item label="用户状态" prop="userStatus">
@@ -379,9 +373,6 @@ export default {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" }
         ],
-        invitationCode: [
-          { required: true, message: "邀请码不能为空", trigger: "blur" }
-        ],
       },
       open1: false,
       form1: {},
@@ -413,6 +404,9 @@ export default {
     };
   },
   created() {
+    this.getList();
+  },
+  activated() {
     this.getList();
   },
   methods: {
@@ -469,8 +463,7 @@ export default {
         createTime: null,
         updateBy: null,
         updateTime: null,
-        remark: null,
-        logindate:null
+        remark: null
       };
       this.resetForm("form");
     },

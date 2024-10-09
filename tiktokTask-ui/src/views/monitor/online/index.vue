@@ -87,6 +87,9 @@ export default {
   created() {
     this.getList();
   },
+  activated() {
+    this.getList();
+  },
   methods: {
     /** 查询登录日志列表 */
     getList() {

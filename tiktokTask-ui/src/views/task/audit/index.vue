@@ -177,7 +177,7 @@
     <!-- 添加或修改自动审核对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="${comment}" prop="lv0">
+        <el-form-item label="体验任务" prop="lv0">
           <el-radio-group v-model="form.lv0">
             <el-radio
               v-for="dict in dict.type.on_off"
@@ -186,7 +186,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="${comment}" prop="lv1">
+        <el-form-item label="一级任务" prop="lv1">
           <el-radio-group v-model="form.lv1">
             <el-radio
               v-for="dict in dict.type.on_off"
@@ -195,7 +195,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="${comment}" prop="lv2">
+        <el-form-item label="二级任务" prop="lv2">
           <el-radio-group v-model="form.lv2">
             <el-radio
               v-for="dict in dict.type.on_off"
@@ -204,7 +204,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="${comment}" prop="lv3">
+        <el-form-item label="三级任务" prop="lv3">
           <el-radio-group v-model="form.lv3">
             <el-radio
               v-for="dict in dict.type.on_off"
@@ -213,7 +213,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="${comment}" prop="lv4">
+        <el-form-item label="四级任务" prop="lv4">
           <el-radio-group v-model="form.lv4">
             <el-radio
               v-for="dict in dict.type.on_off"
@@ -222,7 +222,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="${comment}" prop="lv5">
+        <el-form-item label="五级任务" prop="lv5">
           <el-radio-group v-model="form.lv5">
             <el-radio
               v-for="dict in dict.type.on_off"

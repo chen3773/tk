@@ -61,7 +61,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -70,8 +70,8 @@
           @click="handleAdd"
           v-hasPermi="['task:Withdrawals:add']"
         >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      </el-col> -->
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -92,7 +92,7 @@
           @click="handleDelete"
           v-hasPermi="['task:Withdrawals:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -108,16 +108,13 @@
 
     <el-table v-loading="loading" :data="WithdrawalsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="自增主键" align="center" prop="id" />
-      <el-table-column label="用户 ID" align="center" prop="uid" />
+      <!-- <el-table-column label="自增主键" align="center" prop="id" /> -->
+      <el-table-column label="用户ID" align="center" prop="uid" />
       <el-table-column label="用户名" align="center" prop="username" />
       <el-table-column label="区块链地址" align="center" prop="address" />
       <el-table-column label="链名称" align="center" prop="blockchainName" />
       <el-table-column label="提现金额" align="center" prop="amount" />
       <el-table-column label="提现时间" align="center" prop="withdrawalTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.withdrawalTime, '{y}-{m}-{d}') }}</span>
-        </template>
       </el-table-column>
       <el-table-column label="提现状态" align="center" prop="status">
         <template slot-scope="scope">
@@ -126,6 +123,38 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row, true)"
+            v-hasPermi="['task:acceptances:edit']"
+            v-if="scope.row.status == 0"
+          >通过</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row, false)"
+            v-hasPermi="['task:acceptances:edit']"
+            v-if="scope.row.status == 0"
+          >驳回</el-button>
+          <!-- <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['task:Withdrawals:edit']"
+          >修改</el-button> -->
+          <!-- <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['task:acceptances:remove']"
+          >删除</el-button> -->
+        </template>
+        <!-- <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
@@ -140,7 +169,7 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['task:Withdrawals:remove']"
           >删除</el-button>
-        </template>
+        </template> -->
       </el-table-column>
     </el-table>
 
@@ -258,6 +287,9 @@ export default {
   created() {
     this.getList();
   },
+  activated() {
+    this.getList();
+  },
   methods: {
     /** 查询提现记录列表 */
     getList() {
@@ -316,14 +348,26 @@ export default {
       this.title = "添加提现记录";
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
+    handleUpdate(row, bol) {
       this.reset();
-      const id = row.id || this.ids
-      getWithdrawals(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改提现记录";
+      updateWithdrawals({
+        id: row.id,
+        uid: row.uid,
+        username: row.username,
+        address: row.address,
+        blockchainName: row.blockchainName,
+        amount: row.amount,
+        withdrawalTime: row.withdrawalTime,
+        status: bol ? 1 : 2
+      }).then(response => {
+        this.getList();
+        this.$modal.msgSuccess("审核成功");
       });
+      // getWithdrawals(id).then(response => {
+      //   this.form = response.data;
+      //   this.open = true;
+      //   this.title = "修改提现记录";
+      // });
     },
     /** 提交按钮 */
     submitForm() {

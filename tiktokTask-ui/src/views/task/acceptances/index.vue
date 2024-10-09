@@ -85,25 +85,26 @@
       <!-- <el-table-column label="接取任务的唯一标识符" align="center" prop="id" /> -->
       <el-table-column label="用户ID" align="center" prop="uid" />
       <el-table-column label="任务ID" align="center" prop="taskId" />
-      <el-table-column label="审核状态" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.task_state" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
+      
       <el-table-column label="提交的图片" align="center" prop="submittedImage" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.submittedImage" :width="50" :height="50"/>
         </template>
       </el-table-column>
       <el-table-column label="提交时间" align="center" prop="submissionTime">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <span>{{ parseTime(scope.row.submissionTime, '{y}-{m}-{d}') }}</span>
+        </template> -->
+      </el-table-column>
+      <el-table-column label="审核状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.task_state" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="审核时间" align="center" prop="approvalTime">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <span>{{ parseTime(scope.row.approvalTime, '{y}-{m}-{d}') }}</span>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -113,6 +114,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row, true)"
             v-hasPermi="['task:acceptances:edit']"
+            v-if="scope.row.status == 1"
           >通过</el-button>
           <el-button
             size="mini"
@@ -120,6 +122,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row, false)"
             v-hasPermi="['task:acceptances:edit']"
+            v-if="scope.row.status == 1"
           >驳回</el-button>
           <!-- <el-button
             size="mini"
@@ -228,6 +231,9 @@ export default {
     };
   },
   created() {
+    this.getList();
+  },
+  activated() {
     this.getList();
   },
   methods: {
