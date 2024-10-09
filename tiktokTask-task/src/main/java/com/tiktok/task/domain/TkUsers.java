@@ -84,6 +84,8 @@ public class TkUsers extends BaseEntity
     @Excel(name = "用户状态")
     private String userStatus;
 
+    private Date logindate;
+
     public TkUsers() {
     }
 
@@ -247,5 +249,13 @@ public class TkUsers extends BaseEntity
 
     public void setBlockchainName(String blockchainName) {
         this.blockchainName = blockchainName;
+    }
+
+    public Date getLogindate() {
+        return logindate;
+    }
+
+    public void setLogindate(Date logindate) {
+        this.logindate = logindate;
     }
 }

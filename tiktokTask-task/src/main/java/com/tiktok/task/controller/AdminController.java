@@ -23,9 +23,19 @@ public class AdminController {
      */
 
     @GetMapping("/AddAndDeduct")
-    public AjaxResult AddAndDeduct(String amount,String withdraw,String add,String uid){
+    public AjaxResult AddAndDeduct(String amount,String withdraw,String add,String uid,String rebate){
 
-        return  adminService.AddAndDeduct(amount,withdraw,add,uid);
+        return  adminService.AddAndDeduct(amount,withdraw,add,uid,rebate);
+    }
+    /**
+     * 充值错误回滚
+     *
+     */
+
+    @GetMapping("/TakeOut")
+    public AjaxResult TakeOut(Long id){
+
+        return  adminService.TakeOut(id);
     }
 
 }

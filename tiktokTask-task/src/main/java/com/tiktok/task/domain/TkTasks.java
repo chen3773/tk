@@ -72,6 +72,8 @@ public class TkTasks extends BaseEntity
     @Excel(name = "状态")
     private String state;
 
+    private String deleted;
+
     public void setId(Long id)
     {
         this.id = id;
@@ -205,5 +207,13 @@ public class TkTasks extends BaseEntity
 
     public void setSurplusquantity(int surplusquantity) {
         this.surplusquantity = surplusquantity;
+    }
+
+    public String getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(String deleted) {
+        this.deleted = deleted;
     }
 }

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.tiktok.common.core.domain.AjaxResult;
 import com.tiktok.common.core.domain.entity.SysUser;
@@ -96,7 +97,9 @@ public class TkUsersServiceImpl implements ITkUsersService
     @Override
     public List<TkUsers> selectTkUsersList(TkUsers tkUsers)
     {
-        return tkUsersMapper.selectTkUsersList(tkUsers);
+
+        List<TkUsers> tkUsers1 = tkUsersMapper.selectTkUsersList(tkUsers);
+        return tkUsers1;
     }
 
     /**
@@ -131,6 +134,13 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkUsers.setCreateBy(userId.toString());
         tkUsers.setAvatar("/profile/upload/avatar/2024/09/27/avatar_20240927193831A001.png");
         tkUsers.setTotareward("0");
+        tkUsers.setRegistrationTime(new Date());//注册时间
+        tkUsers.setWithdraw("0");
+        tkUsers.setUserStatus("1");
+        tkUsers.setBalance("0");
+        tkUsers.setNickname("Default");
+        tkUsers.setSvipLevel(0L);
+        tkUsers.setNonWithdrawableBalance("0");
         tkUsers.setInvitationCode(InviteCode);
 
         SysUser user = new SysUser();
@@ -168,12 +178,12 @@ public class TkUsersServiceImpl implements ITkUsersService
         Assert.isTrue(tkInvitationMapper.insertTkInvitation(tkInvitation)>0,"新增用户失败");
 
         //添加二级
-        if(tkUsers1.getReferrerId()!=null){
-            tkInvitation.setInviterId(tkUsers1.getReferrerId());
+        if(tkUsers4.get(0).getReferrerId()!=null){
+            tkInvitation.setInviterId(tkUsers4.get(0).getReferrerId());
             tkInvitation.setLevel(2L);
             Assert.isTrue( tkInvitationMapper.insertTkInvitation(tkInvitation)>0,"新增用户失败");
 
-            TkUsers tkUsers2 = tkUsersMapper.selectTkUsersByUid(tkUsers1.getReferrerId());
+            TkUsers tkUsers2 = tkUsersMapper.selectTkUsersByUid(tkUsers4.get(0).getReferrerId());
             if(tkUsers2.getReferrerId()!=null){//添加三级
                 tkInvitation.setInviterId(tkUsers2.getReferrerId());
                 tkInvitation.setLevel(3L);
@@ -383,6 +393,18 @@ public class TkUsersServiceImpl implements ITkUsersService
     @Transactional
     public AjaxResult addSpecialTask(TaskData taskData) {
         for (int i = 0; i < taskData.getUids().size(); i++) {
+            //过滤
+            TkSpecialTask tkSpecialTask1 = new TkSpecialTask();
+            tkSpecialTask1.setUserId(Long.valueOf(taskData.getUids().get(i)));
+
+            List<TkSpecialTask> tkSpecialTasks = tkSpecialTaskMapper.selectTkSpecialTaskList(tkSpecialTask1);
+            Long[] idArray = tkSpecialTasks.stream()
+                    .map(TkSpecialTask::getId)
+                    .toArray(Long[]::new);
+            if(idArray.length!=0){
+                int i2 = tkSpecialTaskMapper.deleteTkSpecialTaskByIds(idArray);
+
+            }
             for (int i1 = 0; i1 < taskData.getTaskList().size(); i1++) {
                 String taskId = taskData.getTaskList().get(i1).getTaskId();
                Assert.isTrue( tkTasksMapper.selectTkTasksById(Long.valueOf(taskId))!=null,
@@ -391,6 +413,7 @@ public class TkUsersServiceImpl implements ITkUsersService
                 TkSpecialTask tkSpecialTask = new TkSpecialTask();
                 tkSpecialTask.setUserId(Long.valueOf(taskData.getUids().get(i)));
                 tkSpecialTask.setTaskId(Long.valueOf(taskId));
+                tkSpecialTask.setStatus("0");
                 tkSpecialTask.setTriggerCount(Long.valueOf(taskData.getTaskList().get(i1).getCount()));
                 tkSpecialTaskMapper.insertTkSpecialTask(tkSpecialTask);
             }

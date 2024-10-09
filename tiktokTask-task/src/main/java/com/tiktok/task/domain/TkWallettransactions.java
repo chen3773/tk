@@ -63,6 +63,9 @@ public class TkWallettransactions extends BaseEntity
     @Excel(name = "记录最后更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updatedAt;
 
+    private String orderNumber;
+    private String withdraw;
+
     public void setId(Long id)
     {
         this.id = id;

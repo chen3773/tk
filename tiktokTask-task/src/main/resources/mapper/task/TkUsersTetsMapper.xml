@@ -44,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
             <if test="referrerId != null  and referrerId != ''"> and referrer_id = #{referrerId}</if>
             <if test="userStatus != null  and userStatus != ''"> and user_status = #{userStatus}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
         </where>
     </select>
     

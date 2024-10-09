@@ -2,6 +2,7 @@ package com.tiktok.task.service.impl;
 
 import java.util.List;
 import com.tiktok.common.utils.DateUtils;
+import com.tiktok.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tiktok.task.mapper.TkUsersTetsMapper;
@@ -41,6 +42,7 @@ public class TkUsersTetsServiceImpl implements ITkUsersTetsService
     @Override
     public List<TkUsersTets> selectTkUsersTetsList(TkUsersTets tkUsersTets)
     {
+        tkUsersTets.setCreateBy(SecurityUtils.getUserId().toString());
         return tkUsersTetsMapper.selectTkUsersTetsList(tkUsersTets);
     }
 

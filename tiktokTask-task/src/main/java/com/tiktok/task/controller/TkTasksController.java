@@ -1,5 +1,6 @@
 package com.tiktok.task.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,6 +79,10 @@ public class TkTasksController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TkTasks tkTasks)
     {
+        Assert.isTrue(tkTasks.getRewardAmount() != null && tkTasks.getRewardAmount().compareTo(BigDecimal.ONE) >= 0,
+                "奖励金额不能为空或者小于1");
+        Assert.isTrue(tkTasks.getCompletedQuantity()<=tkTasks.getTotalQuantity()&&
+                tkTasks.getSurplusquantity()<=tkTasks.getTotalQuantity(),"任务数量错误");
         return toAjax(tkTasksService.insertTkTasks(tkTasks));
     }
 

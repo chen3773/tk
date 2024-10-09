@@ -81,6 +81,13 @@ public class TkUsersController extends BaseController
         Long userId = SecurityUtils.getUserId();
         //只能查看自己创建的
         tkUsers.setCreateBy(userId.toString());
+
+        //超级管理员和管理员可以查看全部
+        for (int i = 0; i < SecurityUtils.getLoginUser().getUser().getRoles().size(); i++) {
+           if( SecurityUtils.getLoginUser().getUser().getRoles().get(i).getRoleKey().contains("admin")){
+               tkUsers.setCreateBy(null);
+           }
+        }
         List<TkUsers> list = tkUsersService.selectTkUsersList(tkUsers);
         return getDataTable(list);
     }

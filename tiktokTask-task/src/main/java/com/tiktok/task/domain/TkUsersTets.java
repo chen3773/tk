@@ -70,6 +70,7 @@ public class TkUsersTets extends TreeEntity
     @Excel(name = "用户状态")
     private String userStatus;
 
+
     public void setUid(Long uid) 
     {
         this.uid = uid;

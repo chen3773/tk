@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.tiktok.common.utils.SecurityUtils;
+import com.tiktok.task.domain.TkUsers;
+import com.tiktok.task.mapper.TkUsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +39,8 @@ public class SysUserOnlineController extends BaseController
 {
     @Autowired
     private ISysUserOnlineService userOnlineService;
+    @Autowired
+    private TkUsersMapper tkUsersMapper;
 
     @Autowired
     private RedisCache redisCache;
@@ -66,7 +73,21 @@ public class SysUserOnlineController extends BaseController
         }
         Collections.reverse(userOnlineList);
         userOnlineList.removeAll(Collections.singleton(null));
+
+        Long userId = SecurityUtils.getUserId();  //获取出来所有这个人创建的id
+        TkUsers tkUsers = new TkUsers();
+        tkUsers.setCreateBy(userId.toString());
+        List<TkUsers> tkUsers1 = tkUsersMapper.selectTkUsersList(tkUsers);
+        List<String> usernames = tkUsers1.stream()
+                .map(TkUsers::getUsername)
+                .collect(Collectors.toList());
+
+        userOnlineList = userOnlineList.stream()
+                .filter(userOnline -> usernames.contains(userOnline.getUserName()))
+                .collect(Collectors.toList());
+
         return getDataTable(userOnlineList);
+
     }
 
     /**

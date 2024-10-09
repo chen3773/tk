@@ -18,6 +18,7 @@
         <result property="taskLevel"    column="task_level"    />
         <result property="createdAt"    column="created_at"    />
         <result property="state"    column="state"    />
+        <result property="deleted"    column="deleted"    />
     </resultMap>
 
     <resultMap id="UserTaskOVResult" type="UserTaskOV">
@@ -39,7 +40,9 @@
             <if test="taskLevel != null "> and task_level = #{taskLevel}</if>
             <if test="state != null  and state != ''"> and state = #{state}</if>
             <if test="id != null  and id != ''"> and id = #{id}</if>
+            and deleted = "0"
         </where>
+
     </select>
 
     <select id="selectTkTasksById" parameterType="Long" resultMap="TkTasksResult">
@@ -83,7 +86,8 @@
             t.completed_quantity,
             t.task_level,
             t.created_at AS task_created_at,
-            t.state AS task_state
+            t.state AS task_state,
+            t.deleted
         FROM
             tk_task_acceptances ta
                 JOIN
@@ -92,6 +96,7 @@
             ta.uid = #{uid}
           AND
             ta.status = #{status}
+          AND t.deleted = "0"
     </select>
     <select id="getUserTaskById" resultMap="UserTaskOVResult">
         SELECT
@@ -180,10 +185,12 @@
         delete from tk_tasks where id = #{id}
     </delete>
 
-    <delete id="deleteTkTasksByIds" parameterType="String">
-        delete from tk_tasks where id in
+
+
+    <update id="deleteTkTasksByIds" parameterType="String">
+        update tk_tasks set deleted = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 </mapper>
