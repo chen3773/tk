@@ -139,7 +139,7 @@
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column label="账户名" prop="username" />
+      <el-table-column label="账户名" prop="username" width="180" />
       <el-table-column label="密码" align="center" prop="password" />
       <el-table-column label="昵称" align="center" prop="nickname" />
       <el-table-column label="svip等级" align="center" prop="svipLevel" />

@@ -260,7 +260,7 @@
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="配置特殊任务" :visible.sync="open2" width="600px" append-to-body>
+    <el-dialog title="配置特殊任务" :visible.sync="open2" width="500px" append-to-body>
       <div v-for="(data, index) in form2.taskList" :key="index">
         <div style="display: flex;align-items: center;justify-content: space-between; margin-bottom: 15px;">
           <p style="font-size: 16px; font-weight: bold; margin: 0;">特殊任务{{ index+1 }}</p>
@@ -268,7 +268,15 @@
         </div>
         <el-form ref="form2" label-width="120px">
           <el-form-item label="任务id" prop="taskId">
-            <el-input v-model="data.taskId" placeholder="请输入任务id" />
+            <el-select v-model="data.taskId" placeholder="请选择任务" clearable style="width: 100%;">
+              <el-option
+                v-for="dict in tasksList"
+                :key="dict.id"
+                :label="dict.title"
+                :value="dict.id"
+              />
+            </el-select>
+            <!-- <el-input v-model="data.taskId" placeholder="请输入任务id" /> -->
           </el-form-item>
           <el-form-item label="几次任务后触发" prop="count">
             <el-input v-model="data.count" placeholder="请输入几次任务后触发" />
@@ -301,6 +309,15 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="是否有提成" prop="rebate">
+          <el-radio-group v-model="form3.rebate">
+            <el-radio
+              v-for="dict in yesno"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="金额" prop="amount">
           <el-input v-model="form3.amount" placeholder="请输入金额" />
         </el-form-item>
@@ -315,6 +332,7 @@
 
 <script>
 import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip, addSpecialTask, getSpecialTask, addAndDeduct } from "@/api/task/users";
+import { listTasks } from "@/api/task/tasks";
 
 export default {
   name: "Users",
@@ -390,7 +408,8 @@ export default {
       },{
         value: 'no',
         label: '扣除'
-      }]
+      }],
+      tasksList: []
     };
   },
   created() {
@@ -409,6 +428,13 @@ export default {
         this.usersList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+      listTasks({
+        pageNum: 1,
+        pageSize: 100,
+        taskLevel: 6
+      }).then(response => {
+        this.tasksList = response.rows;
       });
     },
     // 取消按钮
@@ -613,6 +639,7 @@ export default {
         amount: '',
         withdraw: 'yes',
         add: 'yes',
+        rebate: 'yes'
       };
       this.resetForm("form3");
     },
@@ -625,6 +652,7 @@ export default {
         amount: '',
         withdraw: 'yes',
         add: 'yes',
+        rebate: 'yes'
       };
       this.open3 = true;
     },

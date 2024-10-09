@@ -42,3 +42,11 @@ export function delWalletTransactions(id) {
     method: 'delete'
   })
 }
+
+export function TakeOut(query) {
+  return request({
+    url: '/admin/TakeOut',
+    method: 'get',
+    params: query
+  })
+}
