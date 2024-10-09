@@ -115,7 +115,7 @@
       <el-table-column label="交易后余额" align="center" prop="fundBalance" />
       <el-table-column label="交易描述/备注" align="center" prop="description" />
       <el-table-column label="交易类别" align="center" prop="category" />
-      <el-table-column label="交易状态" align="center" prop="transactionStatus" />
+<!--      <el-table-column label="交易状态" align="center" prop="transactionStatus" />-->
       <el-table-column label="记录最后更新时间" align="center" prop="updatedAt" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updatedAt, '{y}-{m}-{d}') }}</span>
