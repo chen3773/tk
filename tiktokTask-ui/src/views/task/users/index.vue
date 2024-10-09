@@ -182,7 +182,7 @@
     />
 
     <!-- 添加或修改用户信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="账户名" prop="username">
           <el-input v-model="form.username" placeholder="请输入账户名" />
@@ -243,7 +243,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改vip等级" :visible.sync="open1" width="500px" append-to-body>
+    <el-dialog :close-on-click-modal="false" title="修改vip等级" :visible.sync="open1" width="500px" append-to-body>
       <el-form ref="form1" :model="form1" label-width="80px">
         <el-form-item label="svip等级" prop="lv">
           <el-input v-model="form1.lv" placeholder="请输入vip等级" />
@@ -254,7 +254,7 @@
         <el-button @click="cancel1">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="配置特殊任务" :visible.sync="open2" width="600px" append-to-body>
+    <el-dialog :close-on-click-modal="false" title="配置特殊任务" :visible.sync="open2" width="600px" append-to-body>
       <div v-for="(data, index) in form2.taskList" :key="index">
         <div style="display: flex;align-items: center;justify-content: space-between; margin-bottom: 15px;">
           <p style="font-size: 16px; font-weight: bold; margin: 0;">特殊任务{{ index+1 }}</p>
@@ -283,7 +283,7 @@
         <el-button @click="cancel2">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="资金变动" :visible.sync="open3" width="500px" append-to-body>
+    <el-dialog :close-on-click-modal="false" title="资金变动" :visible.sync="open3" width="500px" append-to-body>
       <el-form ref="form3" :model="form3" label-width="100px">
         <el-form-item label="金额类型" prop="add">
           <el-radio-group v-model="form3.add">

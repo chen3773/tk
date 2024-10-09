@@ -183,7 +183,7 @@
     />
 
     <!-- 添加或修改任务列对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="任务标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入任务标题" />

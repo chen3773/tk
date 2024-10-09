@@ -182,7 +182,7 @@
     />
 
     <!-- 添加或修改提现记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="用户 ID" prop="uid">
           <el-input v-model="form.uid" placeholder="请输入用户 ID" />

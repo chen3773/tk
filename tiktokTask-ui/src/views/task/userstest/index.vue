@@ -139,7 +139,8 @@
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column label="账户名" prop="username" width="180" />
+      <el-table-column label="uid" prop="uid" width="180" />
+      <el-table-column label="账户名" prop="username" />
       <el-table-column label="密码" align="center" prop="password" />
       <el-table-column label="昵称" align="center" prop="nickname" />
       <el-table-column label="svip等级" align="center" prop="svipLevel" />
@@ -148,15 +149,15 @@
       <el-table-column label="不可提现余额" align="center" prop="nonWithdrawableBalance" />
       <el-table-column label="提现USDT地址" align="center" prop="usdtAddress" />
       <el-table-column label="注册时间" align="center" prop="registrationTime" width="180">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <span>{{ parseTime(scope.row.registrationTime, '{y}-{m}-{d}') }}</span>
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column label="头像" align="center" prop="avatar">
+      <!-- <el-table-column label="头像" align="center" prop="avatar">
         <template slot-scope="scope">
           <image-preview :src="scope.row.avatar" :width="50" :height="50" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="推荐人ID" align="center" prop="referrerId" />
       <el-table-column label="用户状态" align="center" prop="userStatus">
         <template slot-scope="scope">
@@ -197,7 +198,7 @@
     </el-table>
 
     <!-- 添加或修改用户信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="账户名" prop="username">
           <el-input v-model="form.username" placeholder="请输入账户名" />
