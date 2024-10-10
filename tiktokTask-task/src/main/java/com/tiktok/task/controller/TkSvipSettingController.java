@@ -37,7 +37,6 @@ public class TkSvipSettingController extends BaseController
     /**
      * 查询svip默认配置列表
      */
-    @PreAuthorize("@ss.hasPermi('task:svipSetting:list')")
     @GetMapping("/list")
     public TableDataInfo list(TkSvipSetting tkSvipSetting)
     {

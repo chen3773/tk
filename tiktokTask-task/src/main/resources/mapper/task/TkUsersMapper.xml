@@ -26,10 +26,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <result property="logindate"    column="last_login_date"    />
+        <result property="deleted"    column="deleted"    />
+
     </resultMap>
 
     <sql id="selectTkUsersVo">
-        SELECT tk.uid, tk.username, tk.password, tk.nickname, tk.svip_level, tk.totareward, tk.balance, tk.non_withdrawable_balance, tk.usdt_address, tk.registration_time, tk.avatar, tk.invitation_code, tk.referrer_id, tk.user_status, tk.withdraw, tk.blockchain_name, tk.create_by, tk.create_time, tk.update_by, tk.update_time, tk.remark, sys.login_date AS last_login_date
+        SELECT tk.uid, tk.username, tk.password, tk.nickname, tk.svip_level, tk.totareward, tk.balance, tk.non_withdrawable_balance, tk.usdt_address, tk.registration_time, tk.avatar, tk.invitation_code, tk.referrer_id, tk.user_status, tk.withdraw, tk.blockchain_name, tk.create_by, tk.create_time, tk.update_by, tk.update_time, tk.remark,tk.deleted, sys.login_date AS last_login_date,deleted
         FROM tk_users AS tk
                  JOIN sys_user AS sys ON tk.username = sys.user_name
     </sql>
@@ -44,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="referrerId != null "> and tk.referrer_id = #{referrerId}</if>
             <if test="createBy != null "> and tk.create_by = #{createBy}</if>
         </where>
+        AND deleted!=1
     </select>
     
     <select id="selectTkUsersByUid" parameterType="Long" resultMap="TkUsersResult">
@@ -129,10 +132,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from tk_users where uid = #{uid}
     </delete>
 
-    <delete id="deleteTkUsersByUids" parameterType="String">
-        delete from tk_users where uid in 
+
+    <update id="deleteTkUsersByUids" parameterType="String">
+        update tk_users set deleted = 1 where uid in
         <foreach item="uid" collection="array" open="(" separator="," close=")">
             #{uid}
         </foreach>
-    </delete>
+    </update>
+
 </mapper>

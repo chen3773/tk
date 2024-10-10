@@ -7,9 +7,9 @@ import com.tiktok.common.core.domain.BaseEntity;
 
 /**
  * 系统默认配置对象 tk_user_default
- * 
+ *
  * @author ruoyi
- * @date 2024-10-06
+ * @date 2024-10-10
  */
 public class TkUserDefault extends BaseEntity
 {
@@ -38,70 +38,84 @@ public class TkUserDefault extends BaseEntity
     @Excel(name = "区块链名称")
     private String blockchain;
 
-    public void setId(Long id) 
+    /** 平台客服地址 */
+    @Excel(name = "平台客服地址")
+    private String customerServiceAddress;
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setExperienceTaskCount(Long experienceTaskCount) 
+    public void setExperienceTaskCount(Long experienceTaskCount)
     {
         this.experienceTaskCount = experienceTaskCount;
     }
 
-    public Long getExperienceTaskCount() 
+    public Long getExperienceTaskCount()
     {
         return experienceTaskCount;
     }
-    public void setRegularTaskCount(Long regularTaskCount) 
+    public void setRegularTaskCount(Long regularTaskCount)
     {
         this.regularTaskCount = regularTaskCount;
     }
 
-    public Long getRegularTaskCount() 
+    public Long getRegularTaskCount()
     {
         return regularTaskCount;
     }
-    public void setHiddenTaskCount(Long hiddenTaskCount) 
+    public void setHiddenTaskCount(Long hiddenTaskCount)
     {
         this.hiddenTaskCount = hiddenTaskCount;
     }
 
-    public Long getHiddenTaskCount() 
+    public Long getHiddenTaskCount()
     {
         return hiddenTaskCount;
     }
-    public void setMinimumWithdrawalAmount(String minimumWithdrawalAmount) 
+    public void setMinimumWithdrawalAmount(String minimumWithdrawalAmount)
     {
         this.minimumWithdrawalAmount = minimumWithdrawalAmount;
     }
 
-    public String getMinimumWithdrawalAmount() 
+    public String getMinimumWithdrawalAmount()
     {
         return minimumWithdrawalAmount;
     }
-    public void setBlockchain(String blockchain) 
+    public void setBlockchain(String blockchain)
     {
         this.blockchain = blockchain;
     }
 
-    public String getBlockchain() 
+    public String getBlockchain()
     {
         return blockchain;
+    }
+    public void setCustomerServiceAddress(String customerServiceAddress)
+    {
+        this.customerServiceAddress = customerServiceAddress;
+    }
+
+    public String getCustomerServiceAddress()
+    {
+        return customerServiceAddress;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("experienceTaskCount", getExperienceTaskCount())
-            .append("regularTaskCount", getRegularTaskCount())
-            .append("hiddenTaskCount", getHiddenTaskCount())
-            .append("minimumWithdrawalAmount", getMinimumWithdrawalAmount())
-            .append("blockchain", getBlockchain())
-            .toString();
+                .append("id", getId())
+                .append("experienceTaskCount", getExperienceTaskCount())
+                .append("regularTaskCount", getRegularTaskCount())
+                .append("hiddenTaskCount", getHiddenTaskCount())
+                .append("minimumWithdrawalAmount", getMinimumWithdrawalAmount())
+                .append("blockchain", getBlockchain())
+                .append("customerServiceAddress", getCustomerServiceAddress())
+                .toString();
     }
 }

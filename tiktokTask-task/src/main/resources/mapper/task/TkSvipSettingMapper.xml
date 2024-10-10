@@ -3,33 +3,38 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tiktok.task.mapper.TkSvipSettingMapper">
-    
+
     <resultMap type="TkSvipSetting" id="TkSvipSettingResult">
         <result property="id"    column="id"    />
         <result property="vipLevel"    column="vip_level"    />
         <result property="dailyTaskCount"    column="daily_task_count"    />
         <result property="upgradeAmount"    column="upgrade_amount"    />
+        <result property="status"    column="status"    />
+        <result property="customerServiceAddress"    column="customer_service_address"    />
     </resultMap>
 
+
     <sql id="selectTkSvipSettingVo">
-        select id, vip_level, daily_task_count, upgrade_amount from tk_svip_setting
+        select id, vip_level, daily_task_count, upgrade_amount, status, customer_service_address from tk_svip_setting
     </sql>
 
     <select id="selectTkSvipSettingList" parameterType="TkSvipSetting" resultMap="TkSvipSettingResult">
         <include refid="selectTkSvipSettingVo"/>
-        <where>  
+        <where>
             <if test="id != null "> and id = #{id}</if>
             <if test="vipLevel != null "> and vip_level = #{vipLevel}</if>
             <if test="dailyTaskCount != null "> and daily_task_count = #{dailyTaskCount}</if>
             <if test="upgradeAmount != null "> and upgrade_amount = #{upgradeAmount}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="customerServiceAddress != null  and customerServiceAddress != ''"> and customer_service_address = #{customerServiceAddress}</if>
         </where>
-        ORDER BY `vip_level` ASC
     </select>
-    
+
     <select id="selectTkSvipSettingById" parameterType="Long" resultMap="TkSvipSettingResult">
         <include refid="selectTkSvipSettingVo"/>
         where id = #{id}
     </select>
+
 
     <insert id="insertTkSvipSetting" parameterType="TkSvipSetting" useGeneratedKeys="true" keyProperty="id">
         insert into tk_svip_setting
@@ -37,12 +42,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vipLevel != null">vip_level,</if>
             <if test="dailyTaskCount != null">daily_task_count,</if>
             <if test="upgradeAmount != null">upgrade_amount,</if>
-         </trim>
+            <if test="status != null">status,</if>
+            <if test="customerServiceAddress != null">customer_service_address,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="vipLevel != null">#{vipLevel},</if>
             <if test="dailyTaskCount != null">#{dailyTaskCount},</if>
             <if test="upgradeAmount != null">#{upgradeAmount},</if>
-         </trim>
+            <if test="status != null">#{status},</if>
+            <if test="customerServiceAddress != null">#{customerServiceAddress},</if>
+        </trim>
     </insert>
 
     <update id="updateTkSvipSetting" parameterType="TkSvipSetting">
@@ -51,6 +60,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vipLevel != null">vip_level = #{vipLevel},</if>
             <if test="dailyTaskCount != null">daily_task_count = #{dailyTaskCount},</if>
             <if test="upgradeAmount != null">upgrade_amount = #{upgradeAmount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="customerServiceAddress != null">customer_service_address = #{customerServiceAddress},</if>
         </trim>
         where id = #{id}
     </update>

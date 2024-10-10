@@ -43,6 +43,13 @@ public class TkUsersTetsServiceImpl implements ITkUsersTetsService
     public List<TkUsersTets> selectTkUsersTetsList(TkUsersTets tkUsersTets)
     {
         tkUsersTets.setCreateBy(SecurityUtils.getUserId().toString());
+
+        //超级管理员和管理员可以查看全部
+        for (int i = 0; i < SecurityUtils.getLoginUser().getUser().getRoles().size(); i++) {
+            if( SecurityUtils.getLoginUser().getUser().getRoles().get(i).getRoleKey().contains("admin")){
+                tkUsersTets.setCreateBy(null);
+            }
+        }
         return tkUsersTetsMapper.selectTkUsersTetsList(tkUsersTets);
     }
 

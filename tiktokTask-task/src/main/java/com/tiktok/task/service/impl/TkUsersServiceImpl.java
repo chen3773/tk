@@ -415,6 +415,10 @@ public class TkUsersServiceImpl implements ITkUsersService
                 tkSpecialTask.setUserId(Long.valueOf(taskData.getUids().get(i)));
                 tkSpecialTask.setTaskId(Long.valueOf(taskId));
                 tkSpecialTask.setStatus("0");
+                if(taskData.getTaskList().get(i1).getCount().equals("0")){
+                    tkSpecialTask.setStatus("1");
+                }
+
                 tkSpecialTask.setTriggerCount(Long.valueOf(taskData.getTaskList().get(i1).getCount()));
                 tkSpecialTaskMapper.insertTkSpecialTask(tkSpecialTask);
             }

@@ -2,6 +2,7 @@ package com.tiktok.task.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Random;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,10 +80,31 @@ public class TkTasksController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody TkTasks tkTasks)
     {
+        Integer surplusQuantity = tkTasks.getSurplusquantity();
+        Long completedQuantity = tkTasks.getCompletedQuantity();
+        Long totalQuantity = tkTasks.getTotalQuantity();
+
+        Random random = new Random();
+
+        long randomValue = (long) (random.nextDouble() * totalQuantity) + 1;
+
+        if (surplusQuantity == 0) {
+            tkTasks.setSurplusquantity((int) randomValue);
+        }
+        randomValue = (long) (random.nextDouble() * totalQuantity) + 1;
+        if(completedQuantity == null){
+            tkTasks.setCompletedQuantity(0L);
+        }
+
+
+
         Assert.isTrue(tkTasks.getRewardAmount() != null && tkTasks.getRewardAmount().compareTo(BigDecimal.ONE) >= 0,
                 "奖励金额不能为空或者小于1");
         Assert.isTrue(tkTasks.getCompletedQuantity()<=tkTasks.getTotalQuantity()&&
                 tkTasks.getSurplusquantity()<=tkTasks.getTotalQuantity(),"任务数量错误");
+
+
+
         return toAjax(tkTasksService.insertTkTasks(tkTasks));
     }
 

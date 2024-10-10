@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
 <!--    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">-->
-<!--      <el-form-item label="${comment}" prop="id">-->
+<!--      <el-form-item label="" prop="id">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.id"-->
-<!--          placeholder="请输入${comment}"-->
+<!--          placeholder="请输入"-->
 <!--          clearable-->
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
@@ -33,13 +33,23 @@
 <!--          @keyup.enter.native="handleQuery"-->
 <!--        />-->
 <!--      </el-form-item>-->
+<!--      <el-form-item label="是否开启升级" prop="status">-->
+<!--        <el-select v-model="queryParams.status" placeholder="请选择是否开启升级" clearable>-->
+<!--          <el-option-->
+<!--            v-for="dict in dict.type.on_off"-->
+<!--            :key="dict.value"-->
+<!--            :label="dict.label"-->
+<!--            :value="dict.value"-->
+<!--          />-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
 <!--      <el-form-item>-->
 <!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
 <!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
 <!--      </el-form-item>-->
 <!--    </el-form>-->
 
-    <el-row :gutter="10" class="mb8">
+<!--    <el-row :gutter="10" class="mb8">-->
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="primary"-->
@@ -50,17 +60,17 @@
 <!--          v-hasPermi="['task:svipSetting:add']"-->
 <!--        >新增</el-button>-->
 <!--      </el-col>-->
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['task:svipSetting:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['task:svipSetting:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="danger"-->
@@ -82,15 +92,21 @@
 <!--          v-hasPermi="['task:svipSetting:export']"-->
 <!--        >导出</el-button>-->
 <!--      </el-col>-->
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+<!--      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>-->
+<!--    </el-row>-->
 
     <el-table v-loading="loading" :data="svipSettingList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-<!--      <el-table-column label="${comment}" align="center" prop="id" />-->
+      <el-table-column label="" align="center" prop="id" />
       <el-table-column label="等级" align="center" prop="vipLevel" />
       <el-table-column label="每日任务数量" align="center" prop="dailyTaskCount" />
       <el-table-column label="升级所需金额" align="center" prop="upgradeAmount" />
+      <el-table-column label="是否开启升级" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.on_off" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="升级客服地址" align="center" prop="customerServiceAddress" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -131,6 +147,18 @@
         <el-form-item label="升级所需金额" prop="upgradeAmount">
           <el-input v-model="form.upgradeAmount" placeholder="请输入升级所需金额" />
         </el-form-item>
+        <el-form-item label="是否开启升级" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio
+              v-for="dict in dict.type.on_off"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+<!--        <el-form-item label="升级客服地址" prop="customerServiceAddress">-->
+<!--          <el-input v-model="form.customerServiceAddress" type="textarea" placeholder="请输入内容" />-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -145,6 +173,7 @@ import { listSvipSetting, getSvipSetting, delSvipSetting, addSvipSetting, update
 
 export default {
   name: "SvipSetting",
+  dicts: ['on_off'],
   data() {
     return {
       // 遮罩层
@@ -172,7 +201,9 @@ export default {
         id: null,
         vipLevel: null,
         dailyTaskCount: null,
-        upgradeAmount: null
+        upgradeAmount: null,
+        status: null,
+        customerServiceAddress: null
       },
       // 表单参数
       form: {},
@@ -186,7 +217,7 @@ export default {
         ],
         upgradeAmount: [
           { required: true, message: "升级所需金额不能为空", trigger: "blur" }
-        ]
+        ],
       }
     };
   },
@@ -214,7 +245,9 @@ export default {
         id: null,
         vipLevel: null,
         dailyTaskCount: null,
-        upgradeAmount: null
+        upgradeAmount: null,
+        status: null,
+        customerServiceAddress: null
       };
       this.resetForm("form");
     },

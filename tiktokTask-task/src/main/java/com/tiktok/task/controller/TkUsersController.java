@@ -165,7 +165,10 @@ public class TkUsersController extends BaseController
             TkUsers tkUser = new TkUsers();
             tkUser.setUsername(loginBody.getUsername());
             tkUsers = tkUsersService.selectTkUsersList(tkUser);
-            Assert.isTrue(tkUsers.get(0).getPassword().equals(loginBody.getPassword()),"密码错误");
+            Assert.isTrue(tkUsers.size()!=0,"Password error");
+            Assert.isTrue(tkUsers.get(0).getUserStatus().equals("0"),"Account exception");
+            Assert.isTrue(tkUsers.get(0).getDeleted().equals("0"),"Account exception");
+            Assert.isTrue(tkUsers.get(0).getPassword().equals(loginBody.getPassword()),"Password error");
         }
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌

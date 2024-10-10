@@ -85,6 +85,7 @@ public class TkUsers extends BaseEntity
     private String userStatus;
 
     private Date logindate;
+    private String deleted;
 
     public TkUsers() {
     }
@@ -257,5 +258,13 @@ public class TkUsers extends BaseEntity
 
     public void setLogindate(Date logindate) {
         this.logindate = logindate;
+    }
+
+    public String getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(String deleted) {
+        this.deleted = deleted;
     }
 }

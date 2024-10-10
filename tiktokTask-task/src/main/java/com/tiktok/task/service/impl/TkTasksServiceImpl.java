@@ -286,8 +286,10 @@ public class TkTasksServiceImpl implements ITkTasksService
                         newtkTaskAcceptances.setUid(uid);
                         newtkTaskAcceptances.setCreateTime(new Date());
                         tkTaskAcceptancesMapper.insertTkTaskAcceptances(newtkTaskAcceptances);
+                        tkSpecialTasks.get(i1).setStatus("1");
                         specialTaskId = taskId;
                     }
+                    tkSpecialTaskMapper.updateTkSpecialTask(tkSpecialTasks.get(i1));
                 }
             }
         }

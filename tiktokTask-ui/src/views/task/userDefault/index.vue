@@ -41,6 +41,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="平台客服地址" prop="customerServiceAddress">
+        <el-input
+          v-model="queryParams.customerServiceAddress"
+          placeholder="请输入平台客服地址"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -101,6 +109,7 @@
       <el-table-column label="隐藏任务数" align="center" prop="hiddenTaskCount" />
       <el-table-column label="最低提现金额" align="center" prop="minimumWithdrawalAmount" />
       <el-table-column label="区块链名称" align="center" prop="blockchain" />
+      <el-table-column label="平台客服地址" align="center" prop="customerServiceAddress" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -120,7 +129,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -130,7 +139,7 @@
     />
 
     <!-- 添加或修改系统默认配置对话框 -->
-    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="体验任务数" prop="experienceTaskCount">
           <el-input v-model="form.experienceTaskCount" placeholder="请输入体验任务数" />
@@ -146,6 +155,9 @@
         </el-form-item>
         <el-form-item label="区块链名称" prop="blockchain">
           <el-input v-model="form.blockchain" placeholder="请输入区块链名称" />
+        </el-form-item>
+        <el-form-item label="平台客服地址" prop="customerServiceAddress">
+          <el-input v-model="form.customerServiceAddress" placeholder="请输入平台客服地址" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -189,7 +201,8 @@ export default {
         regularTaskCount: null,
         hiddenTaskCount: null,
         minimumWithdrawalAmount: null,
-        blockchain: null
+        blockchain: null,
+        customerServiceAddress: null
       },
       // 表单参数
       form: {},
@@ -224,7 +237,8 @@ export default {
         regularTaskCount: null,
         hiddenTaskCount: null,
         minimumWithdrawalAmount: null,
-        blockchain: null
+        blockchain: null,
+        customerServiceAddress: null
       };
       this.resetForm("form");
     },

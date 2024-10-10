@@ -35,8 +35,6 @@
             <result column="invitee_usdt_address" property="usdtAddress"/>
             <result column="registration_time" property="registrationTime"/>
             <result column="avatar" property="avatar"/>
-
-
         </association>
     </resultMap>
 

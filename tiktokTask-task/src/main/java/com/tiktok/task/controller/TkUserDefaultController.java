@@ -47,6 +47,18 @@ public class TkUserDefaultController extends BaseController
     }
 
     /**
+     * 查询系统默认配置列表
+     */
+    @GetMapping("/dispositionList")
+    public TableDataInfo dispositionList(TkUserDefault tkUserDefault)
+    {
+        startPage();
+        List<TkUserDefault> list = tkUserDefaultService.selectTkUserDefaultList(tkUserDefault);
+        return getDataTable(list);
+    }
+
+
+    /**
      * 导出系统默认配置列表
      */
     @PreAuthorize("@ss.hasPermi('task:userDefault:export')")
