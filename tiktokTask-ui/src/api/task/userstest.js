@@ -42,3 +42,11 @@ export function delUserstest(uid) {
     method: 'delete'
   })
 }
+
+export function ViewSubordinates(query) {
+  return request({
+    url: '/admin/ViewSubordinates',
+    method: 'get',
+    params: query
+  })
+}

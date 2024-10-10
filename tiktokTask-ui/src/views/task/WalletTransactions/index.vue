@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
       <el-form-item label="用户ID" prop="userid">
         <el-input
           v-model="queryParams.userid"
@@ -17,12 +17,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="交易日期和时间" prop="transactionDate">
+      <el-form-item label="交易日期" prop="transactionDate">
         <el-date-picker clearable
           v-model="queryParams.transactionDate"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="请选择交易日期和时间">
+          placeholder="请选择交易日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="交易后余额" prop="fundBalance">
@@ -41,12 +41,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="记录最后更新时间" prop="updatedAt">
+      <el-form-item label="更新时间" prop="updatedAt">
         <el-date-picker clearable
           v-model="queryParams.updatedAt"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="请选择记录最后更新时间">
+          placeholder="请选择更新时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -108,18 +108,18 @@
       <el-table-column label="交易类型" align="center" prop="transactionType" />
       <el-table-column label="交易金额" align="center" prop="amount" />
       <el-table-column label="交易时间" align="center" prop="transactionDate" width="180">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <span>{{ parseTime(scope.row.transactionDate, '{y}-{m}-{d}') }}</span>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column label="交易后余额" align="center" prop="fundBalance" />
-      <el-table-column label="交易描述/备注" align="center" prop="description" />
+      <el-table-column label="交易备注" align="center" prop="description" />
       <el-table-column label="交易类别" align="center" prop="category" />
 <!--      <el-table-column label="交易状态" align="center" prop="transactionStatus" />-->
-      <el-table-column label="记录最后更新时间" align="center" prop="updatedAt" width="180">
-        <template slot-scope="scope">
+      <el-table-column label="更新时间" align="center" prop="updatedAt" width="180">
+        <!-- <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updatedAt, '{y}-{m}-{d}') }}</span>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">

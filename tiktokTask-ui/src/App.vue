@@ -26,3 +26,29 @@ export default {
   display: none;
 }
 </style>
+<style>
+
+.tag-color1 {
+  color: #00d1ff;
+}
+
+.tag-color2 {
+  color: #0066ff;
+}
+
+.tag-color3 {
+  color: #9e00ff;
+}
+
+.tag-color4 {
+  color: #ff004d;
+}
+
+.tag-color5 {
+  color: #ff6b00;
+}
+
+.tag-color6 {
+  color: #f4de10;
+}
+</style>

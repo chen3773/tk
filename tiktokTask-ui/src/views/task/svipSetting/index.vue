@@ -97,7 +97,7 @@
 
     <el-table v-loading="loading" :data="svipSettingList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="" align="center" prop="id" />
+      <!-- <el-table-column label="" align="center" prop="id" /> -->
       <el-table-column label="等级" align="center" prop="vipLevel" />
       <el-table-column label="每日任务数量" align="center" prop="dailyTaskCount" />
       <el-table-column label="升级所需金额" align="center" prop="upgradeAmount" />
@@ -137,7 +137,7 @@
 
     <!-- 添加或修改svip默认配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="等级" prop="vipLevel">
           <el-input v-model="form.vipLevel" placeholder="请输入等级" />
         </el-form-item>

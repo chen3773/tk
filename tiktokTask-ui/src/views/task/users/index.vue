@@ -101,18 +101,33 @@
 
     <el-table v-loading="loading" :data="usersList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户ID" align="center" prop="uid" />
-      <el-table-column label="账户名" align="center" prop="username" />
-      <el-table-column label="密码" align="center" prop="password" />
-      <el-table-column label="昵称" align="center" prop="nickname" />
-      <el-table-column label="svip等级" align="center" prop="svipLevel" />
-      <el-table-column label="余额" align="center" prop="balance" />
-      <el-table-column label="不可提现余额" align="center" prop="nonWithdrawableBalance" />
-      <el-table-column label="提现USDT地址" align="center" prop="usdtAddress" />
-      <el-table-column label="注册时间" align="center" prop="registrationTime" width="180">
+      <el-table-column label="UID" align="center" prop="uid" width="110" >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.registrationTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <div><el-button type="text" @click="toPage(scope)">UID：{{ scope.row.uid }}</el-button></div>
+          <div :class="`tag-color${scope.row.svipLevel}`">等级：VIP{{ scope.row.svipLevel }}</div>
         </template>
+      </el-table-column>
+      <el-table-column label="账户名" align="center" prop="username" width="160" >
+        <template slot-scope="scope">
+          <div>账户名：{{ scope.row.username }}</div>
+          <div>密码：{{ scope.row.password }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="密码" align="center" prop="password" /> -->
+      <el-table-column label="昵称" align="center" prop="nickname" />
+      <!-- <el-table-column label="svip等级" align="center" prop="svipLevel" /> -->
+      <el-table-column label="余额" align="center" prop="balance" width="150" >
+        <template slot-scope="scope">
+          <div style="color: #1890ff;">余额：{{ scope.row.balance }}</div>
+          <div style="color: #ff9292;">冻结金额：{{ scope.row.nonWithdrawableBalance }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="不可提现余额" align="center" prop="nonWithdrawableBalance" /> -->
+      <el-table-column label="钱包地址" align="center" prop="usdtAddress" />
+      <el-table-column label="注册时间" align="center" prop="registrationTime" width="180">
+        <!-- <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.registrationTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template> -->
       </el-table-column>
       <el-table-column label="邀请码" align="center" prop="invitationCode" />
       <el-table-column label="用户状态" align="center" prop="userStatus">
@@ -126,10 +141,10 @@
           <dict-tag :options="dict.type.user_state" :value="scope.row.withdraw"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-        <template slot-scope="scope">
+      <el-table-column label="最后登录时间" align="center" prop="logindate" width="180">
+        <!-- <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120">
@@ -202,8 +217,8 @@
         <el-form-item label="不可提现余额" prop="nonWithdrawableBalance">
           <el-input v-model="form.nonWithdrawableBalance" placeholder="请输入不可提现余额" />
         </el-form-item>
-        <el-form-item label="提现USDT地址" prop="usdtAddress">
-          <el-input v-model="form.usdtAddress" placeholder="请输入提现USDT地址" />
+        <el-form-item label="钱包地址" prop="usdtAddress">
+          <el-input v-model="form.usdtAddress" placeholder="请输入钱包地址" />
         </el-form-item>
         <el-form-item label="注册时间" prop="registrationTime">
           <el-date-picker clearable
@@ -654,6 +669,11 @@ export default {
         rebate: 'yes'
       };
       this.open3 = true;
+    },
+    toPage(scope) {
+      this.$router.push({ path: '/tkuser/userstest', query: {
+        uid: scope.row.uid
+      }})
     },
   }
 };
