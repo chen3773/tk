@@ -1,15 +1,21 @@
 package com.tiktok.task.controller;
 
+import com.tiktok.common.core.controller.BaseController;
 import com.tiktok.common.core.domain.AjaxResult;
+import com.tiktok.common.core.page.TableDataInfo;
+import com.tiktok.task.domain.ov.JuniorUserOV;
 import com.tiktok.task.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+
 @RestController
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminController extends BaseController {
     @Autowired
     private AdminService adminService;
     @GetMapping("/getHomePage")
@@ -38,4 +44,13 @@ public class AdminController {
         return  adminService.TakeOut(id);
     }
 
+    /**
+     * 查看用户下级
+     */
+    @GetMapping("/ViewSubordinates")
+    public TableDataInfo ViewSubordinates(Long id){
+        startPage();
+        List<JuniorUserOV> juniorUserOVS = adminService.ViewSubordinates(id);
+        return getDataTable(juniorUserOVS);
+    }
 }

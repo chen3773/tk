@@ -58,4 +58,6 @@ public interface TkUsersMapper
      * @return 结果
      */
     public int deleteTkUsersByUids(Long[] uids);
+
+    List<TkUsers> selectSubordinates(Long userId);
 }

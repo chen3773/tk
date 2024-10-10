@@ -46,12 +46,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="referrerId != null "> and tk.referrer_id = #{referrerId}</if>
             <if test="createBy != null "> and tk.create_by = #{createBy}</if>
         </where>
-        AND deleted!=1
+        AND tk.deleted!=1
+        ORDER BY uid DESC
     </select>
     
     <select id="selectTkUsersByUid" parameterType="Long" resultMap="TkUsersResult">
         <include refid="selectTkUsersVo"/>
         where uid = #{uid}
+    </select>
+    <select id="selectSubordinates" resultType="com.tiktok.task.domain.TkUsers">
+            SELECT * FROM tk_users WHERE referrer_id = #{userId}
     </select>
 
     <insert id="insertTkUsers" parameterType="TkUsers" useGeneratedKeys="true" keyProperty="uid">

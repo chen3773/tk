@@ -130,6 +130,8 @@
         </template> -->
       </el-table-column>
       <el-table-column label="邀请码" align="center" prop="invitationCode" />
+      <el-table-column label="团队人数" align="center" prop="teamsize" />
+      <el-table-column label="上级id" align="center" prop="referrerId" />
       <el-table-column label="用户状态" align="center" prop="userStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.userStatus"/>

@@ -10,4 +10,5 @@ public class JuniorUserOV {
     private TkUsers tkUsers;
     private TkInvitation tkInvitation;
     private SysUser sysUser;
+
 }

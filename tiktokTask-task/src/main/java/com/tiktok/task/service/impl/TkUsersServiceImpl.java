@@ -95,12 +95,35 @@ public class TkUsersServiceImpl implements ITkUsersService
      * @return 用户信息
      */
     @Override
-    public List<TkUsers> selectTkUsersList(TkUsers tkUsers)
-    {
+    public List<TkUsers> selectTkUsersList(TkUsers tkUsers) {
+        Long userId = SecurityUtils.getUserId();
+        // 只能查看自己创建的
+        tkUsers.setCreateBy(userId.toString());
 
-        List<TkUsers> tkUsers1 = tkUsersMapper.selectTkUsersList(tkUsers);
-        return tkUsers1;
+        // 超级管理员和管理员可以查看全部
+        for (int i = 0; i < SecurityUtils.getLoginUser().getUser().getRoles().size(); i++) {
+            if (SecurityUtils.getLoginUser().getUser().getRoles().get(i).getRoleKey().contains("admin")) {
+                tkUsers.setCreateBy(null);
+            }
+        }
+
+        List<TkUsers> tkUsersList = tkUsersMapper.selectTkUsersList(tkUsers);
+        for (TkUsers user : tkUsersList) {
+            int num = getSubordinateCount(user.getUid()); // 获取下级数量
+            user.setTeamsize(num); // 设置下级数量
+        }
+        return tkUsersList;
     }
+
+    private int getSubordinateCount(Long userId) {
+        List<TkUsers> subordinates = tkUsersMapper.selectSubordinates(userId);
+        int count = subordinates.size();
+        for (TkUsers subordinate : subordinates) {
+            count += getSubordinateCount(subordinate.getUid());
+        }
+        return count;
+    }
+
 
     /**
      * 新增用户信息

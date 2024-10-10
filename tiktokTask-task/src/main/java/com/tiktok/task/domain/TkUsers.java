@@ -83,9 +83,11 @@ public class TkUsers extends BaseEntity
     /** 用户状态 */
     @Excel(name = "用户状态")
     private String userStatus;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date logindate;
     private String deleted;
+
+    private int teamsize;
 
     public TkUsers() {
     }
@@ -266,5 +268,13 @@ public class TkUsers extends BaseEntity
 
     public void setDeleted(String deleted) {
         this.deleted = deleted;
+    }
+
+    public int getTeamsize() {
+        return teamsize;
+    }
+
+    public void setTeamsize(int teamsize) {
+        this.teamsize = teamsize;
     }
 }

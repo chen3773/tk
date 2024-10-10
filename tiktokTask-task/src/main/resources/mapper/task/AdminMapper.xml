@@ -22,8 +22,104 @@
         (SELECT COUNT(*) FROM tk_task_acceptances WHERE DATE(create_time) = CURDATE()) AS today_task_acceptance_count,
 
         -- 今日完成任务的用户数量
-        (SELECT COUNT(DISTINCT uid) FROM tk_task_acceptances WHERE DATE(create_time) = CURDATE()) AS today_completed_task_users;
+        (SELECT COUNT(DISTINCT uid) FROM tk_task_acceptances WHERE DATE(create_time) = CURDATE()) AS today_completed_task_users,
+
+        -- 今日充值金额
+        (SELECT IFNULL(SUM(Amount), 0) FROM tk_WalletTransactions WHERE transaction_type = 'top-up:' AND DATE(transaction_date) = CURDATE()) AS today_recharge_amount,
+
+        -- 当月充值金额
+        (SELECT IFNULL(SUM(Amount), 0) FROM tk_WalletTransactions WHERE transaction_type = 'top-up:' AND YEAR(transaction_date) = YEAR(CURDATE()) AND MONTH(transaction_date) = MONTH(CURDATE())) AS current_month_recharge_amount,
+
+        -- 全部充值金额
+        (SELECT IFNULL(SUM(Amount), 0) FROM tk_WalletTransactions WHERE transaction_type = 'top-up:') AS total_recharge_amount,
+
+
+        -- 今日提现金额
+        (SELECT IFNULL(SUM(Amount), 0) FROM tk_WalletTransactions WHERE description LIKE 'withdraw:%' AND DATE(transaction_date) = CURDATE()) AS today_withdraw_amount,
+
+
+        -- 今日登录用户数量
+        (SELECT COUNT(*) FROM tk_users tu INNER JOIN sys_user su ON tu.create_by = su.user_id WHERE DATE(su.login_date) = CURDATE() AND tu.create_by = #{userId}) AS today_login_user_count;
     </select>
+
+
+
+
+
+
+    <resultMap id="JuniorUserOVResultMap" type="com.tiktok.task.domain.ov.JuniorUserOV">
+        <association property="tkUsers" javaType="com.tiktok.task.domain.TkUsers">
+            <id column="tu_uid" property="uid"/>
+            <result column="tu_username" property="username"/>
+            <result column="tu_password" property="password"/>
+            <result column="tu_nickname" property="nickname"/>
+            <result column="tu_svip_level" property="svipLevel"/>
+            <result column="tu_balance" property="balance"/>
+            <result column="tu_non_withdrawable_balance" property="nonWithdrawableBalance"/>
+            <result column="tu_totareward" property="totareward"/>
+            <result column="tu_usdt_address" property="usdtAddress"/>
+            <result column="tu_registration_time" property="registrationTime"/>
+            <result column="tu_avatar" property="avatar"/>
+            <result column="tu_invitation_code" property="invitationCode"/>
+            <result column="tu_withdraw" property="withdraw"/>
+            <result column="tu_blockchain_name" property="blockchainName"/>
+            <result column="tu_referrer_id" property="referrerId"/>
+            <result column="tu_user_status" property="userStatus"/>
+            <result column="tu_logindate" property="logindate"/>
+            <result column="tu_deleted" property="deleted"/>
+        </association>
+        <association property="tkInvitation" javaType="com.tiktok.task.domain.TkInvitation">
+            <id column="ti_id" property="id"/>
+            <result column="ti_inviter_id" property="inviterId"/>
+            <result column="ti_invitee_id" property="inviteeId"/>
+            <result column="ti_level" property="level"/>
+            <result column="ti_amount" property="amount"/>
+        </association>
+        <association property="sysUser" javaType="com.tiktok.common.core.domain.entity.SysUser">
+            <id column="su_user_id" property="userId"/>
+            <result column="su_nick_name" property="nickName"/>
+        </association>
+    </resultMap>
+
+    <select id="ViewSubordinates" resultMap="JuniorUserOVResultMap">
+        SELECT
+            ti.id AS ti_id,
+            ti.inviter_id AS ti_inviter_id,
+            ti.invitee_id AS ti_invitee_id,
+            ti.level AS ti_level,
+            ti.amount AS ti_amount,
+            tu.uid AS tu_uid,
+            tu.username AS tu_username,
+            tu.password AS tu_password,
+            tu.nickname AS tu_nickname,
+            tu.svip_level AS tu_svip_level,
+            tu.balance AS tu_balance,
+            tu.non_withdrawable_balance AS tu_non_withdrawable_balance,
+            tu.totareward AS tu_totareward,
+            tu.usdt_address AS tu_usdt_address,
+            tu.registration_time AS tu_registration_time,
+            tu.avatar AS tu_avatar,
+            tu.invitation_code AS tu_invitation_code,
+            tu.withdraw AS tu_withdraw,
+            tu.blockchain_name AS tu_blockchain_name,
+            tu.referrer_id AS tu_referrer_id,
+            tu.user_status AS tu_user_status,
+            su_login.login_date AS tu_logindate,
+            su_create.nick_name AS su_nick_name,
+            tu.deleted AS tu_deleted,
+            su_login.user_id AS su_login_user_id,
+            su_login.nick_name AS su_login_nick_name
+        FROM tk_invitation ti
+                 JOIN tk_users tu ON ti.invitee_id = tu.uid
+                 JOIN sys_user su_login ON tu.username = su_login.user_name
+                 JOIN sys_user su_create ON tu.create_by = su_create.user_id
+        WHERE
+           ti.level = 1
+        <if test="inviterId != null ">and ti.inviter_id = #{inviterId}</if>
+        <if test="createBy != null "> and tu.create_by = #{createBy}</if>
+    </select>
+
+
 
 
 

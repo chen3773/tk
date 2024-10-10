@@ -1,8 +1,10 @@
 package com.tiktok.task.service.impl;
 
 import com.tiktok.common.core.domain.AjaxResult;
+import com.tiktok.common.core.domain.model.LoginUser;
 import com.tiktok.common.utils.SecurityUtils;
 import com.tiktok.task.domain.*;
+import com.tiktok.task.domain.ov.JuniorUserOV;
 import com.tiktok.task.mapper.*;
 import com.tiktok.task.service.AdminService;
 import com.tiktok.task.util.OrderNumberGenerator;
@@ -266,4 +268,33 @@ public class AdminServiceImpl implements AdminService {
         }
         return AjaxResult.success("用户"+userIds+"余额扣除成功");
     }
+
+    @Override
+    public List<JuniorUserOV> ViewSubordinates(Long id) {
+        Long userId = SecurityUtils.getUserId();
+        //超级管理员和管理员可以查看全部
+        for (int i = 0; i < SecurityUtils.getLoginUser().getUser().getRoles().size(); i++) {
+            if (SecurityUtils.getLoginUser().getUser().getRoles().get(i).getRoleKey().contains("admin")) {
+                userId = null;
+            }
+        }
+
+        List<JuniorUserOV> juniorUserOVS = adminMapper.ViewSubordinates(id, userId);
+        for (JuniorUserOV juniorUserOV : juniorUserOVS) {
+            Long uid = juniorUserOV.getTkUsers().getUid(); // 用户id
+            int num = getSubordinateCount(uid); // 获取下级数量
+            juniorUserOV.getTkUsers().setTeamsize(num); // 假设JuniorUserOV有一个字段来存储下级数量
+        }
+        return juniorUserOVS;
+    }
+
+    private int getSubordinateCount(Long userId) {
+        List<JuniorUserOV> subordinates = adminMapper.ViewSubordinates(userId, null);
+        int count = subordinates.size();
+        for (JuniorUserOV subordinate : subordinates) {
+            count += getSubordinateCount(subordinate.getTkUsers().getUid());
+        }
+        return count;
+    }
+
 }
