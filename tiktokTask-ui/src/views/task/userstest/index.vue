@@ -67,8 +67,9 @@
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="UID" align="center" prop="uid" width="110" >
         <template slot-scope="scope">
-          <div><el-button type="text" @click="toPage(scope.row.tkUsers.uid)">UID：{{ scope.row.tkUsers.uid }}</el-button></div>
+          <div><el-button type="text" style="padding: 0;" @click="toPage(scope.row.tkUsers.uid, scope.row.tkUsers)">UID：{{ scope.row.tkUsers.uid }}</el-button></div>
           <div :class="`tag-color${scope.row.tkUsers.svipLevel}`">等级：VIP{{ scope.row.tkUsers.svipLevel }}</div>
+          <div>团队人数：{{ scope.row.tkUsers.teamsize }}</div>
         </template>
       </el-table-column>
       <el-table-column label="推荐人ID" align="center" prop="tkInvitation.inviterId" >
@@ -78,14 +79,16 @@
       </el-table-column>
       <el-table-column label="归属代理" align="center" prop="sysUser.nickName" >
       </el-table-column>
-      <el-table-column label="账户名" align="center" prop="username" width="160" >
+      <el-table-column label="账户" align="center" prop="username" width="160" >
         <template slot-scope="scope">
           <div>账户名：{{ scope.row.tkUsers.username }}</div>
           <div>密码：{{ scope.row.tkUsers.password }}</div>
+          <div>昵称：{{ scope.row.tkUsers.nickname }}</div>
         </template>
       </el-table-column>
+      <!-- <el-table-column label="团队人数" align="center" prop="tkUsers.teamsize" /> -->
       <!-- <el-table-column label="密码" align="center" prop="password" /> -->
-      <el-table-column label="昵称" align="center" prop="tkUsers.nickname" />
+      <!-- <el-table-column label="昵称" align="center" prop="tkUsers.nickname" /> -->
       <!-- <el-table-column label="svip等级" align="center" prop="svipLevel" /> -->
       <el-table-column label="余额" align="center" prop="tkUsers.balance" width="150" >
         <template slot-scope="scope">
@@ -95,24 +98,23 @@
       </el-table-column>
       <!-- <el-table-column label="不可提现余额" align="center" prop="nonWithdrawableBalance" /> -->
       <el-table-column label="钱包地址" align="center" prop="tkUsers.usdtAddress" />
-      <el-table-column label="注册时间" align="center" prop="tkUsers.registrationTime" width="180">
-        <!-- <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.registrationTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template> -->
+      <el-table-column label="时间" align="center" prop="registrationTime" width="230">
+        <template slot-scope="scope">
+          <div>注册时间：{{ scope.row.tkUsers.registrationTime }}</div>
+          <div>登录时间：{{ scope.row.tkUsers.logindate }}</div>
+        </template>
       </el-table-column>
       <el-table-column label="邀请码" align="center" prop="tkUsers.invitationCode" />
-      <el-table-column label="用户状态" align="center" prop="tkUsers.userStatus">
+      <el-table-column label="状态" align="center" prop="tkUsers.userStatus" width="70">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.tkUsers.userStatus"/>
         </template>
       </el-table-column>
 
-      <el-table-column label="提现" align="center" prop="withdraw">
+      <el-table-column label="提现" align="center" prop="withdraw" width="70">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.tkUsers.withdraw"/>
         </template>
-      </el-table-column>
-      <el-table-column label="最后登录时间" align="center" prop="tkUsers.logindate" width="180">
       </el-table-column>
       <el-table-column label="备注" align="center" prop="tkUsers.remark" />
     </el-table>
@@ -210,10 +212,12 @@ export default {
         ...this.queryParams
       }, `users_${new Date().getTime()}.xlsx`)
     },
-    toPage(id) {
-      this.historyList.push(this.queryParams.id)
-      this.queryParams.id = id;
-      this.getList();
+    toPage(id, val) {
+      if (val.teamsize > 0) {
+        this.historyList.push(this.queryParams.id)
+        this.queryParams.id = id;
+        this.getList();
+      }
     },
     back() {
       this.queryParams.id = this.historyList[this.historyList.length - 1];
