@@ -1,6 +1,29 @@
 <template>
   <div class="app-container home">
     <panel-group :info="userIndexData" />
+    <el-table v-loading="loading" :data="userIndexData.AgencyPerformance" v-if="userIndexData.AgencyPerformance.length > 0">
+      <el-table-column label="代理ID" align="center" prop="agent_id" >
+      </el-table-column>
+      <el-table-column label="代理昵称" align="center" prop="nick_name" >
+      </el-table-column>
+      <el-table-column label="总客户数" align="center" prop="total_customer_count" />
+      <el-table-column label="今日注册客户数" align="center" prop="daily_customer_count" />
+      <el-table-column label="本月注册客户数" align="center" prop="monthly_customer_count" />
+      <el-table-column label="充值" align="center" prop="total_top_up_amount" width="220" >
+        <template slot-scope="scope">
+          <div style="text-align: left;">总充值：{{ scope.row.total_top_up_amount }}</div>
+          <div style="text-align: left;">今日充值：{{ scope.row.daily_top_up_amount }}</div>
+          <div style="text-align: left;">本月充值：{{ scope.row.monthly_top_up_amount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="提现" align="center" prop="total_withdraw_amount" width="220" >
+        <template slot-scope="scope">
+          <div style="text-align: left;">总提现：{{ scope.row.total_withdraw_amount }}</div>
+          <div style="text-align: left;">今日提现：{{ scope.row.daily_withdraw_amount }}</div>
+          <div style="text-align: left;">本月提现：{{ scope.row.monthly_withdraw_amount }}</div>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -16,7 +39,9 @@ export default {
     return {
       // 版本号
       version: "3.8.8",
-      userIndexData: {}
+      userIndexData: {},
+      loading: true,
+      dataList: []
     };
   },
   created() {

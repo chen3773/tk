@@ -100,21 +100,22 @@
     </el-row>
 
     <el-table v-loading="loading" :data="usersList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="45" align="center" />
       <el-table-column label="UID" align="center" prop="uid" width="110" >
         <template slot-scope="scope">
-          <div><el-button type="text" @click="toPage(scope)">UID：{{ scope.row.uid }}</el-button></div>
+          <div><el-button type="text" style="padding: 0;" @click="toPage(scope)">UID：{{ scope.row.uid }}</el-button></div>
           <div :class="`tag-color${scope.row.svipLevel}`">等级：VIP{{ scope.row.svipLevel }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="账户名" align="center" prop="username" width="160" >
+      <el-table-column label="账户" align="center" prop="username" width="170" >
         <template slot-scope="scope">
           <div>账户名：{{ scope.row.username }}</div>
           <div>密码：{{ scope.row.password }}</div>
+          <div>昵称：{{ scope.row.nickname }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="密码" align="center" prop="password" /> -->
-      <el-table-column label="昵称" align="center" prop="nickname" />
+      <!-- <el-table-column label="昵称" align="center" prop="nickname" /> -->
       <!-- <el-table-column label="svip等级" align="center" prop="svipLevel" /> -->
       <el-table-column label="余额" align="center" prop="balance" width="150" >
         <template slot-scope="scope">
@@ -124,28 +125,26 @@
       </el-table-column>
       <!-- <el-table-column label="不可提现余额" align="center" prop="nonWithdrawableBalance" /> -->
       <el-table-column label="钱包地址" align="center" prop="usdtAddress" />
-      <el-table-column label="注册时间" align="center" prop="registrationTime" width="180">
-        <!-- <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.registrationTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template> -->
+      <el-table-column label="时间" align="center" prop="registrationTime" width="230">
+        <template slot-scope="scope">
+          <div>注册时间：{{ scope.row.registrationTime }}</div>
+          <div>登录时间：{{ scope.row.logindate }}</div>
+        </template>
       </el-table-column>
       <el-table-column label="邀请码" align="center" prop="invitationCode" />
-      <el-table-column label="用户状态" align="center" prop="userStatus">
+      <el-table-column label="状态" align="center" prop="userStatus" width="70">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.userStatus"/>
         </template>
       </el-table-column>
 
-      <el-table-column label="提现" align="center" prop="userStatus">
+      <el-table-column label="提现" align="center" prop="userStatus" width="70">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.withdraw"/>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录时间" align="center" prop="logindate" width="180">
-        <!-- <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template> -->
-      </el-table-column>
+      <!-- <el-table-column label="最后登录时间" align="center" prop="logindate" width="160">
+      </el-table-column> -->
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120">
         <template slot-scope="scope">

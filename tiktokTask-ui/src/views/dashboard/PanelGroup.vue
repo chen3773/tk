@@ -1,70 +1,149 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            总用户数量
+          <div>
+            <div class="card-panel-text">
+              总用户数量
+            </div>
+            <count-to :start-val="0" :end-val="info.total_user_count || 0" :duration="2600" class="card-panel-num" />
           </div>
-          <count-to :start-val="0" :end-val="info.total_user_count || 0" :duration="2600" class="card-panel-num" />
+          <div>
+            <div class="card-panel-text">
+              VIP用户数量
+            </div>
+            <count-to :start-val="0" :end-val="info.svip_user_count || 0" :duration="2600" class="card-panel-num" />
+          </div>
+          <div>
+            <div class="card-panel-text">
+              今日注册用户数量
+            </div>
+            <count-to :start-val="0" :end-val="info.today_registered_count || 0" :duration="2600" class="card-panel-num" />
+          </div>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('people')">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            VIP用户数量
-          </div>
-          <count-to :start-val="0" :end-val="info.svip_user_count || 0" :duration="3000" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            今日注册用户数量
-          </div>
-          <count-to :start-val="0" :end-val="info.today_registered_count || 0" :duration="3200" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('message')">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            今日任务数量
+          <div>
+            <div class="card-panel-text">
+              今日任务数量
+            </div>
+            <count-to :start-val="0" :end-val="info.today_task_acceptance_count || 0" :duration="3600" class="card-panel-num" />
           </div>
-          <count-to :start-val="0" :end-val="info.today_task_acceptance_count || 0" :duration="3600" class="card-panel-num" />
+          <div>
+            <div class="card-panel-text">
+              今日做任务用户数量
+            </div>
+            <count-to :start-val="0" :end-val="info.today_completed_task_users || 0" :duration="3200" class="card-panel-num" />
+          </div>
+          <div>
+            <div class="card-panel-text">
+              今日登录用户数量
+            </div>
+            <count-to :start-val="0" :end-val="info.today_login_user_count || 0" :duration="3200" class="card-panel-num" />
+          </div>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            今日做任务用户数量
+    <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-money">
+            <svg-icon icon-class="my" class-name="card-panel-icon" />
           </div>
-          <count-to :start-val="0" :end-val="info.today_completed_task_users || 0" :duration="3200" class="card-panel-num" />
+          <div class="card-panel-description">
+            <div>
+              <div class="card-panel-text">用户总充值</div>
+              <div>
+                <count-to
+                  :start-val="0"
+                  :end-val="info.total_recharge_amount || 0"
+                  :duration="2600"
+                  :decimals="2"
+                  class="card-panel-num"
+                />
+              </div>
+            </div>
+            <div>
+              <div class="card-panel-text">用户当日总充值</div>
+              <div>
+                <count-to
+                  :start-val="0"
+                  :end-val="info.today_recharge_amount || 0"
+                  :duration="2600"
+                  :decimals="2"
+                  class="card-panel-num"
+                />
+              </div>
+            </div>
+            <div>
+              <div class="card-panel-text">用户当月总充值</div>
+              <div>
+                <count-to
+                  :start-val="0"
+                  :end-val="info.current_month_recharge_amount || 0"
+                  :duration="2600"
+                  :decimals="2"
+                  class="card-panel-num"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </el-col>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-money">
+            <svg-icon icon-class="my" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div>
+              <div class="card-panel-text">用户总提现</div>
+              <div>
+                <count-to
+                  :start-val="0"
+                  :end-val="info.total_withdraw_amount || 0"
+                  :duration="2600"
+                  :decimals="2"
+                  class="card-panel-num"
+                />
+              </div>
+            </div>
+            <div>
+              <div class="card-panel-text">用户当日总提现</div>
+              <div>
+                <count-to
+                  :start-val="0"
+                  :end-val="info.today_withdraw_amount || 0"
+                  :duration="2600"
+                  :decimals="2"
+                  class="card-panel-num"
+                />
+              </div>
+            </div>
+            <div>
+              <div class="card-panel-text">用户当月总提现</div>
+              <div>
+                <count-to
+                  :start-val="0"
+                  :end-val="info.current_month_withdraw_amount || 0"
+                  :duration="2600"
+                  :decimals="2"
+                  class="card-panel-num"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-col>
   </el-row>
 </template>
 
@@ -105,15 +184,21 @@ export default {
   }
 
   .card-panel {
-    height: 108px;
-    cursor: pointer;
+    // height: 108px;
+    // cursor: pointer;
     font-size: 12px;
     position: relative;
-    overflow: hidden;
+    // overflow: hidden;
     color: #666;
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
+
+    &::after {
+      clear: both;
+      display: block;
+      content: "";
+    }
 
     &:hover {
       .card-panel-icon-wrapper {
@@ -172,6 +257,10 @@ export default {
       margin: 26px;
       margin-left: 0px;
       text-align: right;
+
+      > div {
+        margin-bottom: 12px;
+      }
 
       .card-panel-text {
         line-height: 18px;
