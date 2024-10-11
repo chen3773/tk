@@ -65,21 +65,23 @@
 
     <el-table v-loading="loading" :data="usersList" @selection-change="handleSelectionChange">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
-      <el-table-column label="UID" align="center" prop="uid" width="110" >
+      <el-table-column label="UID" align="center" prop="uid" width="140" >
         <template slot-scope="scope">
           <div><el-button type="text" style="padding: 0;" @click="toPage(scope.row.tkUsers.uid, scope.row.tkUsers)">UID：{{ scope.row.tkUsers.uid }}</el-button></div>
           <div :class="`tag-color${scope.row.tkUsers.svipLevel}`">等级：VIP{{ scope.row.tkUsers.svipLevel }}</div>
           <div>团队人数：{{ scope.row.tkUsers.teamsize }}</div>
+          <div>邀请码：{{ scope.row.tkUsers.invitationCode }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="推荐人ID" align="center" prop="tkInvitation.inviterId" >
-        <!-- <template slot-scope="scope">
-          <el-button type="text" @click="toPage(scope.row.tkInvitation.inviterId)">{{ scope.row.tkInvitation.inviterId }}</el-button>
-        </template> -->
+      <el-table-column label="推荐人" align="center" prop="tkInvitation.inviterId" width="150" >
+        <template slot-scope="scope">
+          <div style="text-align: left;">推荐人ID：{{ scope.row.tkInvitation.inviterId }}</div>
+          <div style="text-align: left;">归属代理：{{ scope.row.sysUser.nickName }}</div>
+        </template>
       </el-table-column>
-      <el-table-column label="归属代理" align="center" prop="sysUser.nickName" >
-      </el-table-column>
-      <el-table-column label="账户" align="center" prop="username" width="160" >
+      <!-- <el-table-column label="归属代理" align="center" prop="sysUser.nickName" >
+      </el-table-column> -->
+      <el-table-column label="账户" align="center" prop="username" width="170" >
         <template slot-scope="scope">
           <div>账户名：{{ scope.row.tkUsers.username }}</div>
           <div>密码：{{ scope.row.tkUsers.password }}</div>
@@ -100,11 +102,11 @@
       <el-table-column label="钱包地址" align="center" prop="tkUsers.usdtAddress" />
       <el-table-column label="时间" align="center" prop="registrationTime" width="230">
         <template slot-scope="scope">
-          <div>注册时间：{{ scope.row.tkUsers.registrationTime }}</div>
-          <div>登录时间：{{ scope.row.tkUsers.logindate }}</div>
+          <div style="text-align: left;">注册时间：{{ scope.row.tkUsers.registrationTime }}</div>
+          <div style="text-align: left;">登录时间：{{ scope.row.tkUsers.logindate }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="邀请码" align="center" prop="tkUsers.invitationCode" />
+      <!-- <el-table-column label="邀请码" align="center" prop="tkUsers.invitationCode" /> -->
       <el-table-column label="状态" align="center" prop="tkUsers.userStatus" width="70">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.tkUsers.userStatus"/>
