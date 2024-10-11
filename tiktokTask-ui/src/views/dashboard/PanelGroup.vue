@@ -134,7 +134,7 @@
               <div>
                 <count-to
                   :start-val="0"
-                  :end-val="info.current_month_withdraw_amount || 0"
+                  :end-val="info.monthly_withdraw_amount || 0"
                   :duration="2600"
                   :decimals="2"
                   class="card-panel-num"

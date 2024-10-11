@@ -101,10 +101,11 @@
 
     <el-table v-loading="loading" :data="usersList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="45" align="center" />
-      <el-table-column label="UID" align="center" prop="uid" width="110" >
+      <el-table-column label="UID" align="center" prop="uid" width="140" >
         <template slot-scope="scope">
           <div><el-button type="text" style="padding: 0;" @click="toPage(scope)">UID：{{ scope.row.uid }}</el-button></div>
           <div :class="`tag-color${scope.row.svipLevel}`">等级：VIP{{ scope.row.svipLevel }}</div>
+          <div>邀请码：{{ scope.row.invitationCode }}</div>
         </template>
       </el-table-column>
       <el-table-column label="账户" align="center" prop="username" width="170" >
@@ -131,7 +132,7 @@
           <div>登录时间：{{ scope.row.logindate }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="邀请码" align="center" prop="invitationCode" />
+      <!-- <el-table-column label="邀请码" align="center" prop="invitationCode" /> -->
       <el-table-column label="状态" align="center" prop="userStatus" width="70">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_state" :value="scope.row.userStatus"/>
