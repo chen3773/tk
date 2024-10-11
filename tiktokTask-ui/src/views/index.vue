@@ -1,7 +1,7 @@
 <template>
   <div class="app-container home">
     <panel-group :info="userIndexData" />
-    <el-table v-loading="loading" :data="userIndexData.AgencyPerformance" v-if="userIndexData.AgencyPerformance.length > 0">
+    <el-table v-loading="loading" :data="userIndexData.AgencyPerformance" v-if="userIndexData.AgencyPerformance && userIndexData.AgencyPerformance.length > 0">
       <el-table-column label="代理ID" align="center" prop="agent_id" >
       </el-table-column>
       <el-table-column label="代理昵称" align="center" prop="nick_name" >
