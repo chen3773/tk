@@ -84,6 +84,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="接取任务的唯一标识符" align="center" prop="id" /> -->
       <el-table-column label="用户ID" align="center" prop="uid" />
+      <el-table-column label="用户名" align="center" prop="username" />
       <el-table-column label="任务ID" align="center" prop="taskId" />
       
       <el-table-column label="提交的图片" align="center" prop="submittedImage" width="100">
