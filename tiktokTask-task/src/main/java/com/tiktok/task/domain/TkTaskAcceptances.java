@@ -48,6 +48,8 @@ public class TkTaskAcceptances extends BaseEntity
     @Excel(name = "审核通过时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date approvalTime;
 
+    private String username;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -123,5 +125,13 @@ public class TkTaskAcceptances extends BaseEntity
             .append("submissionTime", getSubmissionTime())
             .append("approvalTime", getApprovalTime())
             .toString();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

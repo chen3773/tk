@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import javax.servlet.http.HttpServletResponse;
+
+import com.tiktok.framework.web.exception.CustomException;
+import com.tiktok.task.task.AssertionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -148,7 +151,6 @@ public class TkTasksController extends BaseController
     @GetMapping("/getTask")
     public AjaxResult getTask(Long taskLevel)
     {
-        startPage();
         TkTasks tkTasks = new TkTasks();
         tkTasks.setTaskLevel(taskLevel);
         List<TkTasks> task = tkTasksService.getTask(tkTasks);
@@ -159,9 +161,8 @@ public class TkTasksController extends BaseController
      * 用户接取任务
      */
     @PostMapping("/receiveTask")
-    public AjaxResult receiveTask(Long taskId)
-    {
-        Assert.isTrue(taskId!=null,"Missing parameter");
+    public AjaxResult receiveTask(Long taskId) throws CustomException {
+        AssertionUtils.isTrue(taskId!=null,"Missing parameter");
        return tkTasksService.receiveTask(taskId);
     }
 

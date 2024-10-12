@@ -6,6 +6,7 @@ import com.tiktok.common.core.page.TableDataInfo;
 import com.tiktok.task.domain.ov.JuniorUserOV;
 import com.tiktok.task.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,9 +31,17 @@ public class AdminController extends BaseController {
 
     @GetMapping("/AddAndDeduct")
     public AjaxResult AddAndDeduct(String amount,String withdraw,String add,String uid,String rebate){
-
         return  adminService.AddAndDeduct(amount,withdraw,add,uid,rebate);
     }
+
+    /**
+     * 获取有多少个未审核任务
+     */
+    @GetMapping("/pendingTask")
+    public AjaxResult pendingTask(){
+        return adminService.pendingTask();
+    }
+
     /**
      * 充值错误回滚
      *

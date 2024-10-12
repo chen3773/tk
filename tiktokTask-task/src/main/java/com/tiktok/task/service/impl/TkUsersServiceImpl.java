@@ -3,10 +3,7 @@ package com.tiktok.task.service.impl;
 import java.beans.Transient;
 import java.math.BigDecimal;
 import java.security.Security;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.tiktok.common.core.domain.AjaxResult;
@@ -33,12 +30,12 @@ import static com.tiktok.task.util.SVIPNotificationGenerator.generateRandomMessa
 
 /**
  * 用户信息Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2024-09-20
  */
 @Service
-public class TkUsersServiceImpl implements ITkUsersService 
+public class TkUsersServiceImpl implements ITkUsersService
 {
     @Autowired
     private TkUsersMapper tkUsersMapper;
@@ -78,7 +75,7 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     /**
      * 查询用户信息
-     * 
+     *
      * @param uid 用户信息主键
      * @return 用户信息
      */
@@ -90,12 +87,13 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     /**
      * 查询用户信息列表
-     * 
+     *
      * @param tkUsers 用户信息
      * @return 用户信息
      */
     @Override
     public List<TkUsers> selectTkUsersList(TkUsers tkUsers) {
+
         Long userId = SecurityUtils.getUserId();
         // 只能查看自己创建的
         tkUsers.setCreateBy(userId.toString());
@@ -127,7 +125,7 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     /**
      * 新增用户信息
-     * 
+     *
      * @param tkUsers 用户信息
      * @return 结果
      */
@@ -231,7 +229,7 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     /**
      * 修改用户信息
-     * 
+     *
      * @param tkUsers 用户信息
      * @return 结果
      */
@@ -244,7 +242,7 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     /**
      * 批量删除用户信息
-     * 
+     *
      * @param uids 需要删除的用户信息主键
      * @return 结果
      */
@@ -256,7 +254,7 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     /**
      * 删除用户信息信息
-     * 
+     *
      * @param uid 用户信息主键
      * @return 结果
      */
@@ -327,7 +325,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         // 将 amount 转换为 BigDecimal
         BigDecimal amountToWithdraw = new BigDecimal(amount);
         // 检查余额是否足够
-       Assert.isTrue(withdrawableBalance.compareTo(amountToWithdraw) >= 0,"error");
+        Assert.isTrue(withdrawableBalance.compareTo(amountToWithdraw) >= 0,"error");
 
         // 计算提现后的余额
         BigDecimal newBalance = balance.subtract(amountToWithdraw);
@@ -402,7 +400,7 @@ public class TkUsersServiceImpl implements ITkUsersService
             }
         }
 
-                
+
 
         HashMap<String, Object> res = new HashMap<>();
         res.put("JobCommission",tkUsers.getTotareward());
@@ -416,6 +414,7 @@ public class TkUsersServiceImpl implements ITkUsersService
     @Override
     @Transactional
     public AjaxResult addSpecialTask(TaskData taskData) {
+
         for (int i = 0; i < taskData.getUids().size(); i++) {
             //过滤
             TkSpecialTask tkSpecialTask1 = new TkSpecialTask();
@@ -430,9 +429,26 @@ public class TkUsersServiceImpl implements ITkUsersService
 
             }
             for (int i1 = 0; i1 < taskData.getTaskList().size(); i1++) {
+                List<TaskData.Task> taskList = taskData.getTaskList();
+                Map<String, Long> taskIdCountMap = taskList.stream()
+                        .collect(Collectors.groupingBy(TaskData.Task::getTaskId, Collectors.counting())); // 统计每个taskId出现的次数
+
+                // 判断是否有重复的taskId
+                boolean hasDuplicate = taskIdCountMap.values().stream().anyMatch(count -> count > 1);
+
+                // 获取重复的taskId
+                List<String> duplicateTaskIds = taskIdCountMap.entrySet().stream()
+                        .filter(entry -> entry.getValue() > 1)
+                        .map(Map.Entry::getKey)
+                        .collect(Collectors.toList());
+
+                Assert.isTrue(!hasDuplicate,"特殊任务不能进行两次添加，重复任务："+duplicateTaskIds+"请移除");
+
+                // 获取任务ID
                 String taskId = taskData.getTaskList().get(i1).getTaskId();
-               Assert.isTrue( tkTasksMapper.selectTkTasksById(Long.valueOf(taskId))!=null,
-                       "这个任务id不存在-->"+taskId);
+
+                Assert.isTrue( tkTasksMapper.selectTkTasksById(Long.valueOf(taskId))!=null,
+                        "这个任务id不存在-->"+taskId);
 
                 TkSpecialTask tkSpecialTask = new TkSpecialTask();
                 tkSpecialTask.setUserId(Long.valueOf(taskData.getUids().get(i)));
@@ -443,6 +459,16 @@ public class TkUsersServiceImpl implements ITkUsersService
                 }
 
                 tkSpecialTask.setTriggerCount(Long.valueOf(taskData.getTaskList().get(i1).getCount()));
+
+
+                //二次兜底  不能重复下特殊任务
+                String uid = taskData.getUids().get(i);//用户id
+                TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
+                tkTaskAcceptances.setUid(Long.valueOf(uid));
+                tkTaskAcceptances.setTaskId(Long.valueOf(taskId));
+                List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
+                Assert.isTrue(tkTaskAcceptances1.size()==0,taskId+"这个特殊任务客户已经做过了");
+
                 tkSpecialTaskMapper.insertTkSpecialTask(tkSpecialTask);
             }
         }

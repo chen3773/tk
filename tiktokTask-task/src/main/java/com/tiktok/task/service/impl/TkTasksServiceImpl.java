@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import com.tiktok.common.core.domain.AjaxResult;
 import com.tiktok.common.core.domain.entity.SysUser;
 import com.tiktok.common.utils.SecurityUtils;
+import com.tiktok.framework.web.exception.CustomException;
 import com.tiktok.task.domain.*;
 import com.tiktok.task.domain.ov.UserTaskOV;
 import com.tiktok.task.mapper.*;
 import com.tiktok.task.service.ITkTaskAcceptancesService;
+import com.tiktok.task.task.AssertionUtils;
 import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,7 +125,6 @@ public class TkTasksServiceImpl implements ITkTasksService
      */
     @Override
     public List<TkTasks> getTask(TkTasks tkTasks) {
-
         //用户领取过的过滤掉
         TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
         tkTaskAcceptances.setUid(SecurityUtils.getLoginUser().getUser().getUid());
@@ -147,32 +148,39 @@ public class TkTasksServiceImpl implements ITkTasksService
      */
     @Override
     @Transactional
-    public AjaxResult receiveTask(Long taskId) {
+    public AjaxResult receiveTask(Long taskId) throws CustomException {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         //判断用户是否有未完成的任务
         TkTaskAcceptances tkTaskAcceptancesdDm = new TkTaskAcceptances();
         tkTaskAcceptancesdDm.setUid(uid);
-        tkTaskAcceptancesdDm.setStatus("0");
+        tkTaskAcceptancesdDm.setStatus("1");
         List<TkTaskAcceptances> tkTaskAcceptances3= tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptancesdDm);
-        Assert.isTrue(tkTaskAcceptances3.size()==0,"There's still work to be done");
+        tkTaskAcceptancesdDm.setStatus("4");
+        List<TkTaskAcceptances> tkTaskAcceptances5= tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptancesdDm);
+        tkTaskAcceptancesdDm.setStatus("0");
+        List<TkTaskAcceptances> tkTaskAcceptances4= tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptancesdDm);
+
+        AssertionUtils.isTrue(tkTaskAcceptances3.size()==0,"You have a task to review, please wait patiently for approval.");
+        AssertionUtils.isTrue(tkTaskAcceptances5.size()==0,"You have a task to review, please wait patiently for approval.");
+        Assert.isTrue(tkTaskAcceptances4.size()==0,"There's still work to be done");
         //只允许接一次
         TkTaskAcceptances tkTaskAcceptances1 = new TkTaskAcceptances();
         tkTaskAcceptances1.setTaskId(taskId);
         tkTaskAcceptances1.setUid(uid);
         List<TkTaskAcceptances> tkTaskAcceptances2 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances1);
-        Assert.isTrue(tkTaskAcceptances2.size()==0,"Double collection");
+        AssertionUtils.isTrue(tkTaskAcceptances2.size()==0,"Double collection");
 
         TkTasks tkTasks = new TkTasks();
         tkTasks.setId(taskId);
         TkTasks TaskList = tkTasksMapper.selectTkTasksList(tkTasks).get(0);
 
-        Assert.isTrue(TaskList.getDeleted().equals("0"),"error");
+        AssertionUtils.isTrue(TaskList.getDeleted().equals("0"),"error");
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
         //等级不符合
-        Assert.isTrue(TaskList.getTaskLevel()<=tkUsers.getSvipLevel(),"Rank error");
+        AssertionUtils.isTrue(TaskList.getTaskLevel()<=tkUsers.getSvipLevel(),"Rank error");
 
         //判断数量
-        Assert.isTrue(TaskList.getSurplusquantity()>0,"Quota is full");
+        AssertionUtils.isTrue(TaskList.getSurplusquantity()>0,"Quota is full");
 
         //判断用户是否还有任务额度
         TkTasknum tkTasknum = new TkTasknum();
@@ -180,17 +188,17 @@ public class TkTasksServiceImpl implements ITkTasksService
         TkTasknum tkTasknum1 = tkTasknumMapper.selectTkTasknumList(tkTasknum).get(0);
         //判断数量
         if(TaskList.getTaskLevel()==0){
-            Assert.isTrue(tkTasknum1.getExperienceTaskCount()>0,"Insufficient quota");
+            AssertionUtils.isTrue(tkTasknum1.getExperienceTaskCount()>0,"Insufficient quota");
             tkTasknum1.setExperienceTaskCount(tkTasknum1.getExperienceTaskCount()-1);
         }else if(TaskList.getTaskLevel()>0 && TaskList.getTaskLevel()<=5){
-            Assert.isTrue(tkTasknum1.getNormalTaskCount()>0,"Insufficient quota");
+            AssertionUtils.isTrue(tkTasknum1.getNormalTaskCount()>0,"Insufficient quota");
             tkTasknum1.setNormalTaskCount(tkTasknum1.getNormalTaskCount()-1);
         }else if(TaskList.getTaskLevel()==6){
-            Assert.isTrue(tkTasknum1.getHiddenTaskCount()>0,"Insufficient quota");
+            AssertionUtils.isTrue(tkTasknum1.getHiddenTaskCount()>0,"Insufficient quota");
             tkTasknum1.setHiddenTaskCount(tkTasknum1.getHiddenTaskCount()-1);
         }
 
-        Assert.isTrue( tkTasknumMapper.updateTkTasknum(tkTasknum1)>0,"error");
+        AssertionUtils.isTrue( tkTasknumMapper.updateTkTasknum(tkTasknum1)>0,"error");
 
         //接入任务
         TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
@@ -202,10 +210,10 @@ public class TkTasksServiceImpl implements ITkTasksService
         tkTasks.setSurplusquantity(TaskList.getSurplusquantity()-1);
         int i = tkTasksMapper.updateTkTasks(tkTasks);
         //判断数量
-        Assert.isTrue(i!=0,"error");
+        AssertionUtils.isTrue(i!=0,"error");
         //减少一个任务数
         int i1 = tkTaskAcceptancesMapper.insertTkTaskAcceptances(tkTaskAcceptances);
-        Assert.isTrue(i1!=0,"error");
+        AssertionUtils.isTrue(i1!=0,"error");
         return AjaxResult.success("success");
     }
 
@@ -213,6 +221,11 @@ public class TkTasksServiceImpl implements ITkTasksService
     public AjaxResult getTaskNum() {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         List<Map<String, Object>> taskNum = tkTasksMapper.getTaskNum(uid);
+        Integer count = Integer.parseInt(taskNum.get(1).get("count").toString());
+        Integer count2 = Integer.parseInt(taskNum.get(3).get("count").toString());
+        Integer count3 = count + count2;
+        taskNum.get(1).put("count",count3);
+        taskNum.remove(taskNum.size()-1);
         return AjaxResult.success(taskNum);
     }
 
@@ -220,12 +233,9 @@ public class TkTasksServiceImpl implements ITkTasksService
     public AjaxResult getUserTask(String status) {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         List<UserTaskOV> userTaskList =  tkTasksMapper.getUserTask(status, uid);
-        if(status.equals("3")){
-            for (int i = 0; i < userTaskList.size(); i++) {
 
-            }
-        }
-
+        List<UserTaskOV> userTaskList2 =  tkTasksMapper.getUserTask("4", uid);
+        userTaskList.addAll(userTaskList2);
         return AjaxResult.success(userTaskList);
     }
 
@@ -346,6 +356,9 @@ public class TkTasksServiceImpl implements ITkTasksService
         for (int i = 0; i < userTaskById.size(); i++) {
             if(userTaskById.get(i).getTkTaskAcceptances().getStatus().equals("3")){
                 userTaskById.get(i).getTkTasks().setLink("Task failure");
+            }
+            if(userTaskById.get(i).getTkTaskAcceptances().getStatus().equals("2")){
+                userTaskById.get(i).getTkTasks().setLink("Mission completed");
             }
         }
 

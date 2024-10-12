@@ -41,6 +41,17 @@ public class GlobalExceptionHandler
     }
 
     /**
+     * 权限校验异常
+     */
+    @ExceptionHandler(CustomException.class)
+    public AjaxResult CustomException(AccessDeniedException e, HttpServletRequest request)
+    {
+        String requestURI = request.getRequestURI();
+        log.error("请求地址'{}',权限校验失败'{}'", requestURI, e.getMessage());
+        return AjaxResult.error(HttpStatus.FORBIDDEN, "没有权限，请联系管理员授权");
+    }
+
+    /**
      * 请求方式不支持
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -62,6 +73,21 @@ public class GlobalExceptionHandler
         Integer code = e.getCode();
         return StringUtils.isNotNull(code) ? AjaxResult.error(code, e.getMessage()) : AjaxResult.error(e.getMessage());
     }
+
+    /**
+     * 仿照业务异常——自定义异常抛出
+     */
+    @ExceptionHandler(ErrorCodeException.class)
+    public AjaxResult UserDefinedException(ErrorCodeException e){
+        System.out.println("StringUtils.isNull(e.getCode()):"+StringUtils.isNull(e.getCode()));
+        if (StringUtils.isNull(e.getCode()))
+        {
+            return AjaxResult.error(e.getMessage());
+        }
+        return AjaxResult.error(e.getCode(), e.getMessage());
+    }
+
+
 
     /**
      * 请求路径中缺少必需的路径变量

@@ -13,4 +13,6 @@ public interface AdminService {
     AjaxResult TakeOut(Long id);
 
     List<JuniorUserOV> ViewSubordinates(Long id);
+
+    AjaxResult pendingTask();
 }

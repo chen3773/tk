@@ -19,23 +19,26 @@ public class TaskRefresh {
     private TkSvipSettingMapper tkSvipSettingMapper;
     public void TaskRefresh0()
     {
-        //获取出来对应等级的用户
-        TkUsers tkUsers = new TkUsers();
-        tkUsers.setSvipLevel(0L);
-        List<TkUsers> tkUsers1 = tkUsersMapper.selectTkUsersList(tkUsers);
-
-        TkSvipSetting tkSvipSetting = new TkSvipSetting();
-        tkSvipSetting.setVipLevel(0L);
-        TkSvipSetting tkSvipSetting1 = tkSvipSettingMapper.selectTkSvipSettingList(tkSvipSetting).get(0);
-
-        Long dailyTaskCount = tkSvipSetting1.getDailyTaskCount();//每日次数
-        long[] uids = tkUsers1.stream().mapToLong(TkUsers::getUid).toArray();
-
-        //批量更新
-        Map<String, Object> params = new HashMap<>();
-        params.put("dailyTaskCount", dailyTaskCount);
-        params.put("uids", uids);
-        int i = tkSvipSettingMapper.updateDailyTaskCountBatch(params);
+//        //获取出来对应等级的用户
+//        TkUsers tkUsers = new TkUsers();
+//        tkUsers.setSvipLevel(0L);
+//        List<TkUsers> tkUsers1 = tkUsersMapper.selectTkUsersList(tkUsers);
+//
+//        TkSvipSetting tkSvipSetting = new TkSvipSetting();
+//        tkSvipSetting.setVipLevel(0L);
+//        TkSvipSetting tkSvipSetting1 = tkSvipSettingMapper.selectTkSvipSettingList(tkSvipSetting).get(0);
+//
+//        Long dailyTaskCount = tkSvipSetting1.getDailyTaskCount();//每日次数
+//        long[] uids = tkUsers1.stream().mapToLong(TkUsers::getUid).toArray();
+//
+//        //批量更新
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("dailyTaskCount", dailyTaskCount);
+//        params.put("uids", uids);
+//
+//
+//
+//        int i = tkSvipSettingMapper.updateDailyTaskCountBatch(params);
     }
     public void TaskRefresh1()
     {
@@ -55,6 +58,9 @@ public class TaskRefresh {
         Map<String, Object> params = new HashMap<>();
         params.put("dailyTaskCount", dailyTaskCount);
         params.put("uids", uids);
+
+        //uids 判断不能有未完成未提交
+
         int i = tkSvipSettingMapper.updateNormalTaskCountBatch(params);
     }public void TaskRefresh2()
     {

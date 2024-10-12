@@ -3,6 +3,7 @@ package com.tiktok.task.service;
 import java.util.List;
 
 import com.tiktok.common.core.domain.AjaxResult;
+import com.tiktok.framework.web.exception.CustomException;
 import com.tiktok.task.domain.TkTasks;
 
 /**
@@ -63,7 +64,7 @@ public interface ITkTasksService
 
     List<TkTasks> getTask(TkTasks tkTasks);
 
-    AjaxResult receiveTask(Long taskId);
+    AjaxResult receiveTask(Long taskId) throws CustomException;
 
     AjaxResult getTaskNum();
 

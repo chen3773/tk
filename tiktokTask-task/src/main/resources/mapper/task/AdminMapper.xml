@@ -4,42 +4,105 @@
     <select id="HomePage" resultType="java.util.HashMap">
         SELECT
         -- 今日注册的用户数量
-        (SELECT COUNT(*) FROM tk_users WHERE DATE(registration_time) = CURDATE()
-        <if test="userId != null "> and create_by = #{userId}</if>
+        (SELECT COUNT(*) FROM tk_users
+        WHERE DATE(registration_time) = CURDATE()
+        <if test="userId != null"> AND create_by = #{userId}</if>
         ) AS today_registered_count,
 
         -- 总用户数量
         (SELECT COUNT(*) FROM tk_users
-        <if test="userId != null "> WHERE create_by = #{userId}</if>
+        <if test="userId != null"> WHERE create_by = #{userId}</if>
         ) AS total_user_count,
 
         -- SVIP等级大于0的用户数
-        (SELECT COUNT(*) FROM tk_users WHERE svip_level > '0'
-        <if test="userId != null "> and create_by = #{userId}</if>
+        (SELECT COUNT(*) FROM tk_users
+        WHERE svip_level > '0'
+        <if test="userId != null"> AND create_by = #{userId}</if>
         ) AS svip_user_count,
 
         -- 今日接单总数
-        (SELECT COUNT(*) FROM tk_task_acceptances WHERE DATE(create_time) = CURDATE()) AS today_task_acceptance_count,
+        (SELECT COUNT(*)
+        FROM tk_task_acceptances tta
+        JOIN tk_users tu ON tta.uid = tu.uid
+        WHERE DATE(tta.create_time) = CURDATE()
+        <if test="userId != null">  AND
+            tu.create_by =  #{userId}</if>
+        ) AS today_task_acceptance_count,
 
         -- 今日完成任务的用户数量
-        (SELECT COUNT(DISTINCT uid) FROM tk_task_acceptances WHERE DATE(create_time) = CURDATE()) AS today_completed_task_users,
+        (SELECT COUNT(DISTINCT tta.uid)
+        FROM tk_task_acceptances tta
+        JOIN tk_users tu ON tta.uid = tu.uid
+        WHERE DATE(tta.create_time) = CURDATE()
+        <if test="userId != null">  AND
+            tu.create_by =  #{userId}</if>
+        ) AS today_completed_task_users,
 
         -- 今日充值金额
-        (SELECT IFNULL(SUM(Amount), 0) FROM tk_WalletTransactions WHERE transaction_type = 'top-up:' AND DATE(transaction_date) = CURDATE()) AS today_recharge_amount,
+        (SELECT IFNULL(SUM(twt.Amount), 0)
+        FROM tk_WalletTransactions twt
+        JOIN tk_users tu ON twt.userid = tu.uid
+        WHERE twt.transaction_type = 'top-up:'
+        AND DATE(twt.transaction_date) = CURDATE()
+        <if test="userId != null">  AND
+            tu.create_by =  #{userId}</if>
+        ) AS today_recharge_amount,
 
         -- 当月充值金额
-        (SELECT IFNULL(SUM(Amount), 0) FROM tk_WalletTransactions WHERE transaction_type = 'top-up:' AND YEAR(transaction_date) = YEAR(CURDATE()) AND MONTH(transaction_date) = MONTH(CURDATE())) AS current_month_recharge_amount,
+        (SELECT IFNULL(SUM(twt.Amount), 0)
+        FROM tk_WalletTransactions twt
+        JOIN tk_users tu ON twt.userid = tu.uid
+        WHERE twt.transaction_type = 'top-up:'
+        AND YEAR(twt.transaction_date) = YEAR(CURDATE())
+        AND MONTH(twt.transaction_date) = MONTH(CURDATE())
+        <if test="userId != null">  AND
+            tu.create_by =  #{userId}</if>
+        ) AS current_month_recharge_amount,
 
         -- 全部充值金额
-        (SELECT IFNULL(SUM(Amount), 0) FROM tk_WalletTransactions WHERE transaction_type = 'top-up:') AS total_recharge_amount,
-
+        (SELECT IFNULL(SUM(twt.Amount), 0)
+        FROM tk_WalletTransactions twt
+        JOIN tk_users tu ON twt.userid = tu.uid
+        WHERE twt.transaction_type = 'top-up:'
+        <if test="userId != null">  AND
+            tu.create_by =  #{userId}</if>
+        ) AS total_recharge_amount,
 
         -- 今日提现金额
-        (SELECT IFNULL(SUM(Amount), 0) FROM tk_WalletTransactions WHERE description LIKE 'withdraw:%' AND DATE(transaction_date) = CURDATE()) AS today_withdraw_amount,
+        (SELECT IFNULL(SUM(twt.Amount), 0)
+        FROM tk_WalletTransactions twt
+        JOIN tk_users tu ON twt.userid = tu.uid
+        WHERE twt.description LIKE 'withdraw：%'
+        AND DATE(twt.transaction_date) = CURDATE()
+        <if test="userId != null">  AND
+            tu.create_by =  #{userId}</if>
+        ) AS today_withdraw_amount,
 
+        -- 全部提现金额
+        (SELECT IFNULL(SUM(twt.Amount), 0)
+        FROM tk_WalletTransactions twt
+        JOIN tk_users tu ON twt.userid = tu.uid
+        WHERE twt.description LIKE 'withdraw：%'
+        <if test="userId != null">  AND
+            tu.create_by =  #{userId}</if>
+        ) AS total_withdraw_amount,
+        -- 月提现金额
+        (SELECT IFNULL(SUM(twt.Amount), 0)
+        FROM tk_WalletTransactions twt
+        JOIN tk_users tu ON twt.userid = tu.uid
+        WHERE twt.description LIKE 'withdraw：%'
+        AND DATE_FORMAT(twt.transaction_date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+        <if test="userId != null">  AND
+            tu.create_by =  #{userId}</if>
+        ) AS monthly_withdraw_amount,
 
         -- 今日登录用户数量
-        (SELECT COUNT(*) FROM tk_users tu INNER JOIN sys_user su ON tu.create_by = su.user_id WHERE DATE(su.login_date) = CURDATE() AND tu.create_by = #{userId}) AS today_login_user_count;
+        (SELECT COUNT(*)
+        FROM tk_users tu
+        INNER JOIN sys_user su ON tu.create_by = su.user_id
+        WHERE DATE(su.login_date) = CURDATE()
+        <if test="userId != null"> AND tu.create_by = #{userId}</if>
+        ) AS today_login_user_count
     </select>
 
 
@@ -111,6 +174,7 @@
             su_login.nick_name AS su_login_nick_name
         FROM tk_invitation ti
                  JOIN tk_users tu ON ti.invitee_id = tu.uid
+
                  JOIN sys_user su_login ON tu.username = su_login.user_name
                  JOIN sys_user su_create ON tu.create_by = su_create.user_id
         WHERE
@@ -118,9 +182,31 @@
         <if test="inviterId != null ">and ti.inviter_id = #{inviterId}</if>
         <if test="createBy != null "> and tu.create_by = #{createBy}</if>
     </select>
+    <select id="getAgencyPerformance" resultType="java.util.HashMap">
+        SELECT
+            u.create_by AS agent_id,
+            su.nick_name AS nick_name,
+            COUNT(DISTINCT u.uid) AS total_customer_count,
+            COUNT(DISTINCT CASE WHEN DATE_FORMAT(u.registration_time, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') THEN u.uid END) AS monthly_customer_count,
+            COUNT(DISTINCT CASE WHEN DATE(u.registration_time) = CURDATE() THEN u.uid END) AS daily_customer_count,
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'top-up:' THEN t.Amount ELSE 0 END), 0) AS total_top_up_amount,
+            COALESCE(SUM(CASE WHEN t.description LIKE '%withdraw：%' THEN t.Amount ELSE 0 END), 0) AS total_withdraw_amount,
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'top-up:' AND DATE_FORMAT(t.transaction_date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') THEN t.Amount ELSE 0 END), 0) AS monthly_top_up_amount,
+            COALESCE(SUM(CASE WHEN t.description LIKE '%withdraw：%' AND DATE_FORMAT(t.transaction_date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') THEN t.Amount ELSE 0 END), 0) AS monthly_withdraw_amount,
+            COALESCE(SUM(CASE WHEN t.transaction_type = 'top-up:' AND DATE(t.transaction_date) = CURDATE() THEN t.Amount ELSE 0 END), 0) AS daily_top_up_amount,
+            COALESCE(SUM(CASE WHEN t.description LIKE '%withdraw：%' AND DATE(t.transaction_date) = CURDATE() THEN t.Amount ELSE 0 END), 0) AS daily_withdraw_amount
+        FROM
+            tk_users u
+                LEFT JOIN
+            tk_WalletTransactions t ON u.uid = t.userid
+                LEFT JOIN
+            sys_user su ON su.user_id = u.create_by
+        GROUP BY
+            u.create_by, su.nick_name;
 
 
 
+    </select>
 
 
 </mapper>

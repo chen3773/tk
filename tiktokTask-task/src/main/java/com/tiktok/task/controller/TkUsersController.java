@@ -16,6 +16,7 @@ import com.tiktok.framework.web.service.TokenService;
 import com.tiktok.system.service.ISysUserService;
 import com.tiktok.task.domain.*;
 import com.tiktok.task.mapper.TkUserDefaultMapper;
+import com.tiktok.task.mapper.TkUsersMapper;
 import com.tiktok.task.service.ITkSvipSettingService;
 import com.tiktok.task.service.impl.TkTasknumServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,7 +52,8 @@ public class TkUsersController extends BaseController
 {
     @Autowired
     private ITkUsersService tkUsersService;
-
+    @Autowired
+    private TkUsersMapper tkUsersMapper;
     @Autowired
     private SysLoginService loginService;
 
@@ -159,7 +161,7 @@ public class TkUsersController extends BaseController
            //通过账号获取出平台授权账号
             TkUsers tkUser = new TkUsers();
             tkUser.setUsername(loginBody.getUsername());
-            tkUsers = tkUsersService.selectTkUsersList(tkUser);
+            tkUsers = tkUsersMapper.selectTkUsersList(tkUser);
             Assert.isTrue(tkUsers.size()!=0,"Password error");
             Assert.isTrue(tkUsers.get(0).getUserStatus().equals("0"),"Account exception");
             Assert.isTrue(tkUsers.get(0).getDeleted().equals("0"),"Account exception");
@@ -189,7 +191,7 @@ public class TkUsersController extends BaseController
         String username = SecurityUtils.getUsername();
         TkUsers newtkUsers = new TkUsers();
         newtkUsers.setUsername(username);
-        TkUsers tkUsers = tkUsersService.selectTkUsersList(newtkUsers).get(0);
+        TkUsers tkUsers = tkUsersMapper.selectTkUsersList(newtkUsers).get(0);
         if (tkUsers != null){
             newtkUsers.setNickname(tkUsers.getNickname());
             newtkUsers.setSvipLevel(tkUsers.getSvipLevel());

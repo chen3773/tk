@@ -13,4 +13,6 @@ public interface AdminMapper {
 
 
     List<JuniorUserOV> ViewSubordinates(@Param("inviterId") Long inviterId,@Param("createBy") Long createBy);
+
+   List< HashMap<String,Object>> getAgencyPerformance();
 }

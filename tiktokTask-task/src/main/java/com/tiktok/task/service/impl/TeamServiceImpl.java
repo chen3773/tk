@@ -11,6 +11,7 @@ import com.tiktok.task.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 @Service
 public class TeamServiceImpl implements TeamService {
@@ -34,7 +35,14 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public AjaxResult getTeamData() {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
-        return AjaxResult.success(tkInvitationMapper.getTeamData(uid));
+        HashMap<String, String> teamData = tkInvitationMapper.getTeamData(uid);
+        if(teamData==null){
+            teamData = new HashMap<>();
+            teamData.put("totareward","0");
+            teamData.put("amount","0");
+            teamData.put("invitations","0");
+        }
+        return AjaxResult.success(teamData);
     }
 
 

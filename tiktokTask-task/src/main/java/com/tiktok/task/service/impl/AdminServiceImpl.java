@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,23 +33,33 @@ public class AdminServiceImpl implements AdminService {
     private TkInvitationMapper tkInvitationMapper;
     @Autowired
     private TkRoyaltySettingMapper tkRoyaltySettingMapper;
-
+    @Autowired
+    private TkTaskAcceptancesMapper tkTaskAcceptancesMapper;
 
     @Override
     public AjaxResult HomePage() {
         Long userId = SecurityUtils.getUserId();
 
         //超级管理员和管理员可以查看全部
+        boolean bool = false;
         for (int i = 0; i < SecurityUtils.getLoginUser().getUser().getRoles().size(); i++) {
             if( SecurityUtils.getLoginUser().getUser().getRoles().get(i).getRoleKey().contains("admin")){
                 userId = null;
+                bool = true;
             }
         }
-        return AjaxResult.success(adminMapper.HomePage(userId));
+        HashMap<String, Object> stringObjectHashMap = adminMapper.HomePage(userId);
+        if(bool){//是管理员 去查询出代业绩数据
+            List<HashMap<String, Object>> agencyPerformance = adminMapper.getAgencyPerformance();
+            stringObjectHashMap.put("AgencyPerformance",agencyPerformance);
+        }
+        return AjaxResult.success(stringObjectHashMap);
     }
 
     @Override
+    @Transactional
     public AjaxResult AddAndDeduct(String amount,String withdraw,String add,String uid,String rebate) {
+        Assert.isTrue(!(add.equals("no")&&rebate.equals("yes")),"只有加款才能勾选返利");
         String orderNumber = OrderNumberGenerator.generateOrderNumber();
 
 
@@ -78,7 +89,7 @@ public class AdminServiceImpl implements AdminService {
             }
 
         }
-       tkUsersMapper.updateTkUsers(tkUsers);
+        tkUsersMapper.updateTkUsers(tkUsers);
 
         if(add.equals("no")){
             bigDecimal = new BigDecimal(amount).negate();
@@ -225,7 +236,9 @@ public class AdminServiceImpl implements AdminService {
                     TkInvitation tkInvitation = new TkInvitation();
                     tkInvitation.setInviterId(tkUser.getUid());
                     tkInvitation.setInviteeId(result.getUserid());
-                    TkInvitation tkInvitationdm = tkInvitationMapper.selectTkInvitationList(tkInvitation).get(0);
+                    List<TkInvitation> tkInvitations = tkInvitationMapper.selectTkInvitationList(tkInvitation);
+                    Assert.isTrue(tkInvitations.size()!=0,"禁止多次回滚操作");
+                    TkInvitation tkInvitationdm = tkInvitations.get(0);
                     tkInvitationdm.setAmount(new BigDecimal(tkInvitationdm.getAmount()).subtract(amount).toString());
                     tkInvitationMapper.updateTkInvitation(tkInvitationdm);
                 }
@@ -286,6 +299,14 @@ public class AdminServiceImpl implements AdminService {
             juniorUserOV.getTkUsers().setTeamsize(num); // 假设JuniorUserOV有一个字段来存储下级数量
         }
         return juniorUserOVS;
+    }
+
+    @Override
+    public AjaxResult pendingTask() {
+        TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
+        tkTaskAcceptances.setStatus("1");
+        List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
+        return AjaxResult.success(tkTaskAcceptances1.size());
     }
 
     private int getSubordinateCount(Long userId) {

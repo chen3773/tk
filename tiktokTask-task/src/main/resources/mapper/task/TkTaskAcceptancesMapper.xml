@@ -13,16 +13,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="submissionTime"    column="submission_time"    />
         <result property="approvalTime"    column="approval_time"    />
         <result property="createTime"    column="create_time"    />
+        <result property="username"    column="username"    />
     </resultMap>
 
     <sql id="selectTkTaskAcceptancesVo">
-        select id, uid, task_id, status, submitted_image, submission_time, approval_time,create_time from tk_task_acceptances
+        SELECT
+            ta.id,
+            ta.uid,
+            ta.task_id,
+            ta.status,
+            ta.submitted_image,
+            ta.submission_time,
+            ta.approval_time,
+            ta.create_time,
+            tu.username
+        FROM
+            tk_task_acceptances ta
+                JOIN
+            tk_users tu ON ta.uid = tu.uid
     </sql>
 
     <select id="selectTkTaskAcceptancesList" parameterType="TkTaskAcceptances" resultMap="TkTaskAcceptancesResult">
         <include refid="selectTkTaskAcceptancesVo"/>
         <where>  
-            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="uid != null "> and ta.uid = #{uid}</if>
             <if test="taskId != null "> and task_id = #{taskId}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
