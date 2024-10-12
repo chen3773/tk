@@ -85,14 +85,21 @@
       <!-- <el-table-column label="接取任务的唯一标识符" align="center" prop="id" /> -->
       <el-table-column label="用户ID" align="center" prop="uid" />
       <el-table-column label="用户名" align="center" prop="username" />
-      <el-table-column label="任务ID" align="center" prop="taskId" />
+      <el-table-column label="任务" align="center" prop="taskId" width="250" >
+        <template slot-scope="scope">
+          <div style="text-align: left;">任务ID：{{ scope.row.taskId }}</div>
+          <div style="text-align: left;">任务标题：{{ scope.row.taskTitle }}</div>
+          <div style="text-align: left;">任务金额：{{ scope.row.taskRewardAmount }}</div>
+          <div style="text-align: left;display: flex;">任务等级：<dict-tag :options="dict.type.tk_task" :value="scope.row.taskLevel"/></div>
+        </template>
+      </el-table-column>
       
       <el-table-column label="提交的图片" align="center" prop="submittedImage" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.submittedImage" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="提交时间" align="center" prop="submissionTime">
+      <el-table-column label="提交时间" align="center" prop="submissionTime" width="100">
         <!-- <template slot-scope="scope">
           <span>{{ parseTime(scope.row.submissionTime, '{y}-{m}-{d}') }}</span>
         </template> -->
@@ -102,7 +109,7 @@
           <dict-tag :options="dict.type.task_state" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="审核时间" align="center" prop="approvalTime">
+      <el-table-column label="审核时间" align="center" prop="approvalTime" width="100">
         <!-- <template slot-scope="scope">
           <span>{{ parseTime(scope.row.approvalTime, '{y}-{m}-{d}') }}</span>
         </template> -->
@@ -194,7 +201,7 @@ import { listAcceptances, getAcceptances, delAcceptances, addAcceptances, update
 
 export default {
   name: "Acceptances",
-  dicts: ['task_state'],
+  dicts: ['task_state', 'tk_task'],
   data() {
     return {
       // 遮罩层
