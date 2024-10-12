@@ -7,3 +7,10 @@ export function getHomePage() {
     method: 'get'
   })
 }
+
+export function pendingTask() {
+  return request({
+    url: '/admin/pendingTask',
+    method: 'get'
+  })
+}

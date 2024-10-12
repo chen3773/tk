@@ -50,3 +50,11 @@ export function taskAudit(query) {
     params: query
   })
 }
+
+export function acceptancesAudit(data) {
+  return request({
+    url: '/task/acceptances',
+    method: 'put',
+    data: data
+  })
+}

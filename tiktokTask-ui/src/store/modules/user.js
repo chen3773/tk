@@ -1,5 +1,6 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { pendingTask } from "@/api/index";
 
 const user = {
   state: {
@@ -8,7 +9,9 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    rCount: 0,
+    wCount: 0
   },
 
   mutations: {
@@ -29,6 +32,12 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_rCount: (state, num) => {
+      state.rCount = num
+    },
+    SET_wCount: (state, num) => {
+      state.wCount = num
     }
   },
 
@@ -93,6 +102,18 @@ const user = {
         commit('SET_TOKEN', '')
         removeToken()
         resolve()
+      })
+    },
+
+    getTaskNum({ commit }) {
+      return new Promise((resolve, reject) => {
+        pendingTask().then(res => {
+          console.log(res, 'ddd')
+          commit('SET_rCount', res.data)
+          resolve(res.data)
+        }).catch(error => {
+          reject(error)
+        })
       })
     }
   }

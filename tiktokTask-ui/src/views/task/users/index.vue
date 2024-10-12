@@ -446,7 +446,7 @@ export default {
         this.tasksList = response.rows;
         this.tasksList.map(item => {
           item.id = item.id + '';
-          item.label = `名称: ${item.title}; 金额: ${item.rewardAmount}`;
+          item.label = `名称: ${item.title}; ID: ${item.id}; 金额: ${item.rewardAmount}`;
         })
         this.tasksList = [...this.tasksList]
         console.log(this.tasksList, 'this.tasksList')

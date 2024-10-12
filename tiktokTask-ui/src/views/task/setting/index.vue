@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="${comment}" prop="id">
         <el-input
           v-model="queryParams.id"
@@ -37,10 +37,10 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-    </el-form>
+    </el-form> -->
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -49,7 +49,7 @@
           @click="handleAdd"
           v-hasPermi="['task:setting:add']"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -61,7 +61,7 @@
           v-hasPermi="['task:setting:edit']"
         >修改</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="danger"
           plain
@@ -71,7 +71,7 @@
           @click="handleDelete"
           v-hasPermi="['task:setting:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -87,7 +87,7 @@
 
     <el-table v-loading="loading" :data="settingList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
+      <!-- <el-table-column label="${comment}" align="center" prop="id" /> -->
       <el-table-column label="一级" align="center" prop="first" />
       <el-table-column label="二级" align="center" prop="two" />
       <el-table-column label="三级" align="center" prop="three" />
@@ -100,13 +100,13 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['task:setting:edit']"
           >修改</el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['task:setting:remove']"
-          >删除</el-button>
+          >删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
