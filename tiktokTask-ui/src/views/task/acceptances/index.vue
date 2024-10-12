@@ -114,7 +114,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row, true)"
             v-hasPermi="['task:acceptances:edit']"
-            v-if="scope.row.status == 1"
+            v-if="scope.row.status == 1 || scope.row.status == 4"
           >通过</el-button>
           <el-button
             size="mini"
@@ -122,8 +122,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row, false)"
             v-hasPermi="['task:acceptances:edit']"
-            v-if="scope.row.status == 1"
+            v-if="scope.row.status == 1 || scope.row.status == 4"
           >驳回</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate1(scope.row)"
+            v-hasPermi="['task:acceptances:edit']"
+            v-if="scope.row.status == 1"
+          >卡审</el-button>
           <!-- <el-button
             size="mini"
             type="text"
@@ -181,7 +189,7 @@
 </template>
 
 <script>
-import { listAcceptances, getAcceptances, delAcceptances, addAcceptances, updateAcceptances, taskAudit } from "@/api/task/acceptances";
+import { listAcceptances, getAcceptances, delAcceptances, addAcceptances, updateAcceptances, taskAudit, acceptancesAudit } from "@/api/task/acceptances";
 
 export default {
   name: "Acceptances",
@@ -298,6 +306,17 @@ export default {
         this.$modal.msgSuccess("审核成功");
       });
     },
+    handleUpdate1(row) {
+      this.reset();
+      const id = row.id
+      acceptancesAudit({
+        id,
+        status: 4
+      }).then(response => {
+        this.getList();
+        this.$modal.msgSuccess("卡审成功");
+      });
+    },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -333,7 +352,7 @@ export default {
       this.download('task/acceptances/export', {
         ...this.queryParams
       }, `acceptances_${new Date().getTime()}.xlsx`)
-    }
+    },
   }
 };
 </script>
