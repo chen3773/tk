@@ -105,6 +105,7 @@
         <template slot-scope="scope">
           <div><el-button type="text" style="padding: 0;" @click="toPage(scope)">UID：{{ scope.row.uid }}</el-button></div>
           <div :class="`tag-color${scope.row.svipLevel}`">等级：VIP{{ scope.row.svipLevel }}</div>
+          <div>团队人数：{{ scope.row.teamsize }}</div>
           <div>邀请码：{{ scope.row.invitationCode }}</div>
         </template>
       </el-table-column>
@@ -671,9 +672,11 @@ export default {
       this.open3 = true;
     },
     toPage(scope) {
-      this.$router.push({ path: '/tkuser/userstest', query: {
-        uid: scope.row.uid
-      }})
+      if (scope.row.teamsize > 0) {
+        this.$router.push({ path: '/tkuser/userstest', query: {
+          uid: scope.row.uid
+        }})
+      }
     },
   }
 };
