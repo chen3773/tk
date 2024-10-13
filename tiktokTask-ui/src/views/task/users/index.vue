@@ -64,7 +64,7 @@
           v-hasPermi="['task:users:edit']"
         >修改</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="danger"
           plain
@@ -74,7 +74,7 @@
           @click="handleDelete"
           v-hasPermi="['task:users:remove']"
         >删除</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -111,9 +111,10 @@
       </el-table-column>
       <el-table-column label="账户" align="center" prop="username" width="170" >
         <template slot-scope="scope">
-          <div>账户名：{{ scope.row.username }}</div>
-          <div>密码：{{ scope.row.password }}</div>
-          <div>昵称：{{ scope.row.nickname }}</div>
+          <div style="text-align: left;">账户名：{{ scope.row.username }}</div>
+          <div style="text-align: left;">密码：{{ scope.row.password }}</div>
+          <div style="text-align: left;">昵称：{{ scope.row.nickname }}</div>
+          <div style="text-align: left;">交易密码：{{ scope.row.paymentPassword }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="密码" align="center" prop="password" /> -->
@@ -129,8 +130,8 @@
       <el-table-column label="钱包地址" align="center" prop="usdtAddress" />
       <el-table-column label="时间" align="center" prop="registrationTime" width="230">
         <template slot-scope="scope">
-          <div>注册时间：{{ scope.row.registrationTime }}</div>
-          <div>登录时间：{{ scope.row.logindate }}</div>
+          <div style="text-align: left;">注册时间：{{ scope.row.registrationTime }}</div>
+          <div style="text-align: left;">登录时间：{{ scope.row.logindate }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="邀请码" align="center" prop="invitationCode" /> -->
@@ -178,13 +179,13 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['task:users:edit']"
           >修改</el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['task:users:remove']"
-          >删除</el-button>
+          >删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -205,6 +206,9 @@
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="form.password" placeholder="请输入密码" />
+        </el-form-item>
+        <el-form-item label="交易密码" prop="paymentPassword">
+          <el-input v-model="form.paymentPassword" placeholder="请输入交易密码" />
         </el-form-item>
         <el-form-item label="昵称" prop="nickname">
           <el-input v-model="form.nickname" placeholder="请输入昵称" />
@@ -479,7 +483,8 @@ export default {
         createTime: null,
         updateBy: null,
         updateTime: null,
-        remark: null
+        remark: null,
+        paymentPassword: null
       };
       this.resetForm("form");
     },
