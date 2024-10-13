@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="uid" prop="uid">
+        <el-input
+          v-model="queryParams.uid"
+          placeholder="请输入uid"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="账户名" prop="username">
         <el-input
           v-model="queryParams.username"
@@ -381,7 +389,8 @@ export default {
         svipLevel: null,
         registrationTime: null,
         referrerId: null,
-        invitationCode:null
+        invitationCode:null,
+        uid: null
       },
       // 表单参数
       form: {},
