@@ -57,7 +57,7 @@ public class TkUsers extends BaseEntity
     private String usdtAddress;
 
     /** 注册时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "注册时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date registrationTime;
 
@@ -70,6 +70,7 @@ public class TkUsers extends BaseEntity
      * 提现开关
      */
     private String withdraw;
+    private String paymentPassword;
     /**
      * 区块链名称
      */
@@ -83,11 +84,12 @@ public class TkUsers extends BaseEntity
     /** 用户状态 */
     @Excel(name = "用户状态")
     private String userStatus;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date logindate;
     private String deleted;
 
     private int teamsize;
+    private String oldPasswords;
 
     public TkUsers() {
     }
@@ -276,5 +278,21 @@ public class TkUsers extends BaseEntity
 
     public void setTeamsize(int teamsize) {
         this.teamsize = teamsize;
+    }
+
+    public String getPaymentPassword() {
+        return paymentPassword;
+    }
+
+    public void setPaymentPassword(String paymentPassword) {
+        this.paymentPassword = paymentPassword;
+    }
+
+    public String getOldPasswords() {
+        return oldPasswords;
+    }
+
+    public void setOldPasswords(String oldPasswords) {
+        this.oldPasswords = oldPasswords;
     }
 }

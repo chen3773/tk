@@ -11,6 +11,7 @@ import com.tiktok.common.core.domain.entity.SysUser;
 import com.tiktok.common.core.domain.model.LoginBody;
 import com.tiktok.common.core.domain.model.LoginUser;
 import com.tiktok.common.utils.SecurityUtils;
+import com.tiktok.framework.web.exception.CustomException;
 import com.tiktok.framework.web.service.SysLoginService;
 import com.tiktok.framework.web.service.TokenService;
 import com.tiktok.system.service.ISysUserService;
@@ -42,7 +43,7 @@ import com.tiktok.common.core.page.TableDataInfo;
 
 /**
  * 用户信息Controller
- * 
+ *
  * @author ruoyi
  * @date 2024-09-20
  */
@@ -140,7 +141,7 @@ public class TkUsersController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('task:users:remove')")
     @Log(title = "用户信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{uids}")
+    @DeleteMapping("/{uids}")
     public AjaxResult remove(@PathVariable Long[] uids)
     {
         return toAjax(tkUsersService.deleteTkUsersByUids(uids));
@@ -158,7 +159,7 @@ public class TkUsersController extends BaseController
     {
         List<TkUsers> tkUsers = new ArrayList<>();
         if(loginBody.getLoginChannel().equals("tk")){
-           //通过账号获取出平台授权账号
+            //通过账号获取出平台授权账号
             TkUsers tkUser = new TkUsers();
             tkUser.setUsername(loginBody.getUsername());
             tkUsers = tkUsersMapper.selectTkUsersList(tkUser);
@@ -203,7 +204,11 @@ public class TkUsersController extends BaseController
             newtkUsers.setTotareward(tkUsers.getTotareward());
             newtkUsers.setAvatar(tkUsers.getAvatar());
             newtkUsers.setInvitationCode(tkUsers.getInvitationCode());
+            newtkUsers.setPaymentPassword("1");
             userInfo.setTkUsers(newtkUsers);
+            if(tkUsers.getPaymentPassword()==null || tkUsers.getPaymentPassword().trim().equals("")){
+                newtkUsers.setPaymentPassword("0");
+            }
         }
         TkTasknum tkTasknum = new TkTasknum();
         tkTasknum.setUserId(tkUsers.getUid());
@@ -219,15 +224,15 @@ public class TkUsersController extends BaseController
         return ajax;
     }
 
-  
+
     /**
      * 修改用户信息
      * @return
      */
     @PostMapping("/updateUser")
-    public AjaxResult updateUser(@RequestBody TkUsers tkUsers){
+    public AjaxResult updateUser(@RequestBody TkUsers tkUsers) throws CustomException {
 
-       return tkUsersService.updateUser(tkUsers);
+        return tkUsersService.updateUser(tkUsers);
     }
 
 
@@ -235,17 +240,17 @@ public class TkUsersController extends BaseController
     public TableDataInfo getWalletRecords(String category)
     {
         startPage();
-     return getDataTable(tkUsersService.getWalletRecords(category));
+        return getDataTable(tkUsersService.getWalletRecords(category));
     }
 
     /**
      * 用户提现
      */
     @PostMapping("/withdraw")
-    public AjaxResult withdraw(String amount){
+    public AjaxResult withdraw(String amount,String paymentPassword){
         Assert.isTrue(amount!=null,"error");
-
-        return tkUsersService.withdraw(amount);
+        Assert.isTrue(paymentPassword!=null,"The security password cannot be empty!");
+        return tkUsersService.withdraw(amount,paymentPassword);
     }
 
     @GetMapping("/updatePwd")
@@ -326,7 +331,7 @@ public class TkUsersController extends BaseController
     public AjaxResult addSpecialTask(@RequestBody TaskData taskData)
     {
 
-      return tkUsersService.addSpecialTask(taskData);
+        return tkUsersService.addSpecialTask(taskData);
     }
 
 

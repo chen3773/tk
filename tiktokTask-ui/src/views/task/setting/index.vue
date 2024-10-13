@@ -1,96 +1,105 @@
 <template>
   <div class="app-container">
-    <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="${comment}" prop="id">
-        <el-input
-          v-model="queryParams.id"
-          placeholder="请输入${comment}"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="一级" prop="first">
-        <el-input
-          v-model="queryParams.first"
-          placeholder="请输入一级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="二级" prop="two">
-        <el-input
-          v-model="queryParams.two"
-          placeholder="请输入二级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="三级" prop="three">
-        <el-input
-          v-model="queryParams.three"
-          placeholder="请输入三级"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form> -->
+<!--    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">-->
+<!--      <el-form-item label="" prop="id">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.id"-->
+<!--          placeholder="请输入"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="一级" prop="first">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.first"-->
+<!--          placeholder="请输入一级"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="二级" prop="two">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.two"-->
+<!--          placeholder="请输入二级"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="三级" prop="three">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.three"-->
+<!--          placeholder="请输入三级"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="奖励" prop="rewards">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.rewards"-->
+<!--          placeholder="请输入奖励"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>-->
+<!--        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>-->
+<!--      </el-form-item>-->
+<!--    </el-form>-->
 
     <el-row :gutter="10" class="mb8">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['task:setting:add']"
-        >新增</el-button>
-      </el-col> -->
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['task:setting:edit']"
-        >修改</el-button>
-      </el-col>
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['task:setting:remove']"
-        >删除</el-button>
-      </el-col> -->
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['task:setting:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="el-icon-plus"-->
+<!--          size="mini"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['task:setting:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['task:setting:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['task:setting:remove']"-->
+<!--        >删除</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['task:setting:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="settingList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="${comment}" align="center" prop="id" /> -->
+<!--      <el-table-column label="" align="center" prop="id" />-->
       <el-table-column label="一级" align="center" prop="first" />
       <el-table-column label="二级" align="center" prop="two" />
       <el-table-column label="三级" align="center" prop="three" />
+      <el-table-column label="奖励" align="center" prop="rewards" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -100,17 +109,17 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['task:setting:edit']"
           >修改</el-button>
-          <!-- <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['task:setting:remove']"
-          >删除</el-button> -->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['task:setting:remove']"-->
+<!--          >删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -130,6 +139,9 @@
         </el-form-item>
         <el-form-item label="三级" prop="three">
           <el-input v-model="form.three" placeholder="请输入三级" />
+        </el-form-item>
+        <el-form-item label="奖励" prop="rewards">
+          <el-input v-model="form.rewards" placeholder="请输入奖励" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -172,7 +184,8 @@ export default {
         id: null,
         first: null,
         two: null,
-        three: null
+        three: null,
+        rewards: null
       },
       // 表单参数
       form: {},
@@ -186,7 +199,7 @@ export default {
         ],
         three: [
           { required: true, message: "三级不能为空", trigger: "blur" }
-        ]
+        ],
       }
     };
   },
@@ -214,7 +227,8 @@ export default {
         id: null,
         first: null,
         two: null,
-        three: null
+        three: null,
+        rewards: null
       };
       this.resetForm("form");
     },

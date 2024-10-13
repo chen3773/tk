@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.tiktok.common.annotation.Excel;
 import com.tiktok.common.core.domain.BaseEntity;
+import sun.dc.pr.PRError;
 
 /**
  * 用户接取任务对象 tk_task_acceptances
@@ -49,6 +50,10 @@ public class TkTaskAcceptances extends BaseEntity
     private Date approvalTime;
 
     private String username;
+    private String taskTitle;
+    private String taskRewardAmount;
+    private String taskLevel;
+
 
     public void setId(Long id) 
     {
@@ -133,5 +138,29 @@ public class TkTaskAcceptances extends BaseEntity
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getTaskTitle() {
+        return taskTitle;
+    }
+
+    public void setTaskTitle(String taskTitle) {
+        this.taskTitle = taskTitle;
+    }
+
+    public String getTaskRewardAmount() {
+        return taskRewardAmount;
+    }
+
+    public void setTaskRewardAmount(String taskRewardAmount) {
+        this.taskRewardAmount = taskRewardAmount;
+    }
+
+    public String getTaskLevel() {
+        return taskLevel;
+    }
+
+    public void setTaskLevel(String taskLevel) {
+        this.taskLevel = taskLevel;
     }
 }

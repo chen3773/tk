@@ -19,6 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="referrerId"    column="referrer_id"    />
         <result property="userStatus"    column="user_status"    />
         <result property="withdraw"    column="withdraw"    />
+        <result property="paymentPassword"    column="payment_password"    />
         <result property="blockchainName"    column="blockchain_name"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -31,15 +32,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTkUsersVo">
-        SELECT tk.uid, tk.username, tk.password, tk.nickname, tk.svip_level, tk.totareward, tk.balance, tk.non_withdrawable_balance, tk.usdt_address, tk.registration_time, tk.avatar, tk.invitation_code, tk.referrer_id, tk.user_status, tk.withdraw, tk.blockchain_name, tk.create_by, tk.create_time, tk.update_by, tk.update_time, tk.remark,tk.deleted, sys.login_date AS last_login_date,deleted
+        SELECT tk.uid, tk.username, tk.password, tk.nickname, tk.svip_level, tk.totareward, tk.balance, tk.non_withdrawable_balance, tk.usdt_address, tk.registration_time, tk.avatar, tk.invitation_code, tk.referrer_id, tk.user_status, tk.withdraw,tk.payment_password, tk.blockchain_name, tk.create_by, tk.create_time, tk.update_by, tk.update_time, tk.remark,tk.deleted, sys.login_date AS last_login_date,deleted
         FROM tk_users AS tk
                  JOIN sys_user AS sys ON tk.username = sys.user_name
     </sql>
 
     <select id="selectTkUsersList" parameterType="TkUsers" resultMap="TkUsersResult">
         <include refid="selectTkUsersVo"/>
-        <where>  
-            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+        <where>
+            <if test="uid != null  and uid != ''"> and uid= #{uid}</if>
+            <if test="username != null  and username != ''"> and username= #{username}</if>
             <if test="svipLevel != null "> and tk.svip_level = #{svipLevel}</if>
             <if test="invitationCode != null "> and tk.invitation_code = #{invitationCode}</if>
             <if test="params.beginRegistrationTime != null and params.beginRegistrationTime != '' and params.endRegistrationTime != null and params.endRegistrationTime != ''"> and tk.registration_time between #{params.beginRegistrationTime} and #{params.endRegistrationTime}</if>
@@ -121,6 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="referrerId != null">referrer_id = #{referrerId},</if>
             <if test="invitationCode != null">invitation_code = #{invitationCode},</if>
             <if test="withdraw != null">withdraw = #{withdraw},</if>
+            <if test="paymentPassword != null">payment_password = #{paymentPassword},</if>
             <if test="blockchainName != null">blockchain_name = #{blockchainName},</if>
             <if test="userStatus != null">user_status = #{userStatus},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

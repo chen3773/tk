@@ -10,6 +10,7 @@ import com.tiktok.task.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tiktok.task.service.ITkSvipSettingService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 /**
@@ -107,6 +108,7 @@ public class TkSvipSettingServiceImpl implements ITkSvipSettingService
     }
 
     @Override
+    @Transactional
     public int UpgradeSvip(Long uid, Long lv) {
         //获取出默认配置
         TkSvipSetting tkSvipSetting = new TkSvipSetting();
@@ -115,9 +117,36 @@ public class TkSvipSettingServiceImpl implements ITkSvipSettingService
 
         //更改用户等级
         TkUsers tkuser = tkUsersMapper.selectTkUsersByUid(uid);
+        Long svipLevel = tkuser.getSvipLevel();//等级
+        if(svipLevel.toString().equals("0")){
+            //给上级人头费
+            Long referrerId = tkuser.getReferrerId();//推荐人id
+            //更改用户等级
+            TkUsers referrerTkuser = tkUsersMapper.selectTkUsersByUid(referrerId);
+            TkRoyaltySetting tkRoyaltySetting = tkRoyaltySettingMapper.selectTkRoyaltySettingById(1L);
+            referrerTkuser.setBalance(new BigDecimal(referrerTkuser.getBalance()).
+                    add(new BigDecimal(tkRoyaltySetting.getRewards())).toString());
+            int i = tkUsersMapper.updateTkUsers(referrerTkuser);
+
+            //添加记录
+            TkWallettransactions tkWallettransactions = new TkWallettransactions();
+            tkWallettransactions.setUserid(referrerTkuser.getUid());
+            tkWallettransactions.setTransactionType("newPeopleToReward");
+            tkWallettransactions.setAmount(new BigDecimal(tkRoyaltySetting.getRewards()));
+            tkWallettransactions.setTransactionDate(new Date());
+            tkWallettransactions.setOrderNumber("");
+            tkWallettransactions.setFundBalance(new BigDecimal(referrerTkuser.getBalance()));
+            tkWallettransactions.setDescription("#"+uid+"Newcomer bonus:"+tkRoyaltySetting.getRewards());
+            tkWallettransactions.setCategory("income");
+            tkWallettransactions.setTransactionStatus("已完成");
+            tkWallettransactionsMapper.insertTkWallettransactions(tkWallettransactions);
+        }
+
+
         tkuser.setSvipLevel(lv);
         tkuser.setWithdraw("0");
         tkUsersMapper.updateTkUsers(tkuser);
+
 
 
         //清空用户配额  重新分配

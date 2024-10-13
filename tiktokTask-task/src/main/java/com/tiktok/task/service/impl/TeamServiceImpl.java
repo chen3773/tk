@@ -7,6 +7,7 @@ import com.tiktok.task.domain.TkUsers;
 import com.tiktok.task.domain.ov.TeamUserOV;
 import com.tiktok.task.mapper.TkInvitationMapper;
 import com.tiktok.task.mapper.TkUsersMapper;
+import com.tiktok.task.mapper.TkWallettransactionsMapper;
 import com.tiktok.task.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ public class TeamServiceImpl implements TeamService {
     private TkInvitationMapper tkInvitationMapper;
     @Autowired
     private TkUsersMapper tkUsersMapper;
-
+    @Autowired
+    private TkWallettransactionsMapper tkWallettransactionsMapper;
 
     @Override
     public AjaxResult getTeam(Long level) {
@@ -36,6 +38,10 @@ public class TeamServiceImpl implements TeamService {
     public AjaxResult getTeamData() {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         HashMap<String, String> teamData = tkInvitationMapper.getTeamData(uid);
+        //获取出来用户的  amount
+        Double amount = tkWallettransactionsMapper.getTotalAmountForTransactionTypeAndUser(uid);
+        teamData.put("amount",amount.toString());
+
         if(teamData==null){
             teamData = new HashMap<>();
             teamData.put("totareward","0");

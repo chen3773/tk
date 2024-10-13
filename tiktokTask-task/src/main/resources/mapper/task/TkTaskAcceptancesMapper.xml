@@ -14,6 +14,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="approvalTime"    column="approval_time"    />
         <result property="createTime"    column="create_time"    />
         <result property="username"    column="username"    />
+        <result property="taskTitle"    column="task_title"    />
+        <result property="taskRewardAmount"    column="task_reward_amount"    />
+        <result property="taskLevel"    column="task_level"    />
     </resultMap>
 
     <sql id="selectTkTaskAcceptancesVo">
@@ -26,26 +29,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ta.submission_time,
             ta.approval_time,
             ta.create_time,
-            tu.username
+            tu.username,
+            tt.title AS task_title,
+            tt.reward_amount AS task_reward_amount,
+            tt.task_level AS task_level
         FROM
             tk_task_acceptances ta
-                JOIN
-            tk_users tu ON ta.uid = tu.uid
+                JOIN tk_users tu ON ta.uid = tu.uid
+                JOIN tk_tasks tt ON ta.task_id = tt.id
     </sql>
 
     <select id="selectTkTaskAcceptancesList" parameterType="TkTaskAcceptances" resultMap="TkTaskAcceptancesResult">
         <include refid="selectTkTaskAcceptancesVo"/>
         <where>  
             <if test="uid != null "> and ta.uid = #{uid}</if>
-            <if test="taskId != null "> and task_id = #{taskId}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="taskId != null "> and ta.task_id = #{taskId}</if>
+            <if test="status != null  and status != ''"> and ta.status = #{status}</if>
         </where>
         order by create_time desc
     </select>
     
     <select id="selectTkTaskAcceptancesById" parameterType="Long" resultMap="TkTaskAcceptancesResult">
         <include refid="selectTkTaskAcceptancesVo"/>
-        where id = #{id}
+        where ta.id = #{id}
     </select>
     <select id="selectUserSubmitToday"  resultMap="TkTaskAcceptancesResult">
         SELECT *

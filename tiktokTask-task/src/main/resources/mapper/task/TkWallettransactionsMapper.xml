@@ -44,6 +44,12 @@
         <include refid="selectTkWallettransactionsVo"/>
         where id = #{id}
     </select>
+    <select id="getTotalAmountForTransactionTypeAndUser" resultType="java.lang.Double">
+        SELECT SUM(Amount) AS total_amount
+        FROM tk_WalletTransactions
+        WHERE transaction_type = 'newPeopleToReward' AND userid = #{uid};
+
+    </select>
 
     <insert id="insertTkWallettransactions" parameterType="TkWallettransactions" useGeneratedKeys="true" keyProperty="id">
         insert into tk_WalletTransactions

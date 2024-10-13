@@ -60,4 +60,6 @@ public interface TkWallettransactionsMapper
      * @return 结果
      */
     public int deleteTkWallettransactionsByIds(Long[] ids);
+
+    Double  getTotalAmountForTransactionTypeAndUser(Long uid);
 }

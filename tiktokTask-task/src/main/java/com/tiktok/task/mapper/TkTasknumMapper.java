@@ -2,6 +2,7 @@ package com.tiktok.task.mapper;
 
 import java.util.List;
 import com.tiktok.task.domain.TkTasknum;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 任务数量Mapper接口
@@ -58,4 +59,9 @@ public interface TkTasknumMapper
      * @return 结果
      */
     public int deleteTkTasknumByIds(Long[] ids);
+
+    List<TkTasknum> getTaskNumByUserIds(@Param("uids") long[] uids);
+
+    List<Long> findUsersWithStatus(@Param("userIds") long[] userIdsArray);
+
 }

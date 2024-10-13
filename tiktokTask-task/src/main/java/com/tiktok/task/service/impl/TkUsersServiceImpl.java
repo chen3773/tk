@@ -11,12 +11,14 @@ import com.tiktok.common.core.domain.entity.SysUser;
 import com.tiktok.common.utils.DateUtils;
 import com.tiktok.common.utils.SecurityUtils;
 import com.tiktok.common.utils.StringUtils;
+import com.tiktok.framework.web.exception.CustomException;
 import com.tiktok.system.service.ISysDeptService;
 import com.tiktok.system.service.ISysPostService;
 import com.tiktok.system.service.ISysRoleService;
 import com.tiktok.system.service.ISysUserService;
 import com.tiktok.task.domain.*;
 import com.tiktok.task.mapper.*;
+import com.tiktok.task.task.AssertionUtils;
 import com.tiktok.task.util.InviteCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -273,12 +275,18 @@ public class TkUsersServiceImpl implements ITkUsersService
     }
 
     @Override
-    public AjaxResult updateUser(TkUsers tkUsers) {
+    @Transactional
+    public AjaxResult updateUser(TkUsers tkUsers) throws CustomException {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
+        TkUsers tkUser = tkUsersMapper.selectTkUsersByUid(uid);
+        if(tkUser.getPaymentPassword()!=null){
+            AssertionUtils.isTrue(tkUser.getPaymentPassword().equals(tkUsers.getOldPasswords()),"The old password doesn't match");
 
+        }
         TkUsers tkUsers1 = new TkUsers();
         tkUsers1.setUid(uid);
         tkUsers1.setNickname(tkUsers.getNickname());
+        tkUsers1.setPaymentPassword(tkUsers.getPaymentPassword());
         tkUsers1.setAvatar(tkUsers.getAvatar());
         tkUsers1.setUsdtAddress(tkUsers.getUsdtAddress());
         tkUsers1.setBlockchainName(tkUsers.getBlockchainName());
@@ -290,7 +298,7 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     @Override
     @Transactional
-    public AjaxResult withdraw(String amount) {
+    public AjaxResult withdraw(String amount,String paymentPassword) {
 
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         //判断是否有未完成任务
@@ -310,6 +318,8 @@ public class TkUsersServiceImpl implements ITkUsersService
 
 
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
+        Assert.isTrue(tkUsers.getPaymentPassword().trim().equals(paymentPassword.trim()),"Payment password error");
+
         Assert.isTrue(tkUsers.getBlockchainName()!=null,"Please bind your wallet first");
 
         Assert.isTrue(tkUsers.getWithdraw().equals("0"),"Withdrawal exception, contact customer service");
@@ -371,41 +381,15 @@ public class TkUsersServiceImpl implements ITkUsersService
         //赚取的资金
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
 
-        //获取一级返佣数额
-        TkInvitation tkInvitation = new TkInvitation();
-        tkInvitation.setInviterId(uid);
-        tkInvitation.setLevel(1L);
-        List<TkInvitation> tkInvitations = tkInvitationMapper.selectTkInvitationList(tkInvitation);
-        double  customerRebate = 0;
-        if(tkInvitations.size()!=0){
-            for (int i = 0; i < customerRebate; i++) {
-                customerRebate = customerRebate + Double.parseDouble(tkInvitations.get(i).getAmount());
-            }
-        }
+        //获取出来用户的  amount
+        Double amount = tkWallettransactionsMapper.getTotalAmountForTransactionTypeAndUser(uid);
 
-        tkInvitation.setLevel(2L);
-        tkInvitations = tkInvitationMapper.selectTkInvitationList(tkInvitation);
-        double commissionRebate = 0;
-        if(tkInvitations.size()!=0){
-            for (int i = 0; i < customerRebate; i++) {
-                commissionRebate = commissionRebate + Double.parseDouble(tkInvitations.get(i).getAmount());
-            }
-        }
-
-        tkInvitation.setLevel(3L);
-        tkInvitations = tkInvitationMapper.selectTkInvitationList(tkInvitation);
-        if(tkInvitations.size()!=0){
-            for (int i = 0; i < customerRebate; i++) {
-                commissionRebate = commissionRebate + Double.parseDouble(tkInvitations.get(i).getAmount());
-            }
-        }
-
-
+        HashMap<String, String> teamData = tkInvitationMapper.getTeamData(uid);
 
         HashMap<String, Object> res = new HashMap<>();
         res.put("JobCommission",tkUsers.getTotareward());
-        res.put("customerRebate",customerRebate);
-        res.put("commissionRebate",commissionRebate);
+        res.put("customerRebate",teamData.get("totareward"));
+        res.put("commissionRebate",amount);
         res.put("ShareholderDividends","0");
 
         return AjaxResult.success(res);

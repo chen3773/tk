@@ -10,7 +10,7 @@ import com.tiktok.common.core.domain.BaseEntity;
  * svip默认配置对象 tk_svip_setting
  *
  * @author ruoyi
- * @date 2024-10-10
+ * @date 2024-10-13
  */
 public class TkSvipSetting extends BaseEntity
 {

@@ -165,6 +165,8 @@ public class AdminServiceImpl implements AdminService {
                 tkInvitationMapper.updateTkInvitation(tkInvitations.get(i));
             }
         }
+
+
         return AjaxResult.success(tkUsers);
     }
 

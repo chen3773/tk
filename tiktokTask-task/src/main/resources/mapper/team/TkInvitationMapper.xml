@@ -86,8 +86,7 @@
     <select id="getTeamData" resultType="java.util.HashMap">
         SELECT
             COUNT(i.id) AS invitations,                -- 邀请数量
-            ROUND(SUM(i.amount), 2) AS amount,        -- 四舍五入保留两位小数的返佣金额总额
-            ROUND(SUM(u.totareward), 2) AS totareward -- 四舍五入保留两位小数的被邀请人总奖励金额
+            ROUND(SUM(i.amount), 2) AS totareward -- 四舍五入保留两位小数的被邀请人总奖励金额
         FROM
             tk_invitation i
                 JOIN

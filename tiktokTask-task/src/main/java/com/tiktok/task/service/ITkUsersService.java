@@ -3,6 +3,7 @@ package com.tiktok.task.service;
 import java.util.List;
 
 import com.tiktok.common.core.domain.AjaxResult;
+import com.tiktok.framework.web.exception.CustomException;
 import com.tiktok.task.domain.TaskData;
 import com.tiktok.task.domain.TkUsers;
 import com.tiktok.task.domain.TkWallettransactions;
@@ -65,9 +66,9 @@ public interface ITkUsersService
 
     List<TkWallettransactions> getWalletRecords(String category);
 
-    AjaxResult updateUser(TkUsers tkUsers);
+    AjaxResult updateUser(TkUsers tkUsers) throws CustomException;
 
-    AjaxResult withdraw(String amount);
+    AjaxResult withdraw(String amount,String paymentPassword);
 
     AjaxResult getUserUpgradeVIPMessage();
 

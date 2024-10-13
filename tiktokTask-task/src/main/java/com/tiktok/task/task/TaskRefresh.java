@@ -1,8 +1,10 @@
 package com.tiktok.task.task;
 
 import com.tiktok.task.domain.TkSvipSetting;
+import com.tiktok.task.domain.TkTasknum;
 import com.tiktok.task.domain.TkUsers;
 import com.tiktok.task.mapper.TkSvipSettingMapper;
+import com.tiktok.task.mapper.TkTasknumMapper;
 import com.tiktok.task.mapper.TkUsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,8 @@ public class TaskRefresh {
     private TkUsersMapper tkUsersMapper;
     @Autowired
     private TkSvipSettingMapper tkSvipSettingMapper;
+    @Autowired
+    private TkTasknumMapper tkTasknumMapper;
     public void TaskRefresh0()
     {
 //        //获取出来对应等级的用户
@@ -54,12 +58,23 @@ public class TaskRefresh {
         Long dailyTaskCount = tkSvipSetting1.getDailyTaskCount();//每日次数
         long[] uids = tkUsers1.stream().mapToLong(TkUsers::getUid).toArray();
 
+        //uids 判断不能有未完成未提交
+        List<TkTasknum> taskNumByUserIds = tkTasknumMapper.getTaskNumByUserIds(uids);//额度已经用完的
+        //额度已经用完的
+        long[] userIdsArray = taskNumByUserIds.stream()
+                .mapToLong(TkTasknum::getUserId)
+                .toArray();
+        //无未审核和未提交任务的
+        List<Long> usersWithStatus = tkTasknumMapper.findUsersWithStatus(userIdsArray);
+
+        long[] userIds = new long[usersWithStatus.size()];
+        for (int i = 0; i < usersWithStatus.size(); i++) {
+            userIds[i] = usersWithStatus.get(i);
+        }
         //批量更新
         Map<String, Object> params = new HashMap<>();
         params.put("dailyTaskCount", dailyTaskCount);
-        params.put("uids", uids);
-
-        //uids 判断不能有未完成未提交
+        params.put("uids", userIds);
 
         int i = tkSvipSettingMapper.updateNormalTaskCountBatch(params);
     }public void TaskRefresh2()
@@ -76,10 +91,24 @@ public class TaskRefresh {
         Long dailyTaskCount = tkSvipSetting1.getDailyTaskCount();//每日次数
         long[] uids = tkUsers1.stream().mapToLong(TkUsers::getUid).toArray();
 
+        //uids 判断不能有未完成未提交
+        List<TkTasknum> taskNumByUserIds = tkTasknumMapper.getTaskNumByUserIds(uids);//额度已经用完的
+        //额度已经用完的
+        long[] userIdsArray = taskNumByUserIds.stream()
+                .mapToLong(TkTasknum::getUserId)
+                .toArray();
+        //无未审核和未提交任务的
+        List<Long> usersWithStatus = tkTasknumMapper.findUsersWithStatus(userIdsArray);
+
+        long[] userIds = new long[usersWithStatus.size()];
+        for (int i = 0; i < usersWithStatus.size(); i++) {
+            userIds[i] = usersWithStatus.get(i);
+        }
+
         //批量更新
         Map<String, Object> params = new HashMap<>();
         params.put("dailyTaskCount", dailyTaskCount);
-        params.put("uids", uids);
+        params.put("uids", userIds);
         int i = tkSvipSettingMapper.updateNormalTaskCountBatch(params);
     }public void TaskRefresh3()
     {
@@ -95,10 +124,25 @@ public class TaskRefresh {
         Long dailyTaskCount = tkSvipSetting1.getDailyTaskCount();//每日次数
         long[] uids = tkUsers1.stream().mapToLong(TkUsers::getUid).toArray();
 
+        //uids 判断不能有未完成未提交
+        List<TkTasknum> taskNumByUserIds = tkTasknumMapper.getTaskNumByUserIds(uids);//额度已经用完的
+        //额度已经用完的
+        long[] userIdsArray = taskNumByUserIds.stream()
+                .mapToLong(TkTasknum::getUserId)
+                .toArray();
+        //无未审核和未提交任务的
+        List<Long> usersWithStatus = tkTasknumMapper.findUsersWithStatus(userIdsArray);
+
+        long[] userIds = new long[usersWithStatus.size()];
+        for (int i = 0; i < usersWithStatus.size(); i++) {
+            userIds[i] = usersWithStatus.get(i);
+        }
+
+
         //批量更新
         Map<String, Object> params = new HashMap<>();
         params.put("dailyTaskCount", dailyTaskCount);
-        params.put("uids", uids);
+        params.put("uids", userIds);
         int i = tkSvipSettingMapper.updateNormalTaskCountBatch(params);
     }public void TaskRefresh4()
     {
@@ -114,10 +158,25 @@ public class TaskRefresh {
         Long dailyTaskCount = tkSvipSetting1.getDailyTaskCount();//每日次数
         long[] uids = tkUsers1.stream().mapToLong(TkUsers::getUid).toArray();
 
+        //uids 判断不能有未完成未提交
+        List<TkTasknum> taskNumByUserIds = tkTasknumMapper.getTaskNumByUserIds(uids);//额度已经用完的
+        //额度已经用完的
+        long[] userIdsArray = taskNumByUserIds.stream()
+                .mapToLong(TkTasknum::getUserId)
+                .toArray();
+        //无未审核和未提交任务的
+        List<Long> usersWithStatus = tkTasknumMapper.findUsersWithStatus(userIdsArray);
+
+        long[] userIds = new long[usersWithStatus.size()];
+        for (int i = 0; i < usersWithStatus.size(); i++) {
+            userIds[i] = usersWithStatus.get(i);
+        }
+
+
         //批量更新
         Map<String, Object> params = new HashMap<>();
         params.put("dailyTaskCount", dailyTaskCount);
-        params.put("uids", uids);
+        params.put("uids", userIds);
         int i = tkSvipSettingMapper.updateNormalTaskCountBatch(params);
     }public void TaskRefresh5()
     {
@@ -133,10 +192,25 @@ public class TaskRefresh {
         Long dailyTaskCount = tkSvipSetting1.getDailyTaskCount();//每日次数
         long[] uids = tkUsers1.stream().mapToLong(TkUsers::getUid).toArray();
 
+        //uids 判断不能有未完成未提交
+        List<TkTasknum> taskNumByUserIds = tkTasknumMapper.getTaskNumByUserIds(uids);//额度已经用完的
+        //额度已经用完的
+        long[] userIdsArray = taskNumByUserIds.stream()
+                .mapToLong(TkTasknum::getUserId)
+                .toArray();
+        //无未审核和未提交任务的
+        List<Long> usersWithStatus = tkTasknumMapper.findUsersWithStatus(userIdsArray);
+
+        long[] userIds = new long[usersWithStatus.size()];
+        for (int i = 0; i < usersWithStatus.size(); i++) {
+            userIds[i] = usersWithStatus.get(i);
+        }
+
+
         //批量更新
         Map<String, Object> params = new HashMap<>();
         params.put("dailyTaskCount", dailyTaskCount);
-        params.put("uids", uids);
+        params.put("uids", userIds);
         int i = tkSvipSettingMapper.updateNormalTaskCountBatch(params);
     }
 

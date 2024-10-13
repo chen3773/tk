@@ -28,6 +28,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTkTasknumVo"/>
         where id = #{id}
     </select>
+    <select id="getTaskNumByUserIds" resultMap="TkTasknumResult">
+        SELECT * FROM tk_tasknum WHERE user_id IN
+        <foreach item="item" index="index" collection="uids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND normal_task_count = 0;
+    </select>
+    <select id="findUsersWithStatus" resultType="java.lang.Long">
+        SELECT uid
+        FROM tk_task_acceptances
+        WHERE uid IN
+        <foreach item="userId" collection="userIds" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        AND status NOT IN ('0', '1', '4')
+    </select>
+
 
     <insert id="insertTkTasknum" parameterType="TkTasknum" useGeneratedKeys="true" keyProperty="id">
         insert into tk_tasknum

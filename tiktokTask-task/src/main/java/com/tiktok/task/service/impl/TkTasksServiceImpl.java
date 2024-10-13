@@ -140,7 +140,13 @@ public class TkTasksServiceImpl implements ITkTasksService
         List<TkTasks> filteredTasks = tkTasks1.stream()
                 .filter(task -> !taskIdsToRemove.contains(task.getId())) // 假设 getId() 是获取任务 id 的方法
                 .collect(Collectors.toList());
-        return filteredTasks;
+
+        List<TkTasks> finalFilteredTasks = filteredTasks.stream()
+                .filter(task -> task.getSurplusquantity() > 0) // 假设 getSurplusquantity() 是获取剩余数量的方法
+                .collect(Collectors.toList());
+
+        return finalFilteredTasks;
+
     }
 
     /**
@@ -162,7 +168,7 @@ public class TkTasksServiceImpl implements ITkTasksService
 
         AssertionUtils.isTrue(tkTaskAcceptances3.size()==0,"You have a task to review, please wait patiently for approval.");
         AssertionUtils.isTrue(tkTaskAcceptances5.size()==0,"You have a task to review, please wait patiently for approval.");
-        Assert.isTrue(tkTaskAcceptances4.size()==0,"There's still work to be done");
+        AssertionUtils.isTrue(tkTaskAcceptances4.size()==0,"There's still work to be done");
         //只允许接一次
         TkTaskAcceptances tkTaskAcceptances1 = new TkTaskAcceptances();
         tkTaskAcceptances1.setTaskId(taskId);
@@ -222,7 +228,7 @@ public class TkTasksServiceImpl implements ITkTasksService
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         List<Map<String, Object>> taskNum = tkTasksMapper.getTaskNum(uid);
         Integer count = Integer.parseInt(taskNum.get(1).get("count").toString());
-        Integer count2 = Integer.parseInt(taskNum.get(3).get("count").toString());
+        Integer count2 = Integer.parseInt(taskNum.get(4).get("count").toString());
         Integer count3 = count + count2;
         taskNum.get(1).put("count",count3);
         taskNum.remove(taskNum.size()-1);
@@ -236,6 +242,8 @@ public class TkTasksServiceImpl implements ITkTasksService
 
         List<UserTaskOV> userTaskList2 =  tkTasksMapper.getUserTask("4", uid);
         userTaskList.addAll(userTaskList2);
+
+
         return AjaxResult.success(userTaskList);
     }
 
