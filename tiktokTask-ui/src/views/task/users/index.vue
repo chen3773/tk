@@ -115,6 +115,7 @@
           <div :class="`tag-color${scope.row.svipLevel}`">等级：VIP{{ scope.row.svipLevel }}</div>
           <div>团队人数：{{ scope.row.teamsize }}</div>
           <div>邀请码：{{ scope.row.invitationCode }}</div>
+          <div>上级id：{{ scope.row.referrerId }}</div>
         </template>
       </el-table-column>
       <el-table-column label="账户" align="center" prop="username" width="170" >
