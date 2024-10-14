@@ -55,8 +55,8 @@
 
     <el-table v-loading="loading" :data="blockchainList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="${comment}" align="center" prop="blockchainName" />
+      <el-table-column label="id" align="center" prop="id" />
+      <el-table-column label="区块链名称" align="center" prop="blockchainName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -87,9 +87,9 @@
 
     <!-- 添加或修改区块链名称对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="${comment}" prop="blockchainName">
-          <el-input v-model="form.blockchainName" placeholder="请输入${comment}" />
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item label="区块链名称" prop="blockchainName">
+          <el-input v-model="form.blockchainName" placeholder="请输入区块链名称" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
