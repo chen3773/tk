@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <!-- <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="体验任务数" prop="experienceTaskCount">
         <el-input
           v-model="queryParams.experienceTaskCount"
@@ -53,7 +53,7 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
-    </el-form>
+    </el-form> -->
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -103,12 +103,12 @@
 
     <el-table v-loading="loading" :data="userDefaultList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="体验任务数" align="center" prop="experienceTaskCount" />
+      <!-- <el-table-column label="id" align="center" prop="id" /> -->
+      <!-- <el-table-column label="体验任务数" align="center" prop="experienceTaskCount" />
       <el-table-column label="普通任务数" align="center" prop="regularTaskCount" />
-      <el-table-column label="隐藏任务数" align="center" prop="hiddenTaskCount" />
+      <el-table-column label="隐藏任务数" align="center" prop="hiddenTaskCount" /> -->
       <el-table-column label="最低提现金额" align="center" prop="minimumWithdrawalAmount" />
-      <el-table-column label="区块链名称" align="center" prop="blockchain" />
+      <!-- <el-table-column label="区块链名称" align="center" prop="blockchain" /> -->
       <el-table-column label="平台客服地址" align="center" prop="customerServiceAddress" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -141,7 +141,7 @@
     <!-- 添加或修改系统默认配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="体验任务数" prop="experienceTaskCount">
+        <!-- <el-form-item label="体验任务数" prop="experienceTaskCount">
           <el-input v-model="form.experienceTaskCount" placeholder="请输入体验任务数" />
         </el-form-item>
         <el-form-item label="普通任务数" prop="regularTaskCount">
@@ -149,13 +149,13 @@
         </el-form-item>
         <el-form-item label="隐藏任务数" prop="hiddenTaskCount">
           <el-input v-model="form.hiddenTaskCount" placeholder="请输入隐藏任务数" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="最低提现金额" prop="minimumWithdrawalAmount">
           <el-input v-model="form.minimumWithdrawalAmount" placeholder="请输入最低提现金额" />
         </el-form-item>
-        <el-form-item label="区块链名称" prop="blockchain">
+        <!-- <el-form-item label="区块链名称" prop="blockchain">
           <el-input v-model="form.blockchain" placeholder="请输入区块链名称" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="平台客服地址" prop="customerServiceAddress">
           <el-input v-model="form.customerServiceAddress" placeholder="请输入平台客服地址" />
         </el-form-item>

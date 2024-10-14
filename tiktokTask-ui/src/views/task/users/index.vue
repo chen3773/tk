@@ -9,10 +9,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="账户名" prop="username">
+      <el-form-item label="登录名" prop="username">
         <el-input
           v-model="queryParams.username"
-          placeholder="请输入账户名"
+          placeholder="请输入登录名"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -120,7 +120,7 @@
       </el-table-column>
       <el-table-column label="账户" align="center" prop="username" width="170" >
         <template slot-scope="scope">
-          <div style="text-align: left;">账户名：{{ scope.row.username }}</div>
+          <div style="text-align: left;">登录名：{{ scope.row.username }}</div>
           <div style="text-align: left;">密码：{{ scope.row.password }}</div>
           <div style="text-align: left;">昵称：{{ scope.row.nickname }}</div>
           <div style="text-align: left;">交易密码：{{ scope.row.paymentPassword }}</div>
@@ -210,8 +210,8 @@
     <!-- 添加或修改用户信息对话框 -->
     <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="账户名" prop="username">
-          <el-input v-model="form.username" placeholder="请输入账户名" />
+        <el-form-item label="登录名" prop="username">
+          <el-input v-model="form.username" placeholder="请输入登录名" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="form.password" placeholder="请输入密码" />
@@ -423,13 +423,13 @@ export default {
       // 表单校验
       rules: {
         username: [
-          { required: true, message: "账户名不能为空", trigger: "blur" }
+          { required: true, message: "登录名不能为空", trigger: "blur" }
         ],
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" }
         ],
         nickname: [
-          { required: true, message: "账户名不能为空", trigger: "blur" }
+          { required: true, message: "昵称不能为空", trigger: "blur" }
         ],
       },
       open1: false,

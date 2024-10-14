@@ -83,7 +83,7 @@
       </el-table-column> -->
       <el-table-column label="账户" align="center" prop="username" width="170" >
         <template slot-scope="scope">
-          <div style="text-align: left;">账户名：{{ scope.row.tkUsers.username }}</div>
+          <div style="text-align: left;">登录名：{{ scope.row.tkUsers.username }}</div>
           <div style="text-align: left;">密码：{{ scope.row.tkUsers.password }}</div>
           <div style="text-align: left;">昵称：{{ scope.row.tkUsers.nickname }}</div>
           <div style="text-align: left;">交易密码：{{ scope.row.tkUsers.paymentPassword }}</div>
