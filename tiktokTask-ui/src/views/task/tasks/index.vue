@@ -129,7 +129,7 @@
 
     <el-table v-loading="loading" :data="tasksList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="任务的唯一标识符" align="center" prop="id" />
+      <el-table-column label="任务id" align="center" prop="id" />
       <el-table-column label="任务标题" align="center" prop="title" />
       <el-table-column label="任务图片链接" align="center" prop="image" width="100">
         <template slot-scope="scope">
@@ -137,22 +137,34 @@
         </template>
       </el-table-column>
       <el-table-column label="任务描述" align="center" prop="description" />
-      <el-table-column label="任务的详细描述" align="center" prop="detailedDescription" />
+      <el-table-column label="任务的详细描述" align="center" prop="detailedDescription" >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="
+              smContent = scope.row.detailedDescription;
+              open1 = true;
+            "
+            >查看详情</el-button
+          >
+        </template>
+      </el-table-column>
       <el-table-column label="奖励金额" align="center" prop="rewardAmount" />
       <el-table-column label="任务链接" align="center" prop="link" />
       <el-table-column label="任务总数量" align="center" prop="totalQuantity" />
       <el-table-column label="剩余数量" align="center" prop="surplusquantity" />
-      <el-table-column label="已完成数量" align="center" prop="completedQuantity" />
+      <!-- <el-table-column label="已完成数量" align="center" prop="completedQuantity" /> -->
       <el-table-column label="任务等级" align="center" prop="taskLevel">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.tk_task" :value="scope.row.taskLevel"/>
         </template>
       </el-table-column>
-      <el-table-column label="任务创建时间" align="center" prop="createdAt" width="180">
+      <!-- <el-table-column label="任务创建时间" align="center" prop="createdAt" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createdAt, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 <!--      <el-table-column label="状态" align="center" prop="state" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -209,9 +221,9 @@
         <el-form-item label="剩余数量" prop="surplusquantity">
           <el-input v-model="form.surplusquantity" placeholder="请输入剩余数量" />
         </el-form-item>
-        <el-form-item label="已完成数量" prop="completedQuantity">
+        <!-- <el-form-item label="已完成数量" prop="completedQuantity">
           <el-input v-model="form.completedQuantity" placeholder="请输入已完成数量" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="任务等级" prop="taskLevel">
           <el-select v-model="form.taskLevel" placeholder="请选择任务等级">
             <el-option
@@ -222,14 +234,14 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="任务创建时间" prop="createdAt">
+        <!-- <el-form-item label="任务创建时间" prop="createdAt">
           <el-date-picker clearable
                           v-model="form.createdAt"
                           type="datetime"
                           value-format="yyyy-MM-dd HH:mm:ss"
                           placeholder="请选择任务创建时间">
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
 <!--        <el-form-item label="状态" prop="state">-->
 <!--          <el-input v-model="form.state" placeholder="请输入状态" />-->
 <!--        </el-form-item>-->
@@ -238,6 +250,14 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
+    </el-dialog>
+    <el-dialog
+      title="任务的详细描述"
+      :visible.sync="open1"
+      width="700px"
+      append-to-body
+    >
+      <div class="smContent" v-html="smContent"></div>
     </el-dialog>
   </div>
 </template>
@@ -295,7 +315,9 @@ export default {
         totalQuantity: [
           { required: true, message: "任务总数量不能为空", trigger: "blur" }
         ],
-      }
+      },
+      smContent: "",
+      open1: false
     };
   },
   created() {

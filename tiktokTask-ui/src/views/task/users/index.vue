@@ -128,15 +128,15 @@
       <!-- <el-table-column label="密码" align="center" prop="password" /> -->
       <!-- <el-table-column label="昵称" align="center" prop="nickname" /> -->
       <!-- <el-table-column label="svip等级" align="center" prop="svipLevel" /> -->
-      <el-table-column label="余额" align="center" prop="balance" width="150" >
+      <el-table-column label="余额" align="center" prop="balance" width="170" >
         <template slot-scope="scope">
           <div style="color: #1890ff;">余额：{{ scope.row.balance }}</div>
-          <div style="color: #ff9292;">冻结金额：{{ scope.row.nonWithdrawableBalance }}</div>
+          <div style="color: #ff9292;">不可提现金额：{{ scope.row.nonWithdrawableBalance }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="不可提现余额" align="center" prop="nonWithdrawableBalance" /> -->
       <el-table-column label="钱包地址" align="center" prop="usdtAddress" />
-      <el-table-column label="时间" align="center" prop="registrationTime" width="230">
+      <el-table-column label="登录时间" align="center" prop="logindate" width="180">
         <template slot-scope="scope">
           <div style="text-align: left;">注册时间：{{ scope.row.registrationTime }}</div>
           <div style="text-align: left;">登录时间：{{ scope.row.logindate }}</div>
@@ -222,7 +222,19 @@
           <el-input v-model="form.nickname" placeholder="请输入昵称" />
         </el-form-item>
         <el-form-item label="svip等级" prop="svipLevel">
-          <el-input v-model="form.svipLevel" placeholder="请输入svip等级" />
+          <el-select
+                v-model="form.svipLevel"
+                placeholder="请选择svip等级"
+                clearable
+              >
+                <el-option
+                  v-for="dict in vipList"
+                  :key="dict.vipLevel"
+                  :label="'SVIP'+dict.vipLevel"
+                  :value="dict.vipLevel"
+                />
+              </el-select>
+          <!-- <el-input v-model="form.svipLevel" placeholder="请输入svip等级" /> -->
         </el-form-item>
         <el-form-item label="余额" prop="balance">
           <el-input v-model="form.balance" placeholder="请输入余额" />
@@ -233,15 +245,15 @@
         <el-form-item label="钱包地址" prop="usdtAddress">
           <el-input v-model="form.usdtAddress" placeholder="请输入钱包地址" />
         </el-form-item>
-        <el-form-item label="注册时间" prop="registrationTime">
+        <!-- <el-form-item label="注册时间" prop="registrationTime">
           <el-date-picker clearable
                           v-model="form.registrationTime"
                           type="datetime"
                           value-format="yyyy-MM-dd HH:mm:ss"
                           placeholder="请选择注册时间">
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="邀请码" prop="referrerId">
+        </el-form-item> -->
+        <el-form-item label="邀请码" prop="referrerId" v-if="title == '添加用户信息'">
           <el-input v-model="form.invitationCode" placeholder="请输入邀请码" />
         </el-form-item>
         <el-form-item label="用户状态" prop="userStatus">
@@ -274,7 +286,19 @@
     <el-dialog :close-on-click-modal="false" title="修改vip等级" :visible.sync="open1" width="500px" append-to-body>
       <el-form ref="form1" :model="form1" label-width="80px">
         <el-form-item label="svip等级" prop="lv">
-          <el-input v-model="form1.lv" placeholder="请输入vip等级" />
+          <el-select
+                v-model="form1.lv"
+                placeholder="请选择svip等级"
+                clearable
+              >
+                <el-option
+                  v-for="dict in vipList"
+                  :key="dict.vipLevel"
+                  :label="'SVIP'+dict.vipLevel"
+                  :value="dict.vipLevel"
+                />
+              </el-select>
+          <!-- <el-input v-model="form1.lv" placeholder="请输入vip等级" /> -->
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -288,7 +312,7 @@
           <p style="font-size: 16px; font-weight: bold; margin: 0;">特殊任务{{ index+1 }}</p>
           <i style="font-size: 16px; color: red; cursor: pointer;" class="el-icon-delete" @click="delTask(index)"></i>
         </div>
-        <el-form ref="form2" label-width="120px">
+        <el-form ref="form2" label-width="130px">
           <el-form-item label="任务id" prop="taskId">
             <el-select v-model="data.taskId" placeholder="请选择任务" clearable style="width: 100%;">
               <el-option
@@ -300,8 +324,8 @@
             </el-select>
             <!-- <el-input v-model="data.taskId" placeholder="请输入任务id" /> -->
           </el-form-item>
-          <el-form-item label="几次任务后触发" prop="count">
-            <el-input v-model="data.count" placeholder="请输入几次任务后触发" />
+          <el-form-item label="在第几个任务触发" prop="count">
+            <el-input v-model="data.count" placeholder="请输入在第几个任务触发" />
           </el-form-item>
         </el-form>
       </div>
@@ -355,6 +379,7 @@
 <script>
 import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip, addSpecialTask, getSpecialTask, addAndDeduct } from "@/api/task/users";
 import { listTasks } from "@/api/task/tasks";
+import { listSvipSetting } from "@/api/task/svipSetting";
 
 export default {
   name: "Users",
@@ -402,6 +427,9 @@ export default {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" }
         ],
+        nickname: [
+          { required: true, message: "账户名不能为空", trigger: "blur" }
+        ],
       },
       open1: false,
       form1: {},
@@ -429,11 +457,13 @@ export default {
         value: 'no',
         label: '扣除'
       }],
-      tasksList: []
+      tasksList: [],
+      vipList: []
     };
   },
   created() {
     this.getList();
+    this.getVipList()
   },
   activated() {
     this.getList();
@@ -454,16 +484,24 @@ export default {
       });
       listTasks({
         pageNum: 1,
-        pageSize: 100,
+        pageSize: 200,
         taskLevel: 6
       }).then(response => {
         this.tasksList = response.rows;
         this.tasksList.map(item => {
           item.id = item.id + '';
-          item.label = `名称: ${item.title}; ID: ${item.id}; 金额: ${item.rewardAmount}`;
+          item.label = `ID: ${item.id}; 名称: ${item.title}; 金额: ${item.rewardAmount}`;
         })
         this.tasksList = [...this.tasksList]
         console.log(this.tasksList, 'this.tasksList')
+      });
+    },
+    getVipList() {
+      listSvipSetting({
+        pageNum: 1,
+        pageSize: 20
+      }).then(response => {
+        this.vipList = response.rows;
       });
     },
     // 取消按钮
