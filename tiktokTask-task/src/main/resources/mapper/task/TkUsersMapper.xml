@@ -42,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="uid != null  and uid != ''"> and uid= #{uid}</if>
             <if test="username != null  and username != ''"> and username= #{username}</if>
+            <if test="nickname != null  and nickname != ''"> and nickname= #{nickname}</if>
             <if test="svipLevel != null "> and tk.svip_level = #{svipLevel}</if>
             <if test="invitationCode != null "> and tk.invitation_code = #{invitationCode}</if>
             <if test="params.beginRegistrationTime != null and params.beginRegistrationTime != '' and params.endRegistrationTime != null and params.endRegistrationTime != ''"> and tk.registration_time between #{params.beginRegistrationTime} and #{params.endRegistrationTime}</if>

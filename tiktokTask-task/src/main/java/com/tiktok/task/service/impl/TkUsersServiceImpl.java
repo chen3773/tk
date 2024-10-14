@@ -135,10 +135,18 @@ public class TkUsersServiceImpl implements ITkUsersService
     @Transactional
     public int insertTkUsers(TkUsers tkUsers)
     {
+        Assert.isTrue(tkUsers.getNickname()!=null&&!tkUsers.getNickname().trim().equals(""),"昵称不能为空");
         //判断用户名是否存在
         TkUsers tkUsers3 = new TkUsers();
         tkUsers3.setUsername(tkUsers.getUsername());
         Assert.isTrue(tkUsersMapper.selectTkUsersList(tkUsers3).size()==0,"用户名已存在");
+
+
+        //判断用户昵称是否存在
+        //判断用户名是否存在
+        TkUsers tkUsers5 = new TkUsers();
+        tkUsers5.setNickname(tkUsers.getNickname());
+        Assert.isTrue(tkUsersMapper.selectTkUsersList(tkUsers5).size()==0,"昵称已存在");
 
         String InviteCode = InviteCodeGenerator.generateInviteCode();//邀请码
 
@@ -161,7 +169,6 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkUsers.setWithdraw("0");
         tkUsers.setUserStatus("1");
         tkUsers.setBalance("0");
-        tkUsers.setNickname("Default");
         tkUsers.setSvipLevel(0L);
         tkUsers.setNonWithdrawableBalance("0");
         tkUsers.setInvitationCode(InviteCode);
@@ -236,9 +243,35 @@ public class TkUsersServiceImpl implements ITkUsersService
      * @return 结果
      */
     @Override
+    @Transactional
     public int updateTkUsers(TkUsers tkUsers)
     {
+        Assert.isTrue(tkUsers.getNickname()!=null&&!tkUsers.getNickname().trim().equals(""),"昵称不能为空");
+
+        //判断用户昵称是否存在
+        //判断用户名是否存在
+        TkUsers tkUsers5 = new TkUsers();
+        tkUsers5.setNickname(tkUsers.getNickname());
+        List<TkUsers> tkUsers2 = tkUsersMapper.selectTkUsersList(tkUsers5);
+        if(tkUsers2.size()!=0&&!tkUsers2.get(0).getUid().toString().equals(tkUsers.getUid().toString())){
+            Assert.isTrue(false,"昵称已存在");
+        }
+        TkUsers tkUsers1 = tkUsersMapper.selectTkUsersByUid(tkUsers.getUid());
+
+        String username = tkUsers.getUsername();
+        Assert.isTrue(username!=null,"登录名不能为空");
+        Assert.isTrue(!username.trim().equals(""),"登录名不能为空");
         tkUsers.setUpdateTime(DateUtils.getNowDate());
+
+        //修改用户名和用户密码同步系统表
+        String newPassword = SecurityUtils.encryptPassword(tkUsers.getPassword());
+
+       Assert.isTrue(userService.resetUserPwd(tkUsers1.getUsername(), newPassword) > 0,"网络异常");
+
+        SysUser sysUser = userService.selectUserByUserName(tkUsers1.getUsername());
+        sysUser.setUserName(username);
+        sysUser.setPassword(newPassword);
+        Assert.isTrue( userService.updateUser(sysUser) > 0,"网络异常");
         return tkUsersMapper.updateTkUsers(tkUsers);
     }
 
@@ -378,21 +411,24 @@ public class TkUsersServiceImpl implements ITkUsersService
     @Override
     public AjaxResult GetFundComposition() {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
-        //赚取的资金
+        // 赚取的资金
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
 
-        //获取出来用户的  amount
+// 获取出来用户的 amount
         Double amount = tkWallettransactionsMapper.getTotalAmountForTransactionTypeAndUser(uid);
 
         HashMap<String, String> teamData = tkInvitationMapper.getTeamData(uid);
 
         HashMap<String, Object> res = new HashMap<>();
-        res.put("JobCommission",tkUsers.getTotareward());
-        res.put("customerRebate",teamData.get("totareward"));
-        res.put("commissionRebate",amount);
-        res.put("ShareholderDividends","0");
+
+        res.put("JobCommission", tkUsers.getTotareward() != null ? tkUsers.getTotareward() : 0);
+        res.put("customerRebate", teamData != null && teamData.get("totareward") != null ? teamData.get("totareward") : 0);
+        res.put("commissionRebate", amount != null ? amount : 0);
+        res.put("ShareholderDividends", 0);
 
         return AjaxResult.success(res);
+
+
     }
 
     @Override

@@ -287,6 +287,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<JuniorUserOV> ViewSubordinates(Long id) {
         Long userId = SecurityUtils.getUserId();
+
         //超级管理员和管理员可以查看全部
         for (int i = 0; i < SecurityUtils.getLoginUser().getUser().getRoles().size(); i++) {
             if (SecurityUtils.getLoginUser().getUser().getRoles().get(i).getRoleKey().contains("admin")) {

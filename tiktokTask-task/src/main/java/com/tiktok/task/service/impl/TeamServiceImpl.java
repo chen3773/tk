@@ -40,14 +40,24 @@ public class TeamServiceImpl implements TeamService {
         HashMap<String, String> teamData = tkInvitationMapper.getTeamData(uid);
         //获取出来用户的  amount
         Double amount = tkWallettransactionsMapper.getTotalAmountForTransactionTypeAndUser(uid);
-        teamData.put("amount",amount.toString());
+        if(teamData==null){
+            teamData = new HashMap<>();
+            teamData.put("totareward","0");
+            teamData.put("invitations","0");
+        }
+        if(amount==null){
+            teamData.put("amount","0");
+        }else {
+            teamData.put("amount",amount.toString());
+        }
+
 
         if(teamData==null){
             teamData = new HashMap<>();
             teamData.put("totareward","0");
-            teamData.put("amount","0");
             teamData.put("invitations","0");
         }
+
         return AjaxResult.success(teamData);
     }
 
