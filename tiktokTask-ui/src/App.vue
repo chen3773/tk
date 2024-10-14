@@ -66,7 +66,7 @@ export default {
             clearInterval(this.timer);
             this.timer = null;
           });
-      }, 60000);
+      }, 10000);
     },
   }
 };
