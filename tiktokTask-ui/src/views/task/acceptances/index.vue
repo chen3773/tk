@@ -140,6 +140,22 @@
             v-hasPermi="['task:acceptances:edit']"
             v-if="scope.row.status == 1"
           >卡审</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate2(scope.row, true)"
+            v-hasPermi="['task:acceptances:edit']"
+            v-if="scope.row.tips == 0"
+          >关闭提示音</el-button>
+          <!-- <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate2(scope.row, false)"
+            v-hasPermi="['task:acceptances:edit']"
+            v-if="scope.row.tips == 1"
+          >开启提示音</el-button> -->
           <!-- <el-button
             size="mini"
             type="text"
@@ -323,6 +339,15 @@ export default {
       }).then(response => {
         this.getList();
         this.$modal.msgSuccess("卡审成功");
+      });
+    },
+    handleUpdate2(row, bol) {
+      const id = row.id
+      updateAcceptances({
+        id,
+        tips: bol ? '1' : '0'
+      }).then(response => {
+        this.getList();
       });
     },
     /** 提交按钮 */

@@ -50,7 +50,7 @@ export default {
       this.$store
           .dispatch("getTaskNum")
           .then((res) => {
-            if (res > 0) {
+            if (res.Tasks > 0 || res.Withdrawal > 0) {
               this.$refs.audioPlayer.play();
             }
           })
@@ -58,7 +58,7 @@ export default {
         this.$store
           .dispatch("getTaskNum")
           .then((res) => {
-            if (res > 0) {
+            if (res.Tasks > 0 || res.Withdrawal > 0) {
               this.$refs.audioPlayer.play();
             }
           })
