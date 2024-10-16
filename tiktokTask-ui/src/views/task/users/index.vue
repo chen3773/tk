@@ -235,7 +235,7 @@
         <el-form-item label="昵称" prop="nickname">
           <el-input v-model="form.nickname" placeholder="请输入昵称" />
         </el-form-item>
-        <el-form-item label="svip等级" prop="svipLevel">
+        <!-- <el-form-item label="svip等级" prop="svipLevel">
           <el-select
                 v-model="form.svipLevel"
                 placeholder="请选择svip等级"
@@ -248,8 +248,7 @@
                   :value="dict.vipLevel"
                 />
               </el-select>
-          <!-- <el-input v-model="form.svipLevel" placeholder="请输入svip等级" /> -->
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="余额" prop="balance">
           <el-input v-model="form.balance" placeholder="请输入余额" />
         </el-form-item>
@@ -316,8 +315,13 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm1">确 定</el-button>
-        <el-button @click="cancel1">取 消</el-button>
+        <el-popconfirm
+          title="升级vip1-5不可逆，请确认"
+          @confirm="submitForm1"
+        >
+          <el-button type="primary" slot="reference">确 定</el-button>
+        </el-popconfirm>
+        <el-button @click="cancel1" style="margin-left: 10px;">取 消</el-button>
       </div>
     </el-dialog>
     <el-dialog :close-on-click-modal="false" title="配置特殊任务" :visible.sync="open2" width="600px" append-to-body>

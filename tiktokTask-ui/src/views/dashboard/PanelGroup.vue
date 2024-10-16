@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" class="card-panel-col">
+    <el-col :xs="8" :sm="8" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
@@ -27,7 +27,22 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" class="card-panel-col">
+    <el-col :xs="8" :sm="8" class="card-panel-col">
+      <div class="card-panel" @click="handleSetLineChartData('newVisitis')" style="display: flex;">
+        <div class="card-panel-icon-wrapper icon-people">
+          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
+        </div>
+        <div class="card-panel-description" style="display: flex; flex-wrap: wrap;">
+          <div v-for="item,index in info.vipNum" :key="index" style="min-width: 110px;">
+            <div class="card-panel-text">
+              VIP{{item.svip_level}}数量
+            </div>
+            <count-to :start-val="0" :end-val="item.count || 0" :duration="2600" class="card-panel-num" />
+          </div>
+        </div>
+      </div>
+    </el-col>
+    <el-col :xs="8" :sm="8" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('message')">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="message" class-name="card-panel-icon" />
