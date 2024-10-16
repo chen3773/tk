@@ -112,6 +112,10 @@ public class TkUsersServiceImpl implements ITkUsersService
             int num = getSubordinateCount(user.getUid()); // 获取下级数量
             user.setTeamsize(num); // 设置下级数量
         }
+
+        if(tkUsersList.size()==0){//尝试模糊查询
+            tkUsersList =  tkUsersMapper.selectTkUsersBlurList(tkUsers);
+        }
         return tkUsersList;
     }
 
@@ -312,7 +316,8 @@ public class TkUsersServiceImpl implements ITkUsersService
     public AjaxResult updateUser(TkUsers tkUsers) throws CustomException {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         TkUsers tkUser = tkUsersMapper.selectTkUsersByUid(uid);
-        if(tkUser.getPaymentPassword()!=null){
+
+        if(tkUser.getPaymentPassword()!=null && tkUsers.getUsdtAddress()==null){
             AssertionUtils.isTrue(tkUser.getPaymentPassword().equals(tkUsers.getOldPasswords()),"The old password doesn't match");
 
         }
@@ -339,9 +344,18 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkTaskAcceptances.setUid(uid);
         List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
         for (int i = 0; i < tkTaskAcceptances1.size(); i++) {
-            Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("0"),"Please complete all tasks before withdrawing");
+            Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("0"),"Mission not completed");
+            Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("1"),"Mission not completed");
+            Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("4"),"Mission not completed");
         }
 
+        //获取出额度
+        TkTasknum tkTasknum = new TkTasknum();
+        tkTasknum.setUserId(uid);
+        List<TkTasknum> tkTasknums = tkTasknumMapper.selectTkTasknumList(tkTasknum);
+        AssertionUtils.isTrue(tkTasknums.size()!=0,"Contact Customer Service");
+        Assert.isTrue(tkTasknums.get(0).getExperienceTaskCount()==0,"Mission not completed");
+        Assert.isTrue(tkTasknums.get(0).getNormalTaskCount()==0,"Mission not completed");
         // 将字符串转换为 double
         double value = Double.parseDouble(amount);
         Assert.isTrue(value>0,"error");
@@ -351,9 +365,10 @@ public class TkUsersServiceImpl implements ITkUsersService
 
 
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
+        Assert.isTrue(tkUsers.getPaymentPassword()!=null,"Set a payment password.");
         Assert.isTrue(tkUsers.getPaymentPassword().trim().equals(paymentPassword.trim()),"Payment password error");
 
-        Assert.isTrue(tkUsers.getBlockchainName()!=null,"Please bind your wallet first");
+        Assert.isTrue(tkUsers.getUsdtAddress()!=null,"Set the withdrawal address.");
 
         Assert.isTrue(tkUsers.getWithdraw().equals("0"),"Withdrawal exception, contact customer service");
 
@@ -368,7 +383,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         // 将 amount 转换为 BigDecimal
         BigDecimal amountToWithdraw = new BigDecimal(amount);
         // 检查余额是否足够
-        Assert.isTrue(withdrawableBalance.compareTo(amountToWithdraw) >= 0,"error");
+        Assert.isTrue(withdrawableBalance.compareTo(amountToWithdraw) >= 0,"Insufficient funds");
 
         // 计算提现后的余额
         BigDecimal newBalance = balance.subtract(amountToWithdraw);
@@ -381,6 +396,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkWithdrawals.setAmount(new BigDecimal(amount));
         tkWithdrawals.setUsername(tkUsers.getUsername());
         tkWithdrawals.setUid(uid);
+        tkWithdrawals.setTips("0");
         tkWithdrawals.setBlockchainName(tkUsers.getBlockchainName());
         tkWithdrawals.setAddress(tkUsers.getUsdtAddress());
         tkWithdrawals.setWithdrawalTime(new Date());
@@ -436,6 +452,8 @@ public class TkUsersServiceImpl implements ITkUsersService
     public AjaxResult addSpecialTask(TaskData taskData) {
 
         for (int i = 0; i < taskData.getUids().size(); i++) {
+
+
             //过滤
             TkSpecialTask tkSpecialTask1 = new TkSpecialTask();
             tkSpecialTask1.setUserId(Long.valueOf(taskData.getUids().get(i)));
@@ -449,6 +467,7 @@ public class TkUsersServiceImpl implements ITkUsersService
 
             }
             for (int i1 = 0; i1 < taskData.getTaskList().size(); i1++) {
+
                 List<TaskData.Task> taskList = taskData.getTaskList();
                 Map<String, Long> taskIdCountMap = taskList.stream()
                         .collect(Collectors.groupingBy(TaskData.Task::getTaskId, Collectors.counting())); // 统计每个taskId出现的次数
@@ -487,7 +506,9 @@ public class TkUsersServiceImpl implements ITkUsersService
                 tkTaskAcceptances.setUid(Long.valueOf(uid));
                 tkTaskAcceptances.setTaskId(Long.valueOf(taskId));
                 List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
-                Assert.isTrue(tkTaskAcceptances1.size()==0,taskId+"这个特殊任务客户已经做过了");
+                Assert.isTrue(tkTaskAcceptances1.size()==0||tkSpecialTask.getTriggerCount()==0,taskId+"这个特殊任务客户已经做过了");
+
+
 
                 tkSpecialTaskMapper.insertTkSpecialTask(tkSpecialTask);
             }

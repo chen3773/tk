@@ -60,4 +60,6 @@ public interface TkUsersMapper
     public int deleteTkUsersByUids(Long[] uids);
 
     List<TkUsers> selectSubordinates(Long userId);
+
+    public List<TkUsers> selectTkUsersBlurList(TkUsers tkUsers);
 }

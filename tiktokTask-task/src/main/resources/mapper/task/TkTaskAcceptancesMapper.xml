@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="submittedImage"    column="submitted_image"    />
         <result property="submissionTime"    column="submission_time"    />
         <result property="approvalTime"    column="approval_time"    />
+        <result property="tips"    column="tips"    />
         <result property="createTime"    column="create_time"    />
         <result property="username"    column="username"    />
         <result property="taskTitle"    column="task_title"    />
@@ -29,10 +30,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ta.submission_time,
             ta.approval_time,
             ta.create_time,
+            ta.tips,
             tu.username,
             tt.title AS task_title,
             tt.reward_amount AS task_reward_amount,
             tt.task_level AS task_level
+
         FROM
             tk_task_acceptances ta
                 JOIN tk_users tu ON ta.uid = tu.uid
@@ -44,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="uid != null "> and ta.uid = #{uid}</if>
             <if test="taskId != null "> and ta.task_id = #{taskId}</if>
+            <if test="tips != null "> and ta.tips = #{tips}</if>
             <if test="status != null  and status != ''"> and ta.status = #{status}</if>
         </where>
         order by create_time desc
@@ -71,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submissionTime != null">submission_time,</if>
             <if test="approvalTime != null">approval_time,</if>
             <if test="createTime != null">create_time,</if>
+            <if test="tips != null">tips,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="uid != null">#{uid},</if>
@@ -80,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submissionTime != null">#{submissionTime},</if>
             <if test="approvalTime != null">#{approvalTime},</if>
             <if test="createTime != null">#{createTime},</if>
+            <if test="tips != null">#{tips},</if>
          </trim>
     </insert>
 
@@ -88,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="uid != null">uid = #{uid},</if>
             <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="tips != null">tips = #{tips},</if>
             <if test="status != null and status != ''">status = #{status},</if>
             <if test="submittedImage != null">submitted_image = #{submittedImage},</if>
             <if test="submissionTime != null">submission_time = #{submissionTime},</if>

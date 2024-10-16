@@ -57,9 +57,10 @@ public class TkUsers extends BaseEntity
     private String usdtAddress;
 
     /** 注册时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "注册时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "MM/dd/yyyy")
+    @Excel(name = "注册时间", width = 30, dateFormat = "MM/dd/yyyy hh:mm:ss a")
     private Date registrationTime;
+
 
     private String avatar;
     /**

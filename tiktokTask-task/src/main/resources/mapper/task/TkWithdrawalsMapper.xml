@@ -12,11 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="blockchainName"    column="blockchain_name"    />
         <result property="amount"    column="amount"    />
         <result property="withdrawalTime"    column="withdrawal_time"    />
+        <result property="tips"    column="tips"    />
         <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectTkWithdrawalsVo">
-        select id, uid, username,blockchain_name,address, amount, withdrawal_time, status from tk_Withdrawals
+        select id, uid, username,blockchain_name,address, amount, withdrawal_time, tips, status from tk_Withdrawals
     </sql>
 
     <select id="selectTkWithdrawalsList" parameterType="TkWithdrawals" resultMap="TkWithdrawalsResult">
@@ -27,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
             <if test="amount != null "> and amount = #{amount}</if>
+            <if test="tips != null "> and tips = #{tips}</if>
             <if test="params.beginWithdrawalTime != null and params.beginWithdrawalTime != '' and params.endWithdrawalTime != null and params.endWithdrawalTime != ''"> and withdrawal_time between #{params.beginWithdrawalTime} and #{params.endWithdrawalTime}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
@@ -47,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="amount != null">amount,</if>
             <if test="blockchainName != null">blockchain_name,</if>
             <if test="withdrawalTime != null">withdrawal_time,</if>
+            <if test="tips != null">tips,</if>
             <if test="status != null">status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -56,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="amount != null">#{amount},</if>
             <if test="blockchainName != null">#{blockchainName},</if>
             <if test="withdrawalTime != null">#{withdrawalTime},</if>
+            <if test="tips != null">#{tips},</if>
             <if test="status != null">#{status},</if>
          </trim>
     </insert>
@@ -68,6 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null">address = #{address},</if>
             <if test="amount != null">amount = #{amount},</if>
             <if test="withdrawalTime != null">withdrawal_time = #{withdrawalTime},</if>
+            <if test="tips != null">tips = #{tips},</if>
             <if test="status != null">status = #{status},</if>
         </trim>
         where id = #{id}

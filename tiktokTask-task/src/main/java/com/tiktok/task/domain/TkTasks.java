@@ -64,7 +64,7 @@ public class TkTasks extends BaseEntity
     private Long taskLevel;
 
     /** 任务创建时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd ")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     @Excel(name = "任务创建时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
 

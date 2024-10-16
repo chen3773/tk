@@ -28,7 +28,8 @@ public class AdminServiceImpl implements AdminService {
     private TkUsersMapper tkUsersMapper;
     @Autowired
     private TkWallettransactionsMapper tkWallettransactionsMapper;
-
+    @Autowired
+    private TkWithdrawalsMapper tkWithdrawalsMapper;
     @Autowired
     private TkInvitationMapper tkInvitationMapper;
     @Autowired
@@ -53,6 +54,10 @@ public class AdminServiceImpl implements AdminService {
             List<HashMap<String, Object>> agencyPerformance = adminMapper.getAgencyPerformance();
             stringObjectHashMap.put("AgencyPerformance",agencyPerformance);
         }
+
+        //查询出对应VIP数量
+        List< HashMap<String,Object>> stringObjectHashMap1 = adminMapper.getvipNum(userId);
+        stringObjectHashMap.put("vipNum",stringObjectHashMap1);
         return AjaxResult.success(stringObjectHashMap);
     }
 
@@ -307,9 +312,17 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AjaxResult pendingTask() {
         TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
-        tkTaskAcceptances.setStatus("1");
+        tkTaskAcceptances.setTips("0");
         List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
-        return AjaxResult.success(tkTaskAcceptances1.size());
+        HashMap<String, Integer> objectObjectHashMap = new HashMap<>();
+
+
+        TkWithdrawals tkWithdrawals = new TkWithdrawals();
+        tkWithdrawals.setTips("0");
+        List<TkWithdrawals> tkWithdrawals1 = tkWithdrawalsMapper.selectTkWithdrawalsList(tkWithdrawals);
+        objectObjectHashMap.put("Tasks",tkTaskAcceptances1.size());
+        objectObjectHashMap.put("Withdrawal",tkWithdrawals1.size());
+        return AjaxResult.success(objectObjectHashMap);
     }
 
     private int getSubordinateCount(Long userId) {

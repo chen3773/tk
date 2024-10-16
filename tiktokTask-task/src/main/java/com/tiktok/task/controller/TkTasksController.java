@@ -161,7 +161,7 @@ public class TkTasksController extends BaseController
      * 用户接取任务
      */
     @PostMapping("/receiveTask")
-    public AjaxResult receiveTask(Long taskId) throws CustomException {
+    public AjaxResult receiveTask(Long taskId){
         AssertionUtils.isTrue(taskId!=null,"Missing parameter");
        return tkTasksService.receiveTask(taskId);
     }

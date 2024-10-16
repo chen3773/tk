@@ -154,7 +154,7 @@ public class TkTasksServiceImpl implements ITkTasksService
      */
     @Override
     @Transactional
-    public AjaxResult receiveTask(Long taskId) throws CustomException {
+    public AjaxResult receiveTask(Long taskId)  {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         //判断用户是否有未完成的任务
         TkTaskAcceptances tkTaskAcceptancesdDm = new TkTaskAcceptances();
@@ -174,16 +174,16 @@ public class TkTasksServiceImpl implements ITkTasksService
         tkTaskAcceptances1.setTaskId(taskId);
         tkTaskAcceptances1.setUid(uid);
         List<TkTaskAcceptances> tkTaskAcceptances2 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances1);
-        AssertionUtils.isTrue(tkTaskAcceptances2.size()==0,"Double collection");
+        AssertionUtils.isTrue(tkTaskAcceptances2.size()==0,"Cannot be claimed again");
 
         TkTasks tkTasks = new TkTasks();
         tkTasks.setId(taskId);
         TkTasks TaskList = tkTasksMapper.selectTkTasksList(tkTasks).get(0);
 
-        AssertionUtils.isTrue(TaskList.getDeleted().equals("0"),"error");
+        AssertionUtils.isTrue(TaskList.getDeleted().equals("0"),"Network error");
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
         //等级不符合
-        AssertionUtils.isTrue(TaskList.getTaskLevel()<=tkUsers.getSvipLevel(),"Rank error");
+        AssertionUtils.isTrue(TaskList.getTaskLevel()<=tkUsers.getSvipLevel(),"Level not met");
 
         //判断数量
         AssertionUtils.isTrue(TaskList.getSurplusquantity()>0,"Quota is full");
@@ -211,6 +211,7 @@ public class TkTasksServiceImpl implements ITkTasksService
         tkTaskAcceptances.setTaskId(taskId);
         tkTaskAcceptances.setStatus("0");
         tkTaskAcceptances.setUid(uid);
+        tkTaskAcceptances.setTips("0");
         tkTaskAcceptances.setCreateTime(new Date());
         //减少一个任务数量
         tkTasks.setSurplusquantity(TaskList.getSurplusquantity()-1);

@@ -83,8 +83,13 @@ public class TkWithdrawalsServiceImpl implements ITkWithdrawalsService
         TkWithdrawals tkWithdrawals2 = tkWithdrawalsMapper.selectTkWithdrawalsList(tkWithdrawals1).get(0);
 
         Assert.isTrue(tkWithdrawals2!=null,"数据错误");
-
+        if(tkWithdrawals.getStatus()==null){
+            tkWithdrawals2.setTips("1");
+            return tkWithdrawalsMapper.updateTkWithdrawals(tkWithdrawals2);
+        }
         Assert.isTrue(tkWithdrawals2.getStatus().toString().equals("0"),"状态不允许操作");
+
+
         if(tkWithdrawals.getStatus().toString().equals("2")){
             //返还余额
             Long uid = tkWithdrawals.getUid();
@@ -110,6 +115,7 @@ public class TkWithdrawalsServiceImpl implements ITkWithdrawalsService
             Assert.isTrue(tkWallettransactionsMapper.insertTkWallettransactions(tkWallettransaction)!=0,"网络异常...");
             //修改提现的状态
         }
+        tkWithdrawals.setTips("1");
         return tkWithdrawalsMapper.updateTkWithdrawals(tkWithdrawals);
     }
 

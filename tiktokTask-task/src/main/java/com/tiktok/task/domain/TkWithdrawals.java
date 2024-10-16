@@ -46,6 +46,7 @@ public class TkWithdrawals extends BaseEntity
     /** 提现状态 */
     @Excel(name = "提现状态")
     private Long status;
+    private String tips;
 
     public void setId(Long id) 
     {
@@ -130,5 +131,13 @@ public class TkWithdrawals extends BaseEntity
 
     public void setBlockchainName(String blockchainName) {
         this.blockchainName = blockchainName;
+    }
+
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
     }
 }

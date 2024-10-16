@@ -40,7 +40,7 @@ public class TkTaskAcceptances extends BaseEntity
     private String submittedImage;
 
     /** 提交时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "MM/dd/yyyy hh:mm:ss a")
     @Excel(name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date submissionTime;
 
@@ -48,11 +48,17 @@ public class TkTaskAcceptances extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "审核通过时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date approvalTime;
+    @JsonFormat(pattern = "MM/dd/yyyy hh:mm:ss a")
+    private Date createTime;
 
     private String username;
     private String taskTitle;
     private String taskRewardAmount;
     private String taskLevel;
+    /**
+     * 提示音
+     */
+    private String tips;
 
 
     public void setId(Long id) 
@@ -162,5 +168,23 @@ public class TkTaskAcceptances extends BaseEntity
 
     public void setTaskLevel(String taskLevel) {
         this.taskLevel = taskLevel;
+    }
+
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

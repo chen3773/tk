@@ -263,11 +263,11 @@ public class TkUsersController extends BaseController
         String password = loginUser.getPassword();
         if (!SecurityUtils.matchesPassword(oldPassword, password))
         {
-            return error("修改密码失败，旧密码错误");
+            return error("Password change failed, incorrect old password.");
         }
         if (SecurityUtils.matchesPassword(newPassword, password))
         {
-            return error("新密码不能与旧密码相同");
+            return error("The new password cannot be the same as the old password.");
         }
         newPassword = SecurityUtils.encryptPassword(newPassword);
         if (userService.resetUserPwd(userName, newPassword) > 0)
@@ -283,7 +283,7 @@ public class TkUsersController extends BaseController
         }
 
 
-        return error("修改密码异常，请联系管理员");
+        return error("Network error");
     }
 
     /**

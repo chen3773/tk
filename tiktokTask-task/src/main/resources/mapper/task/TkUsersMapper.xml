@@ -52,6 +52,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND tk.deleted!=1
         ORDER BY uid DESC
     </select>
+
+    <select id="selectTkUsersBlurList" parameterType="TkUsers" resultMap="TkUsersResult">
+        <include refid="selectTkUsersVo"/>
+        <where>
+            <if test="uid != null  and uid != ''"> and uid = #{uid}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="nickname != null  and nickname != ''"> and nickname = #{nickname}</if>
+            <if test="svipLevel != null "> and tk.svip_level = #{svipLevel}</if>
+            <if test="invitationCode != null "> and tk.invitation_code = #{invitationCode}</if>
+            <if test="params.beginRegistrationTime != null and params.beginRegistrationTime != '' and params.endRegistrationTime != null and params.endRegistrationTime != ''"> and tk.registration_time between #{params.beginRegistrationTime} and #{params.endRegistrationTime}</if>
+            <if test="referrerId != null "> and tk.referrer_id = #{referrerId}</if>
+            <if test="createBy != null "> and tk.create_by = #{createBy}</if>
+        </where>
+        AND tk.deleted != 1
+        ORDER BY uid DESC
+    </select>
+
     
     <select id="selectTkUsersByUid" parameterType="Long" resultMap="TkUsersResult">
         <include refid="selectTkUsersVo"/>

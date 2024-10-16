@@ -62,4 +62,8 @@ public class AdminController extends BaseController {
         List<JuniorUserOV> juniorUserOVS = adminService.ViewSubordinates(id);
         return getDataTable(juniorUserOVS);
     }
+    /**
+     * 获取对应VIP数量
+     */
+
 }

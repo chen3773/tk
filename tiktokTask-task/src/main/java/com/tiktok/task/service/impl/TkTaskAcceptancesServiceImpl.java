@@ -82,6 +82,7 @@ public class TkTaskAcceptancesServiceImpl implements ITkTaskAcceptancesService
     @Override
     public int updateTkTaskAcceptances(TkTaskAcceptances tkTaskAcceptances)
     {
+        tkTaskAcceptances.setTips("1");
         return tkTaskAcceptancesMapper.updateTkTaskAcceptances(tkTaskAcceptances);
     }
 
@@ -194,7 +195,7 @@ public class TkTaskAcceptancesServiceImpl implements ITkTaskAcceptancesService
             tkTaskAcceptances.setStatus("3");
             tkTaskAcceptances.setApprovalTime(new Date());
         }
-
+        tkTaskAcceptances.setTips("1");
         Assert.isTrue(tkTaskAcceptancesMapper.updateTkTaskAcceptances(tkTaskAcceptances)!=0,"网络出现异常...");
        return  AjaxResult.success("审核完成");
     }

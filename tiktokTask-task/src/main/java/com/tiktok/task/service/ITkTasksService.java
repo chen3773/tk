@@ -64,7 +64,7 @@ public interface ITkTasksService
 
     List<TkTasks> getTask(TkTasks tkTasks);
 
-    AjaxResult receiveTask(Long taskId) throws CustomException;
+    AjaxResult receiveTask(Long taskId) ;
 
     AjaxResult getTaskNum();
 

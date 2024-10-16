@@ -207,6 +207,24 @@
 
 
     </select>
+    <select id="getvipNum" resultType="java.util.HashMap">
+        SELECT levels.svip_level, IFNULL(counts.count, 0) AS count
+        FROM (
+            SELECT '0' AS svip_level
+            UNION SELECT '1'
+            UNION SELECT '2'
+            UNION SELECT '3'
+            UNION SELECT '4'
+            UNION SELECT '5'
+            ) AS levels
+            LEFT JOIN (
+            SELECT svip_level, COUNT(*) AS count
+            FROM tk_users
+        <if test="userId != null"> WHERE create_by = #{userId}</if>
+            GROUP BY svip_level
+            ) AS counts ON levels.svip_level = counts.svip_level;
+
+    </select>
 
 
 </mapper>
