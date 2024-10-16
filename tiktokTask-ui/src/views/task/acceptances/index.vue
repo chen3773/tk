@@ -1,16 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户ID" prop="uid">
+      <el-form-item label="uid" prop="uid">
         <el-input
+          type="number"
           v-model="queryParams.uid"
-          placeholder="请输入用户ID"
+          placeholder="请输入uid"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="任务ID" prop="taskId">
         <el-input
+          type="number"
           v-model="queryParams.taskId"
           placeholder="请输入任务ID"
           clearable
@@ -83,7 +85,7 @@
     <el-table v-loading="loading" :data="acceptancesList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="接取任务的唯一标识符" align="center" prop="id" /> -->
-      <el-table-column label="用户ID" align="center" prop="uid" />
+      <el-table-column label="uid" align="center" prop="uid" />
       <el-table-column label="用户名" align="center" prop="username" />
       <el-table-column label="任务" align="center" prop="taskId" width="250" >
         <template slot-scope="scope">
@@ -178,8 +180,8 @@
     <!-- 添加或修改用户接取任务对话框 -->
     <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="接取任务的用户ID" prop="uid">
-          <el-input v-model="form.uid" placeholder="请输入接取任务的用户ID" />
+        <el-form-item label="接取任务的uid" prop="uid">
+          <el-input v-model="form.uid" placeholder="请输入接取任务的uid" />
         </el-form-item>
         <el-form-item label="关联的任务ID" prop="taskId">
           <el-input v-model="form.taskId" placeholder="请输入关联的任务ID" />
@@ -251,7 +253,7 @@ export default {
       // 表单校验
       rules: {
         uid: [
-          { required: true, message: "接取任务的用户ID不能为空", trigger: "blur" }
+          { required: true, message: "接取任务的uid不能为空", trigger: "blur" }
         ],
         taskId: [
           { required: true, message: "关联的任务ID不能为空", trigger: "blur" }

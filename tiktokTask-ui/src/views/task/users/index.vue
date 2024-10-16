@@ -3,6 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="uid" prop="uid">
         <el-input
+          type="number"
           v-model="queryParams.uid"
           placeholder="请输入uid"
           clearable
@@ -18,12 +19,24 @@
         />
       </el-form-item>
       <el-form-item label="svip等级" prop="svipLevel">
-        <el-input
+        <el-select
+          v-model="queryParams.svipLevel"
+          placeholder="请选择svip等级"
+          clearable
+        >
+          <el-option
+            v-for="dict in vipList"
+            :key="dict.vipLevel"
+            :label="'SVIP'+dict.vipLevel"
+            :value="dict.vipLevel"
+          />
+        </el-select>
+        <!-- <el-input
           v-model="queryParams.svipLevel"
           placeholder="请输入svip等级"
           clearable
           @keyup.enter.native="handleQuery"
-        />
+        /> -->
       </el-form-item>
       <el-form-item label="注册时间">
         <el-date-picker

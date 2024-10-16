@@ -3,16 +3,18 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="任务id" prop="taskId">
         <el-input
+          type="number"
           v-model="queryParams.taskId"
           placeholder="请输入任务id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="userid" prop="userId">
+      <el-form-item label="uid" prop="userId">
         <el-input
+          type="number"
           v-model="queryParams.userId"
-          placeholder="请输入userid"
+          placeholder="请输入uid"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -81,9 +83,9 @@
 
     <el-table v-loading="loading" :data="specialTaskList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
+      <!-- <el-table-column label="id" align="center" prop="id" /> -->
       <el-table-column label="任务id" align="center" prop="taskId" />
-      <el-table-column label="userid" align="center" prop="userId" />
+      <el-table-column label="uid" align="center" prop="userId" />
       <el-table-column label="触发次数" align="center" prop="triggerCount" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
