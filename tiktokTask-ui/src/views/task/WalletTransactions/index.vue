@@ -1,16 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item label="用户ID" prop="userid">
+      <el-form-item label="uid" prop="userid">
         <el-input
+          type="number"
           v-model="queryParams.userid"
-          placeholder="请输入用户ID"
+          placeholder="请输入uid"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="交易金额" prop="amount">
         <el-input
+          type="number"
           v-model="queryParams.amount"
           placeholder="请输入交易金额"
           clearable
@@ -27,6 +29,7 @@
       </el-form-item>
       <el-form-item label="交易后余额" prop="fundBalance">
         <el-input
+          type="number"
           v-model="queryParams.fundBalance"
           placeholder="请输入交易后余额"
           clearable

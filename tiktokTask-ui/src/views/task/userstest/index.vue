@@ -1,69 +1,23 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="uid" prop="uid">
+    <div style="display: flex;align-items: center; margin-bottom: 15px;">
+      <div style="display: flex;align-items: center;">
+        <div>uid</div>
         <el-input
+          size="small"
+          style="width: 200px; margin-left: 10px; margin-right: 10px;"
+          type="number"
           v-model="queryParams.id"
           placeholder="请输入uid"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </div>
+      <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+      <el-button icon="el-icon-refresh" size="mini" v-if="historyList.length > 0" @click="prev">返回上一步</el-button>
+    </div>
 
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <!-- <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button> -->
-        <el-button icon="el-icon-refresh" size="mini" v-if="historyList.length > 0" @click="back">返回上一步</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8" v-if="false">
-      <!-- <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['task:users:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['task:users:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['task:users:remove']"
-        >删除</el-button>
-      </el-col> -->
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['task:users:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
-    <el-table v-loading="loading" :data="usersList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="usersList" >
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="UID" align="center" prop="uid" width="140" >
         <template slot-scope="scope">
@@ -137,7 +91,7 @@ import { ViewSubordinates } from "@/api/task/userstest";
 import { listTasks } from "@/api/task/tasks";
 
 export default {
-  name: "Users",
+  name: "Userstest",
   dicts: ['user_state'],
   data() {
     return {
@@ -167,7 +121,8 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
-      historyList: []
+      historyList: [],
+      id: ''
     };
   },
   created() {
@@ -222,7 +177,7 @@ export default {
         this.getList();
       }
     },
-    back() {
+    prev() {
       this.queryParams.id = this.historyList[this.historyList.length - 1];
       this.historyList.pop();
       this.getList();
