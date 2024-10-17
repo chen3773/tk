@@ -129,7 +129,7 @@
     />
 
     <!-- 添加或修改三级分佣百分比对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="一级" prop="first">
           <el-input v-model="form.first" placeholder="请输入一级" />

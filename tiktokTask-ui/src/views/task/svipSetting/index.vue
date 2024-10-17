@@ -136,7 +136,7 @@
     />
 
     <!-- 添加或修改svip默认配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="等级" prop="vipLevel">
           <el-input v-model="form.vipLevel" placeholder="请输入等级" />

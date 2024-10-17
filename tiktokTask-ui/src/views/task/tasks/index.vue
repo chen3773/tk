@@ -252,6 +252,7 @@
       </div>
     </el-dialog>
     <el-dialog
+      :close-on-click-modal="false"
       title="任务的详细描述"
       :visible.sync="open1"
       width="700px"

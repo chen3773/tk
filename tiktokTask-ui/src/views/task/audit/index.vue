@@ -175,7 +175,7 @@
     />
 
     <!-- 添加或修改自动审核对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="体验任务" prop="lv0">
           <el-radio-group v-model="form.lv0">
