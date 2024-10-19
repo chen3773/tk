@@ -98,8 +98,8 @@
           plain
           icon="el-icon-edit"
           size="mini"
-          :disabled="single"
-          @click="handleUpdate"
+          :disabled="multiple"
+          @click="handleUpdateArr"
           v-hasPermi="['task:tasks:edit']"
         >修改</el-button>
       </el-col>
@@ -260,11 +260,26 @@
     >
       <div class="smContent" v-html="smContent"></div>
     </el-dialog>
+    <el-dialog :close-on-click-modal="false" title="批量修改任务" :visible.sync="open2" width="700px" append-to-body>
+      <el-form ref="form2" :model="form2" label-width="120px">
+        <el-form-item label="任务标题" prop="title">
+          <el-input v-model="form2.title" placeholder="请输入任务标题" />
+        </el-form-item>
+        <el-form-item label="奖励金额" prop="rewardAmount">
+          <el-input v-model="form2.rewardAmount" placeholder="请输入奖励金额" />
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm2">确 定</el-button>
+        <el-button @click="cancel2">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listTasks, getTasks, delTasks, addTasks, updateTasks } from "@/api/task/tasks";
+import { listTasks, getTasks, delTasks, addTasks, updateTasks, BatchChanges } from "@/api/task/tasks";
 
 export default {
   name: "Tasks",
@@ -318,7 +333,9 @@ export default {
         ],
       },
       smContent: "",
-      open1: false
+      open1: false,
+      form2: {},
+      open2: false,
     };
   },
   created() {
@@ -390,6 +407,12 @@ export default {
         this.title = "修改任务列";
       });
     },
+    handleUpdateArr(row) {
+      this.reset2();
+      const id = row.id || this.ids;
+      this.form2.idList = id;
+      this.open2 = true;
+    },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -425,7 +448,30 @@ export default {
       this.download('task/tasks/export', {
         ...this.queryParams
       }, `tasks_${new Date().getTime()}.xlsx`)
-    }
+    },
+    submitForm2() {
+      this.$refs["form2"].validate(valid => {
+        if (valid) {
+          BatchChanges(this.form2).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open2 = false;
+              this.getList();
+            });
+        }
+      });
+    },
+    cancel2() {
+      this.open2 = false;
+      this.reset2();
+    },
+    reset2() {
+      this.form2 = {
+        idList: null,
+        title: null,
+        rewardAmount: null
+      };
+      this.resetForm("form2");
+    },
   }
 };
 </script>

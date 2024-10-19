@@ -50,3 +50,11 @@ export function delTasks(id) {
     method: 'delete'
   })
 }
+
+export function BatchChanges(data) {
+  return request({
+    url: '/task/tasks/BatchChanges',
+    method: 'post',
+    data: data
+  })
+}

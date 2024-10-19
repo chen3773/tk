@@ -142,6 +142,7 @@
       <!-- <el-table-column label="密码" align="center" prop="password" /> -->
       <!-- <el-table-column label="昵称" align="center" prop="nickname" /> -->
       <!-- <el-table-column label="svip等级" align="center" prop="svipLevel" /> -->
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="余额" align="center" prop="balance" width="170" >
         <template slot-scope="scope">
           <div style="color: #1890ff;">余额：{{ scope.row.balance }}</div>
@@ -170,7 +171,7 @@
       </el-table-column>
       <!-- <el-table-column label="最后登录时间" align="center" prop="logindate" width="160">
       </el-table-column> -->
-      <el-table-column label="备注" align="center" prop="remark" />
+      
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120">
         <template slot-scope="scope">
           <el-button
@@ -266,7 +267,7 @@
                           placeholder="请选择注册时间">
           </el-date-picker>
         </el-form-item> -->
-        <el-form-item label="邀请码" prop="referrerId" v-if="title == '添加用户信息'">
+        <el-form-item label="邀请码" prop="invitationCode" v-if="title == '添加用户信息'">
           <el-input v-model="form.invitationCode" placeholder="请输入邀请码" />
         </el-form-item>
         <el-form-item label="用户状态" prop="userStatus" v-if="title != '添加用户信息'">
@@ -447,6 +448,9 @@ export default {
         ],
         nickname: [
           { required: true, message: "昵称不能为空", trigger: "blur" }
+        ],
+        invitationCode: [
+          { required: true, message: "邀请码不能为空", trigger: "blur" }
         ],
       },
       open1: false,
