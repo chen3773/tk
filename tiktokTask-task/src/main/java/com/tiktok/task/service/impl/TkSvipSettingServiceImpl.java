@@ -118,6 +118,7 @@ public class TkSvipSettingServiceImpl implements ITkSvipSettingService
         //更改用户等级
         TkUsers tkuser = tkUsersMapper.selectTkUsersByUid(uid);
         Long svipLevel = tkuser.getSvipLevel();//等级
+        Assert.isTrue(svipLevel < lv,"不允许降级和平级操作");
         if(svipLevel.toString().equals("0")){
             //给上级人头费
             Long referrerId = tkuser.getReferrerId();//推荐人id

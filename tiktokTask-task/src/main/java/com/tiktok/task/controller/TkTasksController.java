@@ -1,8 +1,11 @@
 package com.tiktok.task.controller;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.tiktok.framework.web.exception.CustomException;
@@ -50,6 +53,22 @@ public class TkTasksController extends BaseController
         startPage();
         List<TkTasks> list = tkTasksService.selectTkTasksList(tkTasks);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询任务列列表---金额排序
+     */
+    @PreAuthorize("@ss.hasPermi('task:tasks:list')")
+    @GetMapping("/Sortinglist")
+    public TableDataInfo Sortinglist(TkTasks tkTasks)
+    {
+        startPage();
+        List<TkTasks> list = tkTasksService.selectTkTasksList(tkTasks);
+        List<TkTasks> sortedList = list.stream()
+                .sorted(Comparator.comparing(TkTasks::getRewardAmount))
+                .collect(Collectors.toList());
+
+        return getDataTable(sortedList);
     }
 
     /**
@@ -121,6 +140,24 @@ public class TkTasksController extends BaseController
     {
         return toAjax(tkTasksService.updateTkTasks(tkTasks));
     }
+
+
+
+    /**
+     * 修改任务列
+     * 批量修改
+     */
+    @PreAuthorize("@ss.hasPermi('task:tasks:edit')")
+    @Log(title = "任务列", businessType = BusinessType.UPDATE)
+    @PostMapping("/BatchChanges")
+    public AjaxResult BatchChanges(@RequestBody Map<String, Object> requestData)
+    {
+        List<Long> idList = (List<Long>) requestData.get("idList");
+        Double rewardAmount = (Double) requestData.get("rewardAmount");
+        String title = (String) requestData.get("title");
+        return toAjax(tkTasksService.batchUpdateTasks(idList,rewardAmount,title));
+    }
+
 
     /**
      * 删除任务列

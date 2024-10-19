@@ -45,6 +45,19 @@
 
     </select>
 
+    <select id="selectRandomTkTasks" parameterType="TkTasks" resultMap="TkTasksResult">
+        <include refid="selectTkTasksVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="taskLevel != null "> and task_level = #{taskLevel}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            and deleted = "0"
+        </where>
+        ORDER BY RAND() LIMIT 12
+    </select>
+
+
     <select id="selectTkTasksById" parameterType="Long" resultMap="TkTasksResult">
         <include refid="selectTkTasksVo"/>
         where id = #{id}
@@ -191,6 +204,15 @@
     <update id="deleteTkTasksByIds" parameterType="String">
         update tk_tasks set deleted = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="batchUpdateTasks"  parameterType="java.util.Map">
+        UPDATE tk_tasks
+        SET reward_amount = #{rewardAmount},
+        title = #{title}
+        WHERE id IN
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </update>

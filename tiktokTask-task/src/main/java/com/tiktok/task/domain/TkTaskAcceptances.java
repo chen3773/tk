@@ -40,7 +40,7 @@ public class TkTaskAcceptances extends BaseEntity
     private String submittedImage;
 
     /** 提交时间 */
-    @JsonFormat(pattern = "MM/dd/yyyy hh:mm:ss a")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     @Excel(name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date submissionTime;
 
@@ -48,7 +48,7 @@ public class TkTaskAcceptances extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "审核通过时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date approvalTime;
-    @JsonFormat(pattern = "MM/dd/yyyy hh:mm:ss a")
+    @JsonFormat(pattern = "MM/dd/yyyy")
     private Date createTime;
 
     private String username;

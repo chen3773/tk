@@ -30,6 +30,7 @@ public interface TkTasksMapper
      * @return 任务列集合
      */
     public List<TkTasks> selectTkTasksList(TkTasks tkTasks);
+    public List<TkTasks> selectRandomTkTasks(TkTasks tkTasks);
 
     /**
      * 新增任务列
@@ -68,4 +69,9 @@ public interface TkTasksMapper
     List<UserTaskOV> getUserTask(@Param("status") String status, @Param("uid") Long uid);
 
     List<UserTaskOV> getUserTaskById(@Param("taskId") Long taskId,@Param("uid") Long uid);
+    int batchUpdateTasks(@Param("idList") List<Long> idList,
+                             @Param("rewardAmount") Double rewardAmount,
+                             @Param("title") String title);
+
+
 }

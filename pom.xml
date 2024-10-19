@@ -193,6 +193,7 @@
         <module>tiktokTask-generator</module>
         <module>tiktokTask-common</module>
         <module>tiktokTask-task</module>
+        <module>tiktokTask-investment</module>
     </modules>
     <packaging>pom</packaging>
 

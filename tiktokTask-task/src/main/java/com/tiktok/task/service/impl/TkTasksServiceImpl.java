@@ -19,6 +19,8 @@ import com.tiktok.task.service.ITkTasksService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import static com.tiktok.common.utils.PageUtils.startPage;
+
 /**
  * 任务列Service业务层处理
  * 
@@ -125,12 +127,12 @@ public class TkTasksServiceImpl implements ITkTasksService
      */
     @Override
     public List<TkTasks> getTask(TkTasks tkTasks) {
+        long startTime = System.currentTimeMillis(); // 记录开始时间
         //用户领取过的过滤掉
         TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
         tkTaskAcceptances.setUid(SecurityUtils.getLoginUser().getUser().getUid());
         List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);//领取任务表
-        List<TkTasks> tkTasks1 = tkTasksMapper.selectTkTasksList(tkTasks);//返回的任务
-
+        List<TkTasks> tkTasks1 = tkTasksMapper.selectRandomTkTasks(tkTasks);//返回的任务
         // 获取 tkTaskAcceptances1 中所有的 taskid
         List<Long> taskIdsToRemove = tkTaskAcceptances1.stream()
                 .map(TkTaskAcceptances::getTaskId) // 假设 getTaskId() 是获取 taskid 的方法
@@ -144,6 +146,7 @@ public class TkTasksServiceImpl implements ITkTasksService
         List<TkTasks> finalFilteredTasks = filteredTasks.stream()
                 .filter(task -> task.getSurplusquantity() > 0) // 假设 getSurplusquantity() 是获取剩余数量的方法
                 .collect(Collectors.toList());
+
 
         return finalFilteredTasks;
 
@@ -211,7 +214,7 @@ public class TkTasksServiceImpl implements ITkTasksService
         tkTaskAcceptances.setTaskId(taskId);
         tkTaskAcceptances.setStatus("0");
         tkTaskAcceptances.setUid(uid);
-        tkTaskAcceptances.setTips("0");
+        tkTaskAcceptances.setTips("1");
         tkTaskAcceptances.setCreateTime(new Date());
         //减少一个任务数量
         tkTasks.setSurplusquantity(TaskList.getSurplusquantity()-1);
@@ -374,6 +377,11 @@ public class TkTasksServiceImpl implements ITkTasksService
         return AjaxResult.success(userTaskById);
     }
 
+    @Override
+    public int batchUpdateTasks(List<Long> idList, Double rewardAmount, String title) {
+        return tkTasksMapper.batchUpdateTasks(idList, rewardAmount, title);
+
+    }
 
 
 }
