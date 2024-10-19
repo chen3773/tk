@@ -88,6 +88,7 @@ public class TkTaskAcceptancesController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody TkTaskAcceptances tkTaskAcceptances)
     {
+        tkTaskAcceptances.setTips("1");
         return toAjax(tkTaskAcceptancesService.updateTkTaskAcceptances(tkTaskAcceptances));
     }
 

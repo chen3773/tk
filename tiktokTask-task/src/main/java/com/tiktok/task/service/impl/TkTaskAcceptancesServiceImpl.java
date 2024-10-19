@@ -82,7 +82,6 @@ public class TkTaskAcceptancesServiceImpl implements ITkTaskAcceptancesService
     @Override
     public int updateTkTaskAcceptances(TkTaskAcceptances tkTaskAcceptances)
     {
-        tkTaskAcceptances.setTips("1");
         return tkTaskAcceptancesMapper.updateTkTaskAcceptances(tkTaskAcceptances);
     }
 
@@ -116,6 +115,7 @@ public class TkTaskAcceptancesServiceImpl implements ITkTaskAcceptancesService
         Assert.isTrue(id!=null,"参数缺失");
         TkTaskAcceptances tkTaskAcceptances = tkTaskAcceptancesMapper.selectTkTaskAcceptancesById(id);
         Assert.isTrue(tkTaskAcceptances!=null,"审核任务不存在");
+        Assert.isTrue(tkTaskAcceptances.getStatus().equals("0")||tkTaskAcceptances.getStatus().equals("1") || tkTaskAcceptances.getStatus().equals("4"),"审核任务不存在");
         TkTasks tkTasks = tkTasksMapper.selectTkTasksById(tkTaskAcceptances.getTaskId());
         if(pass){
             tkTaskAcceptances.setStatus("2");

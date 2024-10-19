@@ -86,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nickname != null">nickname,</if>
             <if test="svipLevel != null">svip_level,</if>
             <if test="totareward != null">totareward,</if>
+            <if test="avatar != null">avatar,</if>
             <if test="balance != null">balance,</if>
             <if test="nonWithdrawableBalance != null">non_withdrawable_balance,</if>
             <if test="usdtAddress != null">usdt_address,</if>
@@ -107,6 +108,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nickname != null">#{nickname},</if>
             <if test="svipLevel != null">#{svipLevel},</if>
             <if test="totareward != null">#{totareward},</if>
+            <if test="avatar != null">#{avatar},</if>
             <if test="balance != null">#{balance},</if>
             <if test="nonWithdrawableBalance != null">#{nonWithdrawableBalance},</if>
             <if test="usdtAddress != null">#{usdtAddress},</if>

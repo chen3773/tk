@@ -74,5 +74,5 @@ public interface ITkTasksService
 
     AjaxResult getUserTaskById(Long id);
 
-    int batchUpdateTasks(List<Long> idList, Double rewardAmount, String title);
+    int batchUpdateTasks(List<Long> idList, String rewardAmount, String title);
 }

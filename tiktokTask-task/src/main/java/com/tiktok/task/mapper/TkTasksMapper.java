@@ -70,7 +70,7 @@ public interface TkTasksMapper
 
     List<UserTaskOV> getUserTaskById(@Param("taskId") Long taskId,@Param("uid") Long uid);
     int batchUpdateTasks(@Param("idList") List<Long> idList,
-                             @Param("rewardAmount") Double rewardAmount,
+                             @Param("rewardAmount") String rewardAmount,
                              @Param("title") String title);
 
 

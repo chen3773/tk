@@ -38,7 +38,7 @@ public class TkWallettransactions extends BaseEntity
     private BigDecimal Amount;
 
     /** 交易日期和时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd ")
     @Excel(name = "交易日期和时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date transactionDate;
 

@@ -284,8 +284,7 @@ public class TkTasksServiceImpl implements ITkTasksService
         tkTaskAcceptances.setStatus("1");
         tkTaskAcceptances.setSubmittedImage(image);
         tkTaskAcceptances.setSubmissionTime(new Date());
-        int i = tkTaskAcceptancesMapper.updateTkTaskAcceptances(tkTaskAcceptances);
-        Assert.isTrue(i!=0,"error");
+
                 //判断是否触发特殊任务
         long specialTaskId = 0;
 
@@ -315,42 +314,53 @@ public class TkTasksServiceImpl implements ITkTasksService
                 }
             }
         }
+        tkTaskAcceptances.setTips("0");
+        int i = tkTaskAcceptancesMapper.updateTkTaskAcceptances(tkTaskAcceptances);
+        Assert.isTrue(i!=0,"error");
 
         switch (taskLevel.intValue()) {
             case 0:
                 if (tkAutomaticAudit.getLv0() == 0) {
                     tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                    tkTaskAcceptances.setTips("1");
                 }
                 break;
             case 1:
                 if (tkAutomaticAudit.getLv1() == 0) {
                     tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                    tkTaskAcceptances.setTips("1");
                 }
                 break;
             case 2:
                 if (tkAutomaticAudit.getLv2() == 0) {
                     tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                    tkTaskAcceptances.setTips("1");
                 }
                 break;
             case 3:
                 if (tkAutomaticAudit.getLv3() == 0) {
                     // 执行自动审核任务
                     tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                    tkTaskAcceptances.setTips("1");
                 }
                 break;
             case 4:
                 if (tkAutomaticAudit.getLv4() == 0) {
                     // 执行自动审核任务
                     tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                    tkTaskAcceptances.setTips("1");
                 }
                 break;
             case 5:
                 if (tkAutomaticAudit.getLv5() == 0) {
                     // 执行自动审核任务
                     tkTaskAcceptancesService.TaskAudit(tkTaskAcceptances.getId(),true);
+                    tkTaskAcceptances.setTips("1");
                 }
                 break;
         }
+
+
 
         AjaxResult ajax = AjaxResult.success();
         if(specialTaskId!=0){
@@ -378,7 +388,7 @@ public class TkTasksServiceImpl implements ITkTasksService
     }
 
     @Override
-    public int batchUpdateTasks(List<Long> idList, Double rewardAmount, String title) {
+    public int batchUpdateTasks(List<Long> idList, String rewardAmount, String title) {
         return tkTasksMapper.batchUpdateTasks(idList, rewardAmount, title);
 
     }

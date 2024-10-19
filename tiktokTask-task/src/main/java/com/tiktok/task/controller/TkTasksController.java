@@ -153,7 +153,7 @@ public class TkTasksController extends BaseController
     public AjaxResult BatchChanges(@RequestBody Map<String, Object> requestData)
     {
         List<Long> idList = (List<Long>) requestData.get("idList");
-        Double rewardAmount = (Double) requestData.get("rewardAmount");
+        String rewardAmount =  requestData.get("rewardAmount").toString();
         String title = (String) requestData.get("title");
         return toAjax(tkTasksService.batchUpdateTasks(idList,rewardAmount,title));
     }

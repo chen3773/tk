@@ -167,7 +167,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         tkUsers.setCreateTime(DateUtils.getNowDate());
         //设置创建人
         tkUsers.setCreateBy(userId.toString());
-        tkUsers.setAvatar("/profile/upload/avatar/2024/09/27/avatar_20240927193831A001.png");
+        tkUsers.setAvatar("/profile/upload/avatar/2024/10/19/lgo_20241019212730A001.jpg");
         tkUsers.setTotareward("0");
         tkUsers.setRegistrationTime(new Date());//注册时间
         tkUsers.setWithdraw("0");
