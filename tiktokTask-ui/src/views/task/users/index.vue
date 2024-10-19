@@ -229,7 +229,7 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="form.password" placeholder="请输入密码" />
         </el-form-item>
-        <el-form-item label="交易密码" prop="paymentPassword">
+        <el-form-item label="交易密码" prop="paymentPassword" v-if="title != '添加用户信息'">
           <el-input v-model="form.paymentPassword" placeholder="请输入交易密码" />
         </el-form-item>
         <el-form-item label="昵称" prop="nickname">
@@ -249,13 +249,13 @@
                 />
               </el-select>
         </el-form-item> -->
-        <el-form-item label="余额" prop="balance">
+        <el-form-item label="余额" prop="balance" v-if="title != '添加用户信息'">
           <el-input v-model="form.balance" placeholder="请输入余额" />
         </el-form-item>
-        <el-form-item label="不可提现余额" prop="nonWithdrawableBalance">
+        <el-form-item label="不可提现余额" prop="nonWithdrawableBalance" v-if="title != '添加用户信息'">
           <el-input v-model="form.nonWithdrawableBalance" placeholder="请输入不可提现余额" />
         </el-form-item>
-        <el-form-item label="钱包地址" prop="usdtAddress">
+        <el-form-item label="钱包地址" prop="usdtAddress" v-if="title != '添加用户信息'">
           <el-input v-model="form.usdtAddress" placeholder="请输入钱包地址" />
         </el-form-item>
         <!-- <el-form-item label="注册时间" prop="registrationTime">
@@ -269,7 +269,7 @@
         <el-form-item label="邀请码" prop="referrerId" v-if="title == '添加用户信息'">
           <el-input v-model="form.invitationCode" placeholder="请输入邀请码" />
         </el-form-item>
-        <el-form-item label="用户状态" prop="userStatus">
+        <el-form-item label="用户状态" prop="userStatus" v-if="title != '添加用户信息'">
           <el-radio-group v-model="form.userStatus">
             <el-radio
               v-for="dict in dict.type.user_state"
@@ -278,7 +278,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="提现状态" prop="userStatus">
+        <el-form-item label="提现状态" prop="userStatus" v-if="title != '添加用户信息'">
           <el-radio-group v-model="form.withdraw">
             <el-radio
               v-for="dict in dict.type.user_state"
@@ -287,7 +287,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item label="备注" prop="remark" v-if="title != '添加用户信息'">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
