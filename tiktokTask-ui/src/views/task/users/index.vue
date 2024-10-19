@@ -396,7 +396,7 @@
 
 <script>
 import { listUsers, getUsers, delUsers, addUsers, updateUsers, UpgradeSvip, addSpecialTask, getSpecialTask, addAndDeduct } from "@/api/task/users";
-import { listTasks } from "@/api/task/tasks";
+import { Sortinglist } from "@/api/task/tasks";
 import { listSvipSetting } from "@/api/task/svipSetting";
 
 export default {
@@ -500,7 +500,7 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
-      listTasks({
+      Sortinglist({
         pageNum: 1,
         pageSize: 200,
         taskLevel: 6

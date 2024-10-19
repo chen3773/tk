@@ -9,6 +9,14 @@ export function listTasks(query) {
   })
 }
 
+export function Sortinglist(query) {
+  return request({
+    url: '/task/tasks/Sortinglist',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询任务列详细
 export function getTasks(id) {
   return request({
