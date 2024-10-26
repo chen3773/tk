@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.LcSubscriptionMapper">
+    
+    <resultMap type="LcSubscription" id="LcSubscriptionResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="subscriptionCount"    column="subscription_count"    />
+        <result property="purchasePrice"    column="purchase_price"    />
+        <result property="purchaseTime"    column="purchase_time"    />
+        <result property="cumulativeDividend"    column="cumulative_dividend"    />
+        <result property="dividendStartTime"    column="dividend_start_time"    />
+        <result property="expirationTime"    column="expiration_time"    />
+        <result property="dividendIntervalDays"    column="dividend_interval_days"    />
+        <result property="dividendDays"    column="dividend_days"    />
+        <result property="remainingDays"    column="remaining_days"    />
+        <result property="status"    column="status"    />
+        <result property="orderNumber"    column="order_number"    />
+    </resultMap>
+
+
+    <resultMap type="com.tiktok.task.domain.ov.SubscriptionProductOV" id="SubscriptionProductOVResult">
+        <association property="lcSubscription" columnPrefix="s_" resultMap="com.tiktok.task.mapper.LcSubscriptionMapper.LcSubscriptionResult"/>
+        <association property="lcProduct" columnPrefix="p_" resultMap="com.tiktok.task.mapper.LcProductMapper.LcProductResult"/>
+    </resultMap>
+
+
+
+
+    <sql id="selectLcSubscriptionVo">
+        select id, user_id, product_id, subscription_count, purchase_price, dividend_start_time, purchase_time, cumulative_dividend, expiration_time, dividend_interval_days, dividend_days, remaining_days, status, order_number from lc_subscription
+    </sql>
+
+
+    <select id="selectLcSubscriptionList" parameterType="LcSubscription" resultMap="LcSubscriptionResult">
+        <include refid="selectLcSubscriptionVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="subscriptionCount != null "> and subscription_count = #{subscriptionCount}</if>
+            <if test="purchasePrice != null  and purchasePrice != ''"> and purchase_price = #{purchasePrice}</if>
+            <if test="purchaseTime != null "> and purchase_time = #{purchaseTime}</if>
+            <if test="cumulativeDividend != null  and cumulativeDividend != ''"> and cumulative_dividend = #{cumulativeDividend}</if>
+            <if test="expirationTime != null "> and expiration_time = #{expirationTime}</if>
+            <if test="dividendIntervalDays != null "> and dividend_interval_days = #{dividendIntervalDays}</if>
+            <if test="dividendDays != null "> and dividend_days = #{dividendDays}</if>
+            <if test="remainingDays != null  and remainingDays != ''"> and remaining_days = #{remainingDays}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
+        </where>
+    </select>
+
+
+    <select id="listOfDividends" parameterType="LcSubscription" resultMap="LcSubscriptionResult">
+        SELECT *
+        FROM lc_subscription
+        WHERE dividend_start_time &lt; NOW() AND status = '0';
+    </select>
+    
+    <select id="selectLcSubscriptionById" parameterType="Long" resultMap="LcSubscriptionResult">
+        <include refid="selectLcSubscriptionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcSubscription" parameterType="LcSubscription">
+        insert into lc_subscription
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="subscriptionCount != null">subscription_count,</if>
+            <if test="purchasePrice != null">purchase_price,</if>
+            <if test="dividendStartTime != null">dividend_start_time,</if>
+            <if test="purchaseTime != null">purchase_time,</if>
+            <if test="cumulativeDividend != null">cumulative_dividend,</if>
+            <if test="expirationTime != null">expiration_time,</if>
+            <if test="dividendIntervalDays != null">dividend_interval_days,</if>
+            <if test="dividendDays != null">dividend_days,</if>
+            <if test="remainingDays != null">remaining_days,</if>
+            <if test="status != null">status,</if>
+            <if test="orderNumber != null">order_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="subscriptionCount != null">#{subscriptionCount},</if>
+            <if test="purchasePrice != null">#{purchasePrice},</if>
+            <if test="dividendStartTime != null">#{dividendStartTime},</if>
+            <if test="purchaseTime != null">#{purchaseTime},</if>
+            <if test="cumulativeDividend != null">#{cumulativeDividend},</if>
+            <if test="expirationTime != null">#{expirationTime},</if>
+            <if test="dividendIntervalDays != null">#{dividendIntervalDays},</if>
+            <if test="dividendDays != null">#{dividendDays},</if>
+            <if test="remainingDays != null">#{remainingDays},</if>
+            <if test="status != null">#{status},</if>
+            <if test="orderNumber != null">#{orderNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLcSubscription" parameterType="LcSubscription">
+        update lc_subscription
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="subscriptionCount != null">subscription_count = #{subscriptionCount},</if>
+            <if test="purchasePrice != null">purchase_price = #{purchasePrice},</if>
+            <if test="purchaseTime != null">purchase_time = #{purchaseTime},</if>
+            <if test="cumulativeDividend != null">cumulative_dividend = #{cumulativeDividend},</if>
+            <if test="dividendStartTime != null">dividend_start_time = #{dividendStartTime},</if>
+            <if test="expirationTime != null">expiration_time = #{expirationTime},</if>
+            <if test="dividendIntervalDays != null">dividend_interval_days = #{dividendIntervalDays},</if>
+            <if test="dividendDays != null">dividend_days = #{dividendDays},</if>
+            <if test="remainingDays != null">remaining_days = #{remainingDays},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="orderNumber != null">order_number = #{orderNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcSubscriptionById" parameterType="Long">
+        delete from lc_subscription where id = #{id}
+    </delete>
+
+    <delete id="deleteLcSubscriptionByIds" parameterType="String">
+        delete from lc_subscription where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectSubscriptionProductByUserIdAndStatus" resultMap="SubscriptionProductOVResult">
+        SELECT
+            s.id AS s_id,
+            s.user_id AS s_user_id,
+            s.product_id AS s_product_id,
+            s.subscription_count AS s_subscription_count,
+            s.purchase_price AS s_purchase_price,
+            s.purchase_time AS s_purchase_time,
+            s.cumulative_dividend AS s_cumulative_dividend,
+            s.expiration_time AS s_expiration_time,
+            s.dividend_interval_days AS s_dividend_interval_days,
+            s.dividend_days AS s_dividend_days,
+            s.remaining_days AS s_remaining_days,
+            s.status AS s_status,
+            s.order_number AS s_order_number,
+            p.product_id AS p_product_id,
+            p.product_title AS p_product_title,
+            p.main_image_url AS p_main_image_url,
+            p.detail_image_url AS p_detail_image_url,
+            p.product_description AS p_product_description,
+            p.total_amount AS p_total_amount,
+            p.level AS p_level,
+            p.total_shares AS p_total_shares,
+            p.sold_shares AS p_sold_shares,
+            p.start_time AS p_start_time,
+            p.end_time AS p_end_time,
+            p.create_by AS p_create_by,
+            p.create_time AS p_create_time,
+            p.update_by AS p_update_by,
+            p.update_time AS p_update_time,
+            p.state AS p_state,
+            p.remark AS p_remark,
+            p.deleted AS p_deleted,
+            p.cycle AS p_cycle,
+            p.return_rate AS p_return_rate,
+            p.dividend_days AS p_dividend_days,
+            p.type AS p_type
+        FROM
+            lc_subscription s
+                JOIN
+            lc_product p ON s.product_id = p.product_id
+        WHERE
+         s.user_id = #{userId}
+        <if test="status != null  and status != ''"> AND s.status = #{status}</if>
+        <if test="orderNumber != null  and orderNumber != ''"> AND s.order_number  = #{orderNumber}</if>
+
+    </select>
+</mapper>

@@ -1,8 +1,6 @@
 package com.tiktok.task.service.impl;
 
-import java.beans.Transient;
 import java.math.BigDecimal;
-import java.security.Security;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,12 +11,11 @@ import com.tiktok.common.utils.SecurityUtils;
 import com.tiktok.common.utils.StringUtils;
 import com.tiktok.framework.web.exception.CustomException;
 import com.tiktok.system.service.ISysDeptService;
-import com.tiktok.system.service.ISysPostService;
 import com.tiktok.system.service.ISysRoleService;
 import com.tiktok.system.service.ISysUserService;
 import com.tiktok.task.domain.*;
 import com.tiktok.task.mapper.*;
-import com.tiktok.task.task.AssertionUtils;
+import com.tiktok.task.util.AssertionUtils;
 import com.tiktok.task.util.InviteCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -336,60 +333,87 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     @Override
     @Transactional
-    public AjaxResult withdraw(String amount,String paymentPassword) {
-
+    public AjaxResult withdraw(String amount,String paymentPassword,String type) {
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
-        //判断是否有未完成任务
-        TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
-        tkTaskAcceptances.setUid(uid);
-        List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
-        for (int i = 0; i < tkTaskAcceptances1.size(); i++) {
-            Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("0"),"Mission not completed");
-            Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("1"),"Mission not completed");
-            Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("4"),"Mission not completed");
-        }
-
-        //获取出额度
-        TkTasknum tkTasknum = new TkTasknum();
-        tkTasknum.setUserId(uid);
-        List<TkTasknum> tkTasknums = tkTasknumMapper.selectTkTasknumList(tkTasknum);
-        AssertionUtils.isTrue(tkTasknums.size()!=0,"Contact Customer Service");
-        Assert.isTrue(tkTasknums.get(0).getExperienceTaskCount()==0,"Mission not completed");
-        Assert.isTrue(tkTasknums.get(0).getNormalTaskCount()==0,"Mission not completed");
-        // 将字符串转换为 double
-        double value = Double.parseDouble(amount);
-        Assert.isTrue(value>0,"error");
-
-        TkUserDefault tkUserDefault = tkUserDefaultMapper.selectTkUserDefaultById(1L);
-        Assert.isTrue(Double.parseDouble(tkUserDefault.getMinimumWithdrawalAmount())<=value,"Minimum withdrawal ："+ tkUserDefault.getMinimumWithdrawalAmount());
-
-
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
+
+
         Assert.isTrue(tkUsers.getPaymentPassword()!=null,"Set a payment password.");
         Assert.isTrue(tkUsers.getPaymentPassword().trim().equals(paymentPassword.trim()),"Payment password error");
 
-        Assert.isTrue(tkUsers.getUsdtAddress()!=null,"Set the withdrawal address.");
-
-        Assert.isTrue(tkUsers.getWithdraw().equals("0"),"Withdrawal exception, contact customer service");
-
-        // 获取余额和不可提现金额
-        String balanceStr = tkUsers.getBalance(); // 余额
-        String nonWithdrawableBalanceStr = tkUsers.getNonWithdrawableBalance(); // 不可提现金额
-        // 将字符串转换为 BigDecimal
-        BigDecimal balance = new BigDecimal(balanceStr);
-        BigDecimal nonWithdrawableBalance = new BigDecimal(nonWithdrawableBalanceStr);
-        // 计算可提现余额
-        BigDecimal withdrawableBalance = balance.subtract(nonWithdrawableBalance);
-        // 将 amount 转换为 BigDecimal
-        BigDecimal amountToWithdraw = new BigDecimal(amount);
-        // 检查余额是否足够
-        Assert.isTrue(withdrawableBalance.compareTo(amountToWithdraw) >= 0,"Insufficient funds");
-
         // 计算提现后的余额
-        BigDecimal newBalance = balance.subtract(amountToWithdraw);
+        BigDecimal newBalance = new BigDecimal(0);
+        if(type.equals("0")){
 
-        // 更新用户余额
-        tkUsers.setBalance(newBalance.toString());
+            //判断是否有未完成任务
+            TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
+            tkTaskAcceptances.setUid(uid);
+            List<TkTaskAcceptances> tkTaskAcceptances1 = tkTaskAcceptancesMapper.selectTkTaskAcceptancesList(tkTaskAcceptances);
+            for (int i = 0; i < tkTaskAcceptances1.size(); i++) {
+                Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("0"),"Mission not completed");
+                Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("1"),"Mission not completed");
+                Assert.isTrue(!tkTaskAcceptances1.get(i).getStatus().equals("4"),"Mission not completed");
+            }
+
+            //获取出额度
+            TkTasknum tkTasknum = new TkTasknum();
+            tkTasknum.setUserId(uid);
+            List<TkTasknum> tkTasknums = tkTasknumMapper.selectTkTasknumList(tkTasknum);
+            AssertionUtils.isTrue(tkTasknums.size()!=0,"Contact Customer Service");
+            Assert.isTrue(tkTasknums.get(0).getExperienceTaskCount()==0,"Mission not completed");
+            Assert.isTrue(tkTasknums.get(0).getNormalTaskCount()==0,"Mission not completed");
+            // 将字符串转换为 double
+            double value = Double.parseDouble(amount);
+            Assert.isTrue(value>0,"error");
+
+            TkUserDefault tkUserDefault = tkUserDefaultMapper.selectTkUserDefaultById(1L);
+            Assert.isTrue(Double.parseDouble(tkUserDefault.getMinimumWithdrawalAmount())<=value,"Minimum withdrawal ："+ tkUserDefault.getMinimumWithdrawalAmount());
+
+            Assert.isTrue(tkUsers.getUsdtAddress()!=null,"Set the withdrawal address.");
+
+            Assert.isTrue(tkUsers.getWithdraw().equals("0"),"Withdrawal exception, contact customer service");
+
+            // 获取余额和不可提现金额
+            String balanceStr = tkUsers.getBalance(); // 余额
+            String nonWithdrawableBalanceStr = tkUsers.getNonWithdrawableBalance(); // 不可提现金额
+            // 将字符串转换为 BigDecimal
+            BigDecimal balance = new BigDecimal(balanceStr);
+            BigDecimal nonWithdrawableBalance = new BigDecimal(nonWithdrawableBalanceStr);
+            // 计算可提现余额
+            BigDecimal withdrawableBalance = balance.subtract(nonWithdrawableBalance);
+            // 将 amount 转换为 BigDecimal
+            BigDecimal amountToWithdraw = new BigDecimal(amount);
+            // 检查余额是否足够
+            Assert.isTrue(withdrawableBalance.compareTo(amountToWithdraw) >= 0,"Insufficient funds");
+
+            // 计算提现后的余额
+             newBalance = balance.subtract(amountToWithdraw);
+
+            // 更新用户余额
+            tkUsers.setBalance(newBalance.toString());
+        }else if(type.equals("1")){
+            // 获取余额和不可提现金额
+            String balanceStr = tkUsers.getInvestmentAmount(); // 余额
+            String nonWithdrawableBalanceStr = tkUsers.getFrozenIvestmentAmount(); // 不可提现金额
+            // 将字符串转换为 BigDecimal
+            BigDecimal balance = new BigDecimal(balanceStr);
+            BigDecimal nonWithdrawableBalance = new BigDecimal(nonWithdrawableBalanceStr);
+            // 计算可提现余额
+            BigDecimal withdrawableBalance = balance.subtract(nonWithdrawableBalance);
+            // 将 amount 转换为 BigDecimal
+            BigDecimal amountToWithdraw = new BigDecimal(amount);
+            // 检查余额是否足够
+            Assert.isTrue(withdrawableBalance.compareTo(amountToWithdraw) >= 0,"Insufficient funds");
+
+            // 计算提现后的余额
+            newBalance = balance.subtract(amountToWithdraw);
+
+            // 更新用户余额
+            tkUsers.setInvestmentAmount(newBalance.toString());
+
+        }
+
+
         tkUsersMapper.updateTkUsers(tkUsers);
 
         TkWithdrawals tkWithdrawals = new TkWithdrawals();
@@ -406,7 +430,7 @@ public class TkUsersServiceImpl implements ITkUsersService
         TkWallettransactions tkWallettransactions = new TkWallettransactions();
         tkWallettransactions.setAmount(new BigDecimal(amount).negate());
         tkWallettransactions.setUserid(uid);
-        tkWallettransactions.setTransactionType("withdraw");
+        tkWallettransactions.setTransactionType("withdraw ");
         tkWallettransactions.setTransactionDate(new Date());
         tkWallettransactions.setFundBalance(newBalance);
         tkWallettransactions.setCategory("withdraw");

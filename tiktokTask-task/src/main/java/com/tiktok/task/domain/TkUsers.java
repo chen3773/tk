@@ -92,6 +92,9 @@ public class TkUsers extends BaseEntity
     private int teamsize;
     private String oldPasswords;
 
+    private String frozenIvestmentAmount; //冻结的投资金额
+    private String investmentAmount;//可提现投资金额
+
     public TkUsers() {
     }
 
@@ -295,5 +298,21 @@ public class TkUsers extends BaseEntity
 
     public void setOldPasswords(String oldPasswords) {
         this.oldPasswords = oldPasswords;
+    }
+
+    public String getFrozenIvestmentAmount() {
+        return frozenIvestmentAmount;
+    }
+
+    public void setFrozenIvestmentAmount(String frozenIvestmentAmount) {
+        this.frozenIvestmentAmount = frozenIvestmentAmount;
+    }
+
+    public String getInvestmentAmount() {
+        return investmentAmount;
+    }
+
+    public void setInvestmentAmount(String investmentAmount) {
+        this.investmentAmount = investmentAmount;
     }
 }

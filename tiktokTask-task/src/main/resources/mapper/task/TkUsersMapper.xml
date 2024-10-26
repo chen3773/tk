@@ -28,11 +28,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <result property="logindate"    column="last_login_date"    />
         <result property="deleted"    column="deleted"    />
+        <result property="frozenIvestmentAmount"    column="frozen_investment_amount"    />
+        <result property="investmentAmount"    column="investment_amount"    />
 
     </resultMap>
 
     <sql id="selectTkUsersVo">
-        SELECT tk.uid, tk.username, tk.password, tk.nickname, tk.svip_level, tk.totareward, tk.balance, tk.non_withdrawable_balance, tk.usdt_address, tk.registration_time, tk.avatar, tk.invitation_code, tk.referrer_id, tk.user_status, tk.withdraw,tk.payment_password, tk.blockchain_name, tk.create_by, tk.create_time, tk.update_by, tk.update_time, tk.remark,tk.deleted, sys.login_date AS last_login_date,deleted
+        SELECT tk.uid, tk.username, tk.password, tk.nickname, tk.svip_level, tk.totareward, tk.balance, tk.non_withdrawable_balance, tk.usdt_address, tk.registration_time, tk.avatar, tk.invitation_code, tk.referrer_id, tk.user_status, tk.withdraw,tk.payment_password, tk.blockchain_name, tk.create_by, tk.create_time, tk.update_by, tk.update_time, tk.remark,tk.deleted,tk.frozen_investment_amount,tk.investment_amount, sys.login_date AS last_login_date,deleted
         FROM tk_users AS tk
                  JOIN sys_user AS sys ON tk.username = sys.user_name
     </sql>
@@ -151,6 +153,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="frozenIvestmentAmount != null">frozen_investment_amount = #{frozenIvestmentAmount},</if>
+            <if test="investmentAmount != null">investment_amount = #{investmentAmount},</if>
         </trim>
         where uid = #{uid}
     </update>

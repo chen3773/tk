@@ -4,15 +4,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.tiktok.common.core.domain.AjaxResult;
-import com.tiktok.common.core.domain.entity.SysUser;
 import com.tiktok.common.utils.SecurityUtils;
-import com.tiktok.framework.web.exception.CustomException;
 import com.tiktok.task.domain.*;
 import com.tiktok.task.domain.ov.UserTaskOV;
 import com.tiktok.task.mapper.*;
 import com.tiktok.task.service.ITkTaskAcceptancesService;
-import com.tiktok.task.task.AssertionUtils;
-import org.apache.catalina.security.SecurityUtil;
+import com.tiktok.task.util.AssertionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tiktok.task.service.ITkTasksService;

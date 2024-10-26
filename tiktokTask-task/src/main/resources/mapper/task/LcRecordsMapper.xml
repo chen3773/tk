@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiktok.task.mapper.LcRecordsMapper">
+
+    <resultMap type="LcRecords" id="LcRecordsResult">
+        <result property="id"    column="id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="userId"    column="user_id"    />
+        <result property="amount"    column="amount"    />
+        <result property="title"    column="title"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="timestamp"    column="timestamp"    />
+    </resultMap>
+
+    <sql id="selectLcRecordsVo">
+        select id, product_id, order_number, user_id, amount, title, type, status, timestamp from lc_records
+    </sql>
+
+    <select id="selectLcRecordsList" parameterType="LcRecords" resultMap="LcRecordsResult">
+        <include refid="selectLcRecordsVo"/>
+        <where>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="amount != null  and amount != ''"> and amount = #{amount}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="params.beginTimestamp != null and params.beginTimestamp != '' and params.endTimestamp != null and params.endTimestamp != ''"> and timestamp between #{params.beginTimestamp} and #{params.endTimestamp}</if>
+        </where>
+    </select>
+
+    <select id="selectLcRecordsById" parameterType="Long" resultMap="LcRecordsResult">
+        <include refid="selectLcRecordsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertLcRecords" parameterType="LcRecords">
+        insert into lc_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="orderNumber != null">order_number,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="amount != null">amount,</if>
+            <if test="title != null">title,</if>
+            <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
+            <if test="timestamp != null">timestamp,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="orderNumber != null">#{orderNumber},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="title != null">#{title},</if>
+            <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
+            <if test="timestamp != null">#{timestamp},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLcRecords" parameterType="LcRecords">
+        update lc_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="orderNumber != null">order_number = #{orderNumber},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="timestamp != null">timestamp = #{timestamp},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLcRecordsById" parameterType="Long">
+        delete from lc_records where id = #{id}
+    </delete>
+
+    <delete id="deleteLcRecordsByIds" parameterType="String">
+        delete from lc_records where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

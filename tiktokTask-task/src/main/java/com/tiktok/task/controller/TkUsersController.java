@@ -1,5 +1,6 @@
 package com.tiktok.task.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -194,6 +195,7 @@ public class TkUsersController extends BaseController
         newtkUsers.setUsername(username);
         TkUsers tkUsers = tkUsersMapper.selectTkUsersList(newtkUsers).get(0);
         if (tkUsers != null){
+
             newtkUsers.setNickname(tkUsers.getNickname());
             newtkUsers.setSvipLevel(tkUsers.getSvipLevel());
             newtkUsers.setBalance(tkUsers.getBalance());
@@ -205,6 +207,8 @@ public class TkUsersController extends BaseController
             newtkUsers.setAvatar(tkUsers.getAvatar());
             newtkUsers.setInvitationCode(tkUsers.getInvitationCode());
             newtkUsers.setPaymentPassword("1");
+            newtkUsers.setFrozenIvestmentAmount(tkUsers.getFrozenIvestmentAmount());
+            newtkUsers.setInvestmentAmount(tkUsers.getInvestmentAmount());
             userInfo.setTkUsers(newtkUsers);
             if(tkUsers.getPaymentPassword()==null || tkUsers.getPaymentPassword().trim().equals("")){
                 newtkUsers.setPaymentPassword("0");
@@ -247,10 +251,10 @@ public class TkUsersController extends BaseController
      * 用户提现
      */
     @PostMapping("/withdraw")
-    public AjaxResult withdraw(String amount,String paymentPassword){
+    public AjaxResult withdraw(String amount,String paymentPassword,String type){
         Assert.isTrue(amount!=null,"error");
         Assert.isTrue(paymentPassword!=null,"The security password cannot be empty!");
-        return tkUsersService.withdraw(amount,paymentPassword);
+        return tkUsersService.withdraw(amount,paymentPassword,type);
     }
 
     @GetMapping("/updatePwd")

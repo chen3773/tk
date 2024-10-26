@@ -1,4 +1,4 @@
-package com.tiktok.task.task;
+package com.tiktok.task.util;
 
 import com.tiktok.framework.web.domain.ResultCode;
 import com.tiktok.framework.web.exception.CustomException;

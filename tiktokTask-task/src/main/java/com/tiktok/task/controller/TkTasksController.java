@@ -8,8 +8,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
-import com.tiktok.framework.web.exception.CustomException;
-import com.tiktok.task.task.AssertionUtils;
+import com.tiktok.task.util.AssertionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;

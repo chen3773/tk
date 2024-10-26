@@ -68,7 +68,7 @@ public interface ITkUsersService
 
     AjaxResult updateUser(TkUsers tkUsers) throws CustomException;
 
-    AjaxResult withdraw(String amount,String paymentPassword);
+    AjaxResult withdraw(String amount,String paymentPassword,String type);
 
     AjaxResult getUserUpgradeVIPMessage();
 
