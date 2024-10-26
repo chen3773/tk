@@ -356,6 +356,15 @@
     </el-dialog>
     <el-dialog :close-on-click-modal="false" title="资金变动" :visible.sync="open3" width="500px" append-to-body>
       <el-form ref="form3" :model="form3" label-width="100px">
+        <el-form-item label="资金类型" prop="type">
+          <el-radio-group v-model="form3.type">
+            <el-radio
+              v-for="dict in yesno2"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="金额类型" prop="add">
           <el-radio-group v-model="form3.add">
             <el-radio
@@ -478,6 +487,13 @@ export default {
       },{
         value: 'no',
         label: '扣除'
+      }],
+      yesno2: [{
+        value: '0',
+        label: '任务资金'
+      },{
+        value: '1',
+        label: '投资资金'
       }],
       tasksList: [],
       vipList: []
@@ -728,7 +744,8 @@ export default {
         amount: '',
         withdraw: 'yes',
         add: 'yes',
-        rebate: 'yes'
+        rebate: 'yes',
+        type: '0'
       };
       this.resetForm("form3");
     },
@@ -741,7 +758,8 @@ export default {
         amount: '',
         withdraw: 'yes',
         add: 'yes',
-        rebate: 'yes'
+        rebate: 'yes',
+        type: '0'
       };
       this.open3 = true;
     },
