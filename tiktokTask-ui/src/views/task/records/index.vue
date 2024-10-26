@@ -9,7 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户id" prop="userId">
+      <el-form-item label="uid" prop="userId">
         <el-input
           v-model="queryParams.userId"
           placeholder="请输入用户id"
@@ -35,7 +35,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -44,7 +44,7 @@
           @click="handleAdd"
           v-hasPermi="['task:records:add']"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -82,16 +82,21 @@
 
     <el-table v-loading="loading" :data="recordsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="id" align="center" prop="id" />
-      <el-table-column label="产品id" align="center" prop="productId" />
-      <el-table-column label="用户id" align="center" prop="userId" />
+      <!-- <el-table-column label="id" align="center" prop="id" /> -->
+      <el-table-column label="产品标题" align="center" prop="productTitle" />
+      <el-table-column label="产品类型" align="center" prop="productType" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.product_type" :value="scope.row.productType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="uid" align="center" prop="userId" />
       <el-table-column label="金额" align="center" prop="amount" />
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="类型" align="center" prop="type" />
-      <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="时间" align="center" prop="timestamp" width="180">
+      <!-- <el-table-column label="类型" align="center" prop="type" /> -->
+      <!-- <el-table-column label="状态" align="center" prop="status" /> -->
+      <el-table-column label="时间" align="center" prop="timestamp">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.timestamp, '{y}-{m}-{d}') }}</span>
+          <span>{{ scope.row.timestamp }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -159,6 +164,7 @@ import { listRecords, getRecords, delRecords, addRecords, updateRecords } from "
 
 export default {
   name: "Records",
+  dicts: ['product_type'],
   data() {
     return {
       // 遮罩层

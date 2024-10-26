@@ -108,7 +108,7 @@ const user = {
     getTaskNum({ commit }) {
       return new Promise((resolve, reject) => {
         pendingTask().then(res => {
-          console.log(res, 'ddd')
+          // console.log(res, 'ddd')
           commit('SET_rCount', res.data)
           resolve(res.data)
         }).catch(error => {

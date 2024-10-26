@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="用户ID" prop="userId">
+      <el-form-item label="UID" prop="userId">
         <el-input
           v-model="queryParams.userId"
-          placeholder="请输入用户ID"
+          placeholder="请输入UID"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -17,14 +17,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="认购份数" prop="subscriptionCount">
+      <!-- <el-form-item label="认购份数" prop="subscriptionCount">
         <el-input
           v-model="queryParams.subscriptionCount"
           placeholder="请输入认购份数"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="购入价格" prop="purchasePrice">
         <el-input
           v-model="queryParams.purchasePrice"
@@ -33,14 +33,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="分红开始时间" prop="dividendStartTime">
+      <!-- <el-form-item label="分红开始时间" prop="dividendStartTime">
         <el-date-picker clearable
                         v-model="queryParams.dividendStartTime"
                         type="date"
                         value-format="yyyy-MM-dd"
                         placeholder="请选择分红开始时间">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="购入时间" prop="purchaseTime">
         <el-date-picker clearable
                         v-model="queryParams.purchaseTime"
@@ -49,14 +49,14 @@
                         placeholder="请选择购入时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="累计分红" prop="cumulativeDividend">
+      <!-- <el-form-item label="累计分红" prop="cumulativeDividend">
         <el-input
           v-model="queryParams.cumulativeDividend"
           placeholder="请输入累计分红"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="过期时间" prop="expirationTime">
         <el-date-picker clearable
                         v-model="queryParams.expirationTime"
@@ -65,7 +65,7 @@
                         placeholder="请选择过期时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="分红间隔天数" prop="dividendIntervalDays">
+      <!-- <el-form-item label="分红间隔天数" prop="dividendIntervalDays">
         <el-input
           v-model="queryParams.dividendIntervalDays"
           placeholder="请输入分红间隔天数"
@@ -88,7 +88,7 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="订单号" prop="orderNumber">
         <el-input
           v-model="queryParams.orderNumber"
@@ -104,7 +104,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -113,7 +113,7 @@
           @click="handleAdd"
           v-hasPermi="['task:subscription:add']"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -151,32 +151,53 @@
 
     <el-table v-loading="loading" :data="subscriptionList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户ID" align="center" prop="id" />
-      <el-table-column label="用户ID" align="center" prop="userId" />
+      <!-- <el-table-column label="用户ID" align="center" prop="id" /> -->
+      <el-table-column label="UID" align="center" prop="userId" />
       <el-table-column label="产品ID" align="center" prop="productId" />
+      <el-table-column label="产品标题" align="center" prop="productTitle" />
+      <el-table-column label="产品类型" align="center" prop="productType" >
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.product_type" :value="scope.row.productType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单号" align="center" prop="orderNumber" />
       <el-table-column label="认购份数" align="center" prop="subscriptionCount" />
       <el-table-column label="购入价格" align="center" prop="purchasePrice" />
-      <el-table-column label="分红开始时间" align="center" prop="dividendStartTime" width="180">
+      <el-table-column label="时间" align="center" prop="purchaseTime" width="180">
+        <template slot-scope="scope">
+          <div style="text-align: left;">购入时间：{{ scope.row.purchaseTime }}</div>
+          <div style="text-align: left;">过期时间：{{ scope.row.expirationTime }}</div>
+          <div style="text-align: left;">分红时间：{{ scope.row.dividendStartTime }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="分红开始时间" align="center" prop="dividendStartTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.dividendStartTime, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="购入时间" align="center" prop="purchaseTime" width="180">
+      </el-table-column> -->
+      <!-- <el-table-column label="购入时间" align="center" prop="purchaseTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.purchaseTime, '{y}-{m}-{d}') }}</span>
         </template>
+      </el-table-column> -->
+      <el-table-column label="分红" align="center" prop="cumulativeDividend" width="130">
+        <template slot-scope="scope">
+          <div style="text-align: left;">累计分红：{{ scope.row.cumulativeDividend }}</div>
+          <div style="text-align: left;">分红周期：{{ scope.row.dividendIntervalDays }}</div>
+          <div style="text-align: left;">分红天数：{{ scope.row.dividendDays }}</div>
+        </template>
       </el-table-column>
-      <el-table-column label="累计分红" align="center" prop="cumulativeDividend" />
-      <el-table-column label="过期时间" align="center" prop="expirationTime" width="180">
+      <!-- <el-table-column label="累计分红" align="center" prop="cumulativeDividend" /> -->
+      <!-- <el-table-column label="过期时间" align="center" prop="expirationTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.expirationTime, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="分红间隔天数" align="center" prop="dividendIntervalDays" />
-      <el-table-column label="分红天数" align="center" prop="dividendDays" />
+      </el-table-column> -->
+      <!-- <el-table-column label="分红间隔天数" align="center" prop="dividendIntervalDays" />
+      <el-table-column label="分红天数" align="center" prop="dividendDays" /> -->
       <el-table-column label="剩余天数" align="center" prop="remainingDays" />
-      <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="订单号" align="center" prop="orderNumber" />
+      <!-- <el-table-column label="状态" align="center" prop="status" /> -->
+      
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -273,6 +294,7 @@ import { listSubscription, getSubscription, delSubscription, addSubscription, up
 
 export default {
   name: "Subscription",
+  dicts: ['product_type'],
   data() {
     return {
       // 遮罩层
