@@ -364,7 +364,7 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="分红周期(天)" prop="dividendDays" v-if="form.type == 1">
+        <el-form-item label="分红周期(天)" prop="dividendDays">
           <el-input v-model="form.dividendDays" placeholder="请输入分红周期" />
         </el-form-item>
         
