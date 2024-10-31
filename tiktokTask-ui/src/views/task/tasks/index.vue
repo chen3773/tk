@@ -192,6 +192,7 @@
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
+      :page-sizes="[10, 20, 30, 50, 100, 200]"
     />
 
     <!-- 添加或修改任务列对话框 -->
