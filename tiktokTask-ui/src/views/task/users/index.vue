@@ -143,10 +143,15 @@
       <!-- <el-table-column label="昵称" align="center" prop="nickname" /> -->
       <!-- <el-table-column label="svip等级" align="center" prop="svipLevel" /> -->
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="余额" align="center" prop="balance" width="170" >
+      <el-table-column label="余额" align="center" prop="balance" width="190" >
         <template slot-scope="scope">
-          <div style="color: #1890ff;">余额：{{ scope.row.balance }}</div>
-          <div style="color: #ff9292;">不可提现金额：{{ scope.row.nonWithdrawableBalance }}</div>
+          <div style="color: #1890ff;text-align: left;">余额：{{ scope.row.balance }}</div>
+          <div style="color: #ff9292;text-align: left;">不可提现金额：{{ scope.row.nonWithdrawableBalance }}</div>
+          <div style="color: #1890ff;text-align: left;">投资账户余额：{{ scope.row.investmentAmount }}</div>
+          <div style="color: #ff9292;text-align: left;">投资账户冻结：{{ scope.row.frozenIvestmentAmount }}</div>
+          <div style="color: #1890ff;text-align: left;">投资获利：{{ scope.row.invest.projectIncome }}</div>
+          <div style="color: #1890ff;text-align: left;">参与项目数：{{ scope.row.invest.myProject }}</div>
+          <div style="color: #1890ff;text-align: left;">质押冻结金额：{{ scope.row.invest.frozenAmount }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="不可提现余额" align="center" prop="nonWithdrawableBalance" /> -->
@@ -255,6 +260,12 @@
         </el-form-item>
         <el-form-item label="不可提现余额" prop="nonWithdrawableBalance" v-if="title != '添加用户信息'">
           <el-input v-model="form.nonWithdrawableBalance" placeholder="请输入不可提现余额" />
+        </el-form-item>
+        <el-form-item label="投资账户余额" prop="investmentAmount" v-if="title != '添加用户信息'">
+          <el-input v-model="form.investmentAmount" placeholder="请输入投资账户余额" />
+        </el-form-item>
+        <el-form-item label="投资账户冻结" prop="frozenIvestmentAmount" v-if="title != '添加用户信息'">
+          <el-input v-model="form.frozenIvestmentAmount" placeholder="请输入投资账户冻结" />
         </el-form-item>
         <el-form-item label="钱包地址" prop="usdtAddress" v-if="title != '添加用户信息'">
           <el-input v-model="form.usdtAddress" placeholder="请输入钱包地址" />
@@ -557,6 +568,8 @@ export default {
         svipLevel: null,
         balance: null,
         nonWithdrawableBalance: null,
+        investmentAmount: null,
+        frozenIvestmentAmount: null,
         usdtAddress: null,
         registrationTime: null,
         referrerId: null,
