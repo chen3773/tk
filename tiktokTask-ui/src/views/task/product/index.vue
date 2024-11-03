@@ -494,9 +494,9 @@ export default {
         mainImageUrl: [
           { required: true, message: "产品主图不能为空", trigger: "blur" }
         ],
-        detailImageUrl: [
-          { required: true, message: "详情图不能为空", trigger: "blur" }
-        ],
+        // detailImageUrl: [
+        //   { required: true, message: "详情图不能为空", trigger: "blur" }
+        // ],
         productDescription: [
           { required: true, message: "产品详情描述不能为空", trigger: "blur" }
         ],
