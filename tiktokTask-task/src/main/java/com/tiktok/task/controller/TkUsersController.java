@@ -88,6 +88,7 @@ public class TkUsersController extends BaseController
 
 
 
+
         return getDataTable(list);
     }
 
@@ -337,6 +338,18 @@ public class TkUsersController extends BaseController
 
         return tkUsersService.addSpecialTask(taskData);
     }
+
+    /**
+     * 注册用户
+     * Sign in
+     */
+    @PostMapping("/SignIn")
+    public AjaxResult SignIn(@RequestBody TkUsers tkUsers)
+    {
+
+        return toAjax(tkUsersService.SignIn(tkUsers));
+    }
+
 
 
 }

@@ -75,4 +75,6 @@ public interface ITkUsersService
     AjaxResult GetFundComposition();
 
     AjaxResult addSpecialTask(TaskData taskData);
+
+    int SignIn(TkUsers tkUsers);
 }

@@ -68,6 +68,14 @@ public class TkUsersServiceImpl implements ITkUsersService
 
     @Autowired
     private TkTaskAcceptancesMapper tkTaskAcceptancesMapper;
+    @Autowired
+    private LcSubscriptionMapper lcSubscriptionMapper;
+
+    @Autowired
+    private  LcRecordsMapper lcRecordsMapper;
+    @Autowired
+    private TkSvipSettingMapper tkSvipSettingMapper;
+
 
 
 
@@ -113,6 +121,50 @@ public class TkUsersServiceImpl implements ITkUsersService
         if(tkUsersList.size()==0){//尝试模糊查询
             tkUsersList =  tkUsersMapper.selectTkUsersBlurList(tkUsers);
         }
+
+        //获取出用户获利多少
+        for (int i1 = 0; i1 < tkUsersList.size(); i1++) {
+            Long uid = tkUsersList.get(i1).getUid();
+
+            //获取出来分红记录
+            LcRecords lcRecordsBody = new LcRecords();
+            lcRecordsBody.setUserId(uid);
+            lcRecordsBody.setTitle("Revenue");
+            List<LcRecords> lcRecords = lcRecordsMapper.selectLcRecordsList(lcRecordsBody);
+            // 使用Java 8 Stream API将amount转换为数字并求和
+            double totalAmount = lcRecords.stream()
+                    .mapToDouble(record -> {
+                        // 使用Optional处理可能为null的情况
+                        return Optional.ofNullable(record.getAmount())
+                                .map(Double::parseDouble)
+                                .orElse(0.0);
+                    })
+                    .sum();
+            //获取项目数量
+            LcSubscription lcSubscription = new LcSubscription();
+            lcSubscription.setUserId(uid);
+            List<LcSubscription> lcSubscriptions = lcSubscriptionMapper.selectLcSubscriptionList(lcSubscription);
+            HashMap<String, Object> objectObjectHashMap = new HashMap<>();
+            objectObjectHashMap.put("myProject",lcSubscriptions.size());
+            objectObjectHashMap.put("projectIncome",totalAmount);
+
+
+            //获取出用户一共质押了多少钱
+            //获取出来未结束的订单
+            lcSubscription.setStatus("0");
+            List<LcSubscription> lcSubscriptions2 = lcSubscriptionMapper.selectLcSubscriptionList(lcSubscription);
+            BigDecimal bigDecimal = new BigDecimal(0);
+            for (int i = 0; i < lcSubscriptions2.size(); i++) {
+                BigDecimal purchasePrice = new BigDecimal(lcSubscriptions2.get(i).getPurchasePrice());//单价
+                BigDecimal subscriptionCount = new BigDecimal(lcSubscriptions2.get(i).getSubscriptionCount());//数量
+                bigDecimal = bigDecimal.add(purchasePrice.multiply(subscriptionCount));
+            }
+            tkUsersList.get(i1).setInvest(objectObjectHashMap);
+            objectObjectHashMap.put("frozenAmount",bigDecimal);
+        }
+
+
+
         return tkUsersList;
     }
 
@@ -224,10 +276,10 @@ public class TkUsersServiceImpl implements ITkUsersService
 
         //导入用户默认配置
         TkUserDefault tkUserDefault = tkUserDefaultMapper.selectTkUserDefaultById(1L);
-
+        TkSvipSetting tkSvipSetting = tkSvipSettingMapper.selectTkSvipSettingById(1L);
         TkTasknum tkTasknum = new TkTasknum();
         tkTasknum.setUserId(uid);
-        tkTasknum.setExperienceTaskCount(tkUserDefault.getExperienceTaskCount());
+        tkTasknum.setExperienceTaskCount(tkSvipSetting.getDailyTaskCount());
         tkTasknum.setNormalTaskCount(tkUserDefault.getRegularTaskCount());
         tkTasknum.setHiddenTaskCount(tkUserDefault.getRegularTaskCount());
         tkTasknum.setTotalCompletedTasks(0L);
@@ -311,6 +363,16 @@ public class TkUsersServiceImpl implements ITkUsersService
     @Override
     @Transactional
     public AjaxResult updateUser(TkUsers tkUsers) throws CustomException {
+
+
+        if (tkUsers.getUsdtAddress() != null && !tkUsers.getUsdtAddress().isEmpty()
+                && tkUsers.getBlockchainName() != null && !tkUsers.getBlockchainName().isEmpty()) {
+            // 执行代码，因为两个变量都不为null且不为空字符串
+        } else {
+            // 处理缺少值的情况
+            Assert.isTrue(false,"Refresh and retry");
+        }
+
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         TkUsers tkUser = tkUsersMapper.selectTkUsersByUid(uid);
 
@@ -337,6 +399,9 @@ public class TkUsersServiceImpl implements ITkUsersService
         Long uid = SecurityUtils.getLoginUser().getUser().getUid();
         TkUsers tkUsers = tkUsersMapper.selectTkUsersByUid(uid);
 
+        if(type==null){
+            type = "0";
+        }
 
         Assert.isTrue(tkUsers.getPaymentPassword()!=null,"Set a payment password.");
         Assert.isTrue(tkUsers.getPaymentPassword().trim().equals(paymentPassword.trim()),"Payment password error");
@@ -344,7 +409,6 @@ public class TkUsersServiceImpl implements ITkUsersService
         // 计算提现后的余额
         BigDecimal newBalance = new BigDecimal(0);
         if(type.equals("0")){
-
             //判断是否有未完成任务
             TkTaskAcceptances tkTaskAcceptances = new TkTaskAcceptances();
             tkTaskAcceptances.setUid(uid);
@@ -459,12 +523,30 @@ public class TkUsersServiceImpl implements ITkUsersService
 
         HashMap<String, String> teamData = tkInvitationMapper.getTeamData(uid);
 
+
+        //获取出来分红记录
+        LcRecords lcRecordsBody = new LcRecords();
+        lcRecordsBody.setUserId(uid);
+        lcRecordsBody.setTitle("Revenue");
+        List<LcRecords> lcRecords = lcRecordsMapper.selectLcRecordsList(lcRecordsBody);
+        // 使用Java 8 Stream API将amount转换为数字并求和
+        double totalAmount = lcRecords.stream()
+                .mapToDouble(record -> {
+                    // 使用Optional处理可能为null的情况
+                    return Optional.ofNullable(record.getAmount())
+                            .map(Double::parseDouble)
+                            .orElse(0.0);
+                })
+                .sum();
+
+        //获取出来分红赚的钱
+
         HashMap<String, Object> res = new HashMap<>();
 
         res.put("JobCommission", tkUsers.getTotareward() != null ? tkUsers.getTotareward() : 0);
         res.put("customerRebate", teamData != null && teamData.get("totareward") != null ? teamData.get("totareward") : 0);
         res.put("commissionRebate", amount != null ? amount : 0);
-        res.put("ShareholderDividends", 0);
+        res.put("ShareholderDividends", totalAmount);
 
         return AjaxResult.success(res);
 
@@ -515,6 +597,8 @@ public class TkUsersServiceImpl implements ITkUsersService
 
                 TkSpecialTask tkSpecialTask = new TkSpecialTask();
                 tkSpecialTask.setUserId(Long.valueOf(taskData.getUids().get(i)));
+                tkSpecialTask.setUpdateTime(new Date());
+                tkSpecialTask.setCreateTime(new Date());
                 tkSpecialTask.setTaskId(Long.valueOf(taskId));
                 tkSpecialTask.setStatus("0");
                 if(taskData.getTaskList().get(i1).getCount().equals("0")){
@@ -538,5 +622,114 @@ public class TkUsersServiceImpl implements ITkUsersService
             }
         }
         return AjaxResult.success("添加成功");
+    }
+
+    @Override
+    public int SignIn(TkUsers tkUsers) {
+        Assert.isTrue(tkUsers.getInvitationCode()!=null,"Fill in the invitation code");
+        Assert.isTrue(tkUsers.getInvitationCode()!="","Fill in the invitation code");
+        Assert.isTrue(tkUsers.getNickname()!=null&&!tkUsers.getNickname().trim().equals(""),"Nicknames cannot be empty");
+        //判断用户名是否存在
+        TkUsers tkUsers3 = new TkUsers();
+        tkUsers3.setUsername(tkUsers.getUsername());
+        Assert.isTrue(tkUsersMapper.selectTkUsersList(tkUsers3).size()==0,"The user name already exists");
+
+
+        //判断用户昵称是否存在
+        //判断用户名是否存在
+        TkUsers tkUsers5 = new TkUsers();
+        tkUsers5.setNickname(tkUsers.getNickname());
+        Assert.isTrue(tkUsersMapper.selectTkUsersList(tkUsers5).size()==0,"Nickname already exists");
+
+        String InviteCode = InviteCodeGenerator.generateInviteCode();//邀请码
+
+
+        //todo 判断邀请码是否存在
+        TkUsers tkUsers1 = new TkUsers();
+        tkUsers1.setInvitationCode(tkUsers.getInvitationCode());
+        List<TkUsers> tkUsers4 = tkUsersMapper.selectTkUsersList(tkUsers1);
+        Assert.isTrue(tkUsers4.size()!=0,"The invitation code does not exist");
+        tkUsers.setReferrerId(tkUsers4.get(0).getUid());
+
+       // Long userId = SecurityUtils.getUserId();
+
+        tkUsers.setCreateTime(DateUtils.getNowDate());
+        //设置创建人
+        tkUsers.setCreateBy("1");
+        tkUsers.setAvatar("/profile/upload/avatar/2024/10/19/lgo_20241019212730A001.jpg");
+        tkUsers.setTotareward("0");
+        tkUsers.setRegistrationTime(new Date());//注册时间
+        tkUsers.setWithdraw("0");
+        tkUsers.setUserStatus("1");
+        tkUsers.setCreateBy(tkUsers4.get(0).getCreateBy());
+        tkUsers.setBalance("0");
+        tkUsers.setSvipLevel(0L);
+        tkUsers.setNonWithdrawableBalance("0");
+        tkUsers.setInvitationCode(InviteCode);
+
+
+        SysUser user = new SysUser();
+        user.setDeptId(110L);
+        user.setRoleId(104L);
+        user.setPassword(tkUsers.getPassword());
+        user.setUserName(tkUsers.getUsername());
+        user.setNickName(tkUsers.getNickname());
+//        deptService.checkDeptDataScope2(110L);//分配岗位
+//        roleService.checkRoleDataScope2(104L);//分配角色
+
+        if (!userService.checkUserNameUnique(user))
+        {
+            System.out.println(error("新增用户'" + user.getUserName() + "'失败，登录账号已存在"));
+        }
+        else if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(user))
+        {
+            System.out.println(error("新增用户'" + user.getUserName() + "'失败，手机号码已存在"));
+        }
+        else if (StringUtils.isNotEmpty(user.getEmail()) && !userService.checkEmailUnique(user))
+        {
+            System.out.println(error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在"));
+        }
+//        user.setCreateBy(getUsername());
+        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        Assert.isTrue( userService.insertUser(user)>0,"Network exception");
+        int i = tkUsersMapper.insertTkUsers(tkUsers);
+        Long uid = tkUsers.getUid();
+        //添加一级
+        TkInvitation tkInvitation = new TkInvitation();
+        tkInvitation.setInviteeId(uid);
+        tkInvitation.setInviterId(tkUsers.getReferrerId());
+        tkInvitation.setAmount("0.00");
+        tkInvitation.setLevel(1L);
+        Assert.isTrue(tkInvitationMapper.insertTkInvitation(tkInvitation)>0,"Network exception");
+
+        //添加二级
+        if(tkUsers4.get(0).getReferrerId()!=null){
+            tkInvitation.setInviterId(tkUsers4.get(0).getReferrerId());
+            tkInvitation.setLevel(2L);
+            Assert.isTrue( tkInvitationMapper.insertTkInvitation(tkInvitation)>0,"Network exception");
+
+            TkUsers tkUsers2 = tkUsersMapper.selectTkUsersByUid(tkUsers4.get(0).getReferrerId());
+            if(tkUsers2.getReferrerId()!=null){//添加三级
+                tkInvitation.setInviterId(tkUsers2.getReferrerId());
+                tkInvitation.setLevel(3L);
+                Assert.isTrue( tkInvitationMapper.insertTkInvitation(tkInvitation)>0,"Network exception");
+            }
+        }
+
+        //导入用户默认配置
+        TkUserDefault tkUserDefault = tkUserDefaultMapper.selectTkUserDefaultById(1L);
+
+        TkSvipSetting tkSvipSetting = tkSvipSettingMapper.selectTkSvipSettingById(1L);
+
+        TkTasknum tkTasknum = new TkTasknum();
+        tkTasknum.setUserId(uid);
+        tkTasknum.setExperienceTaskCount(tkSvipSetting.getDailyTaskCount());
+        tkTasknum.setNormalTaskCount(tkUserDefault.getRegularTaskCount());
+        tkTasknum.setHiddenTaskCount(tkUserDefault.getRegularTaskCount());
+        tkTasknum.setTotalCompletedTasks(0L);
+        //创建用户限制
+        tkTasknumMapper.insertTkTasknum(tkTasknum);
+        //去创建系统用户
+        return 1;
     }
 }

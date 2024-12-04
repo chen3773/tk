@@ -1,14 +1,15 @@
 package com.tiktok.task.controller;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.tiktok.task.util.AssertionUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -41,6 +42,9 @@ public class TkTasksController extends BaseController
 {
     @Autowired
     private ITkTasksService tkTasksService;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 查询任务列列表
@@ -149,13 +153,19 @@ public class TkTasksController extends BaseController
     @PreAuthorize("@ss.hasPermi('task:tasks:edit')")
     @Log(title = "任务列", businessType = BusinessType.UPDATE)
     @PostMapping("/BatchChanges")
-    public AjaxResult BatchChanges(@RequestBody Map<String, Object> requestData)
-    {
+    public AjaxResult BatchChanges(@RequestBody Map<String, Object> requestData) {
         List<Long> idList = (List<Long>) requestData.get("idList");
-        String rewardAmount =  requestData.get("rewardAmount").toString();
+        String rewardAmount = requestData.get("rewardAmount") != null ? requestData.get("rewardAmount").toString() : null;
         String title = (String) requestData.get("title");
-        return toAjax(tkTasksService.batchUpdateTasks(idList,rewardAmount,title));
+
+        if (rewardAmount == null && title == null) {
+            return toAjax(0);
+        }
+
+        return toAjax(tkTasksService.batchUpdateTasks(idList, rewardAmount, title));
     }
+
+
 
 
     /**
@@ -196,12 +206,32 @@ public class TkTasksController extends BaseController
     /**
      * 用户接取任务
      */
+
     @PostMapping("/receiveTask")
     public AjaxResult receiveTask(Long taskId){
         AssertionUtils.isTrue(taskId!=null,"Missing parameter");
-       return tkTasksService.receiveTask(taskId);
-    }
 
+        String lockKey = "lock:receiveTask:" + taskId;
+        String clientId = UUID.randomUUID().toString();
+
+        try {
+            // 尝试获取分布式锁
+            Boolean locked = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, clientId);
+            if (locked != null && locked) {
+                // 设置锁的过期时间，避免出现死锁
+                stringRedisTemplate.expire(lockKey, 30, TimeUnit.SECONDS);
+                // 执行业务逻辑
+                return tkTasksService.receiveTask(taskId);
+            } else {
+                return AjaxResult.error("Please try again");
+            }
+        } finally {
+            // 释放锁
+            String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+            RedisScript<Long> redisScript = new DefaultRedisScript<>(script, Long.class);
+            stringRedisTemplate.execute(redisScript, Collections.singletonList(lockKey), clientId);
+        }
+    }
     /**
      * 获取我的任务
      */

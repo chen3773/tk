@@ -307,6 +307,7 @@ public class TkTasksServiceImpl implements ITkTasksService
                         tkSpecialTasks.get(i1).setStatus("1");
                         specialTaskId = taskId;
                     }
+                    tkSpecialTasks.get(i1).setUpdateTime(new Date());
                     tkSpecialTaskMapper.updateTkSpecialTask(tkSpecialTasks.get(i1));
                 }
             }
@@ -386,7 +387,8 @@ public class TkTasksServiceImpl implements ITkTasksService
 
     @Override
     public int batchUpdateTasks(List<Long> idList, String rewardAmount, String title) {
-        return tkTasksMapper.batchUpdateTasks(idList, rewardAmount, title);
+        tkTasksMapper.batchUpdateTasks(idList, rewardAmount, title);
+        return 1;
 
     }
 
