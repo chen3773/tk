@@ -312,7 +312,7 @@
     />
 
     <!-- 添加或修改众筹产品对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="产品标题" prop="productTitle">
           <el-input v-model="form.productTitle" placeholder="请输入产品标题" />
@@ -324,7 +324,7 @@
           <image-upload v-model="form.detailImageUrl" :limit="1"/>
         </el-form-item>
         <el-form-item label="产品描述" prop="productDescription">
-          <el-input v-model="form.productDescription" type="textarea" placeholder="请输入内容" />
+          <editor v-model="form.productDescription" :min-height="192" />
         </el-form-item>
         <el-form-item label="单价" prop="totalAmount">
           <el-input v-model="form.totalAmount" placeholder="请输入单价" />

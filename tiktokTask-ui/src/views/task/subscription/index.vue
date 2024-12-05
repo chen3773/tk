@@ -197,7 +197,7 @@
       <el-table-column label="分红天数" align="center" prop="dividendDays" /> -->
       <el-table-column label="剩余天数" align="center" prop="remainingDays" />
       <!-- <el-table-column label="状态" align="center" prop="status" /> -->
-      
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -227,7 +227,7 @@
     />
 
     <!-- 添加或修改认购对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="用户ID" prop="userId">
           <el-input v-model="form.userId" placeholder="请输入用户ID" />

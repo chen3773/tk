@@ -118,7 +118,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -128,7 +128,7 @@
     />
 
     <!-- 添加或修改理财分红记录对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="产品id" prop="productId">
           <el-input v-model="form.productId" placeholder="请输入产品id" />
