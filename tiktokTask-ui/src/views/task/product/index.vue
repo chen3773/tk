@@ -265,7 +265,7 @@
       <el-table-column label="周期(天)" align="center" prop="cycle" width="130">
         <template slot-scope="scope">
           <div style="text-align: left;">周期(天)：{{ scope.row.cycle }}</div>
-          <div style="text-align: left;">收益率(%)：{{ scope.row.returnRate }}</div>
+          <div style="text-align: left;">收益：{{ scope.row.returnRate }}</div>
           <div style="text-align: left;">分红周期(天)：{{ scope.row.dividendDays }}</div>
           <div style="text-align: left;">参与人数(人)：{{ scope.row.participants }}</div>
         </template>
@@ -353,8 +353,8 @@
         <el-form-item label="周期(天)" prop="cycle">
           <el-input v-model="form.cycle" placeholder="请输入周期天数" />
         </el-form-item>
-        <el-form-item label="收益率(%)" prop="returnRate">
-          <el-input v-model="form.returnRate" placeholder="请输入收益率" />
+        <el-form-item label="收益" prop="returnRate">
+          <el-input v-model="form.returnRate" placeholder="请输入收益" />
         </el-form-item>
         <el-form-item label="参与人数(人)" prop="participants">
           <el-input v-model="form.participants" placeholder="请输入参与人数" />
